@@ -17,11 +17,11 @@ public class Goodies {
     }
 
     public static void setChild(String child){
-        child = child;
+        Goodies.child = child;
     }
 
     public static void setGoodies(String goodies){
-        goodies = goodies;
+        Goodies.goodies = goodies;
     }
 
     public static void printPresents(){
