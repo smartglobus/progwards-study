@@ -32,6 +32,11 @@ public class Goodies {
         cookie();
         printPresent();
         setChild("Пете");
+        printPresent();
+    }
+
+    public static void main(String[] args){
+        printPresents();
     }
 
 }
