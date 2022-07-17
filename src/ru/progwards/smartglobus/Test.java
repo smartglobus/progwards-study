@@ -8,6 +8,7 @@ public class Test {
         { String a = "2"; }
         String a = "3пролл  'о'ор'  оро";
         String n = "1\" 5845" + 5 + 8;
-        System.out.println(Variables.sum);
+        double x = 5 / 2;
+        System.out.println(x);
     }
 }

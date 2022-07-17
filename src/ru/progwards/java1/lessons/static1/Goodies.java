@@ -17,7 +17,7 @@ public class Goodies {
     }
 
     public static void setChild(String child){
-        Goodies.child = child;
+       Goodies.child = child;
     }
 
     public static void setGoodies(String goodies){
