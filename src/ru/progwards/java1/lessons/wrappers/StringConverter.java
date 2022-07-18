@@ -34,5 +34,7 @@ public class StringConverter {
         System.out.println(fromShort(s));
         System.out.println(fromInt(45555));
         System.out.println(fromLong(987L));
+        System.out.println(fromFloat(3278.97f));
+        System.out.println(fromDouble(68.93));
     }
 }
