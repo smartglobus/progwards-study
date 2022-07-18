@@ -26,4 +26,5 @@ public class Astronomy {
     public static Double earthVsJupiter(){
         return earthSquare()/jupiterSquare();
     }
+
 }

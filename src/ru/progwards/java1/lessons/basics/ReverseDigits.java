@@ -7,4 +7,8 @@ public class ReverseDigits {
         int digits = number%10;
         return digits*100 + dozens*10 + hundreds;
     }
+
+    public static void main(String[] args) {
+        System.out.println(reverseDigits(835));
+    }
 }
