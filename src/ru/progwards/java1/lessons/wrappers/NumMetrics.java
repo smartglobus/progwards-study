@@ -19,7 +19,7 @@ public class NumMetrics {
     }
 
     public static void main(String[] args) {
-        System.out.println(sumDigits(423));
+        System.out.println(sumDigits(123));
         System.out.println(mulDigits(423));
     }
 }
