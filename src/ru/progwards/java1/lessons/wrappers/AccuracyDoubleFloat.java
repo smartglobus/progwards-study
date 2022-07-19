@@ -22,5 +22,12 @@ public class AccuracyDoubleFloat {
         System.out.println(volumeBallDouble(R_D));
         System.out.println(volumeBallFloat(R_F));
         System.out.println(calculateAccuracy(R_D));
+        String s1 = "Сложим строки";
+        String s2 = "и так и сяк";
+        String s3 = "потому что";
+        String s4 = "мы можем всяк";
+
+        String str = s1 + " " + s2;
+        System.out.println(str + ", " + s3.concat(" ".concat(s4).concat(".")));
     }
 }

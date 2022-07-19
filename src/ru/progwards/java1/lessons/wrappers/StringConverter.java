@@ -28,8 +28,8 @@ public class StringConverter {
 
 
     public static void main(String[] args) {
-        byte b = 67;
-        System.out.println(fromByte(b));
+        //byte b = 67;
+        System.out.println(fromByte((byte)67));
         short s = 489;
         System.out.println(fromShort(s));
         System.out.println(fromInt(45555));
