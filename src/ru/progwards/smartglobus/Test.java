@@ -22,6 +22,7 @@ public class Test {
         String twoInt =t+""+t;
         int z = Integer.parseInt(twoInt);
         System.out.println(addAsStrings(56,976));
+
     }
 
     static int addAsStrings(int n1, int n2){
