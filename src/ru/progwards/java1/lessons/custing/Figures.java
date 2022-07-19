@@ -3,7 +3,7 @@ package ru.progwards.java1.lessons.custing;
 public class Figures {
 
     public static double circle(double d) {
-        return d * d * 3.14 / 4;
+        return d * d * 3.14;
     }
 
     public static double square(double n) {
