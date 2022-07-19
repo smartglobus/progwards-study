@@ -13,11 +13,20 @@ public class Test {
 
         double d1 = Double.parseDouble("7.998786");
         Integer i = Integer.parseInt("8");
-
-        System.out.println(4 / 3 * 2 * 5.7 / 2);
+        int t = (int)765.567;
+        System.out.println((short)2147478071);
         System.out.println(maxInt());
-        boolean t = Character.isLetter('h');
-        System.out.println(d1);
+        System.out.println(maxInt()+2147483647+2147483647+2147483647+4);
+        //boolean t = Character.isLetter('h');
+        System.out.println((short) 256567);
+        String twoInt =t+""+t;
+        int z = Integer.parseInt(twoInt);
+        System.out.println(addAsStrings(56,976));
+    }
+
+    static int addAsStrings(int n1, int n2){
+        String twoInt =n1 + "" + n2;
+        return Integer.parseInt(twoInt);
     }
 
     static int maxInt() {
