@@ -10,12 +10,12 @@ public class Divisibility {
                 System.out.println(num1 + " делится нацело на " + num2);
             else
                 System.out.println("Остаток от деления " + num1 + " на " + num2 + " равен " + (num1 % num2));
-            System.out.println("Частное от деления " + num1 + " на " + num2 + " равно " + (num1 / num2));
+            System.out.println("Частное от деления " + num1 + " на " + num2 + " равно " + (double)(num1 / num2));
         }
     }
 
     public static void main(String[] args) {
-        check(128, 8);
+        check(89, 9);
         check(13, 8);
         check(18, 0);
     }
