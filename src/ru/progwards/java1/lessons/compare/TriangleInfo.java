@@ -9,10 +9,16 @@ public class TriangleInfo {
     }
 
     public static boolean isRightTriangle(int a, int b, int c) {
-        if (a * a == (b * b + c * c) | b * b == (a * a + c * c) | c * c == (a * a + b * b))
+        if (RightTriangleCheck(a,b,c) | RightTriangleCheck(b,a,c) | RightTriangleCheck(c,a,b))
             return true;
         return false;
     }
+
+public static boolean RightTriangleCheck(int x, int y, int z){
+    if (x * x == (y * y + z * z))
+        return true;
+    return false;
+}
 
     public static boolean isIsoscelesTriangle(int a, int b, int c) {
         if (a == b | b == c | a == c)
