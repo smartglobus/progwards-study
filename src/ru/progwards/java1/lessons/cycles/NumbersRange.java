@@ -37,6 +37,6 @@ public class NumbersRange {
         System.out.println(sumOdd(0, 17));
 
         System.out.println("\n" + sumEvenIdx(0, 10));
-        System.out.println(sumEvenIdx(1,5));
+        System.out.println(sumEvenIdx(1, 5));
     }
 }
