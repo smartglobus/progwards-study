@@ -35,8 +35,10 @@ public class Time {
     }
 
     public static void main(String[] args) {
+        Time time = new Time(7,8,9);
         Time teaTime = new Time(1, 30, 05);
         System.out.println(teaTime.toString());
         System.out.println(teaTime.toSeconds());
+        System.out.println(teaTime.secondsBetween(time));
     }
 }
