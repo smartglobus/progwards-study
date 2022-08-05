@@ -26,8 +26,17 @@ public class Time {
         return strHours + ":" + strMinutes + ":" + strSeconds;
     }
 
+    public int toSeconds(){
+        return hours*3600+minutes*60+seconds;
+    }
+
+    public int secondsBetween(Time time){
+
+    }
+
     public static void main(String[] args) {
-        Time teaTime = new Time(4, 17, 0);
+        Time teaTime = new Time(1, 30, 05);
         System.out.println(teaTime.toString());
+        System.out.println(teaTime.toSeconds());
     }
 }
