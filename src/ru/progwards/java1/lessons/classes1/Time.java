@@ -26,18 +26,20 @@ public class Time {
         return strHours + ":" + strMinutes + ":" + strSeconds;
     }
 
-    public int toSeconds(){
-        return hours*3600+minutes*60+seconds;
+    public int toSeconds() {
+        return hours * 3600 + minutes * 60 + seconds;
     }
 
-    public int secondsBetween(Time time){
-
+    public int secondsBetween(Time time) {
+        int diff = Math.abs(time.toSeconds() - this.toSeconds());
+        return diff;
     }
 
     public static void main(String[] args) {
-        Time time = new Time(7,8,9);
-        Time teaTime = new Time(1, 30, 05);
+        Time teaTime = new Time(7, 8, 9);
+        Time time = new Time(1, 30, 5);
         System.out.println(teaTime.toString());
+        System.out.println(time.toSeconds());
         System.out.println(teaTime.toSeconds());
         System.out.println(teaTime.secondsBetween(time));
     }
