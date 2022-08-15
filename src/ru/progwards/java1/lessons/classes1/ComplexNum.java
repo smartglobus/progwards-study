@@ -48,4 +48,12 @@ public class ComplexNum {
         System.out.println(cNum.mul(cNum2).toString());
         System.out.println(cNum.div(cNum2).toString());
     }
+
+    public void setA(int a) {
+        this.a = a;
+    }
+
+    public int getA() {
+        return a;
+    }
 }
