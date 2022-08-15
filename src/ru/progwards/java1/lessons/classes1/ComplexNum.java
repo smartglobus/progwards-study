@@ -27,9 +27,8 @@ public class ComplexNum {
     }
 
     public ComplexNum mul(ComplexNum num) {
-        ComplexNum mul = new ComplexNum((this.a * num.a - this.b * num.b), (this.b * num.a + this.a * num.b));
         //(a + bi) * (c + di) = (a*c - b*d) + (b*c + a*d)i
-        return mul;
+        return new ComplexNum((this.a * num.a - this.b * num.b), (this.b * num.a + this.a * num.b));
     }
 
     public ComplexNum div(ComplexNum num) {
@@ -49,11 +48,4 @@ public class ComplexNum {
         System.out.println(cNum.div(cNum2).toString());
     }
 
-    public void setA(int a) {
-        this.a = a;
-    }
-
-    public int getA() {
-        return a;
-    }
 }
