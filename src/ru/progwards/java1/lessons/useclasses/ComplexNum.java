@@ -45,7 +45,7 @@ public class ComplexNum {
         System.out.println(cNum.add(cNum2).toString());
         System.out.println(cNum.sub(cNum2).toString());
         System.out.println(cNum.mul(cNum2).toString());
-        System.out.println(cNum.div(cNum2).toString());
+        System.out.println(cNum.div(cNum2));
     }
 
 }
