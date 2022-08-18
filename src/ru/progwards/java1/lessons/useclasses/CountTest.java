@@ -13,12 +13,12 @@ public class CountTest {
 
     public static void testDec(int count) {
         Count countDec = new Count(count);
-        Count checkDec = new Count(count);
+
         while (true) {
-            countDec.dec();
+            boolean checkDec = countDec.dec();
             System.out.print(countDec.getCount() + " ");
 
-            if (checkDec.dec()) {
+            if (checkDec) {
                 System.out.println("\ncount равен 0");
                 break;
             }
@@ -31,7 +31,7 @@ public class CountTest {
         testInc(0);
         testInc(-1);
         testDec(9);
-//        testDec(0);
-//        testDec(-5);
+        testDec(0);
+        testDec(-5);
     }
 }
