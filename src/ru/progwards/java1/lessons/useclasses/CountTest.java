@@ -8,23 +8,23 @@ public class CountTest {
             countInc.inc();
             System.out.print(countInc.getCount() + " ");
         }
-        if (count>0) System.out.println();
+        if (count > 0) System.out.println();
         System.out.println("тест inc окончен");
     }
 
     public static void testDec(int count) {
         Count countDec = new Count(count);
         boolean checkDec;
-        if (countDec.getCount()>0) {
-            do {
-                checkDec = countDec.dec();
-                System.out.print(countDec.getCount() + " ");
 
-                if (checkDec) {
-                    System.out.println("\ncount равен 0");
-                }
-            } while (!checkDec);
-        }
+        do {
+            checkDec = countDec.dec();
+            System.out.print(countDec.getCount() + " ");
+
+            if (countDec.getCount() == 0) {
+                System.out.println("\ncount равен 0");
+            }
+        } while (!checkDec);
+        if (count <= 0) System.out.println();
         System.out.println("тест dec окончен");
     }
 
