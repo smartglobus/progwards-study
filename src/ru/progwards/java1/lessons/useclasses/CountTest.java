@@ -13,17 +13,17 @@ public class CountTest {
 
     public static void testDec(int count) {
         Count countDec = new Count(count);
+        Count checkDec = new Count(count);
         while (true) {
             countDec.dec();
             System.out.print(countDec.getCount() + " ");
-            count++;
-            if (countDec.dec()) {
 
-                System.out.println("count равен 0");
+            if (checkDec.dec()) {
+                System.out.println("\ncount равен 0");
                 break;
             }
         }
-        System.out.println("\nтест dec окончен");
+        System.out.println("тест dec окончен");
     }
 
     public static void main(String[] args) {
@@ -31,7 +31,7 @@ public class CountTest {
         testInc(0);
         testInc(-1);
         testDec(9);
-        testDec(0);
-        testDec(-5);
+//        testDec(0);
+//        testDec(-5);
     }
 }
