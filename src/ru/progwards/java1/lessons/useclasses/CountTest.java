@@ -13,15 +13,16 @@ public class CountTest {
 
     public static void testDec(int count) {
         Count countDec = new Count(count);
+        boolean checkDec;
+        if (countDec.getCount()>0) {
+            do {
+                checkDec = countDec.dec();
+                System.out.print(countDec.getCount() + " ");
 
-        while (true) {
-            boolean checkDec = countDec.dec();
-            System.out.print(countDec.getCount() + " ");
-
-            if (checkDec) {
-                System.out.println("\ncount равен 0");
-                break;
-            }
+                if (checkDec) {
+                    System.out.println("\ncount равен 0");
+                }
+            } while (!checkDec);
         }
         System.out.println("тест dec окончен");
     }
