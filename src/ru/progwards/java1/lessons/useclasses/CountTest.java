@@ -8,7 +8,8 @@ public class CountTest {
             countInc.inc();
             System.out.print(countInc.getCount() + " ");
         }
-        System.out.println("\nтест inc окончен");
+        if (count>0) System.out.println();
+        System.out.println("тест inc окончен");
     }
 
     public static void testDec(int count) {
