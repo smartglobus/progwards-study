@@ -20,6 +20,10 @@ public abstract class Animal {
 }
 
 class Cow extends Animal {
+    public Cow(String name) {
+        super(name);
+    }
+
     @Override
     public String kind() { return "корова"; }
     public String say() {
@@ -28,6 +32,10 @@ class Cow extends Animal {
 }
 
 class Hamster extends Animal {
+    public Hamster(String name){
+        super(name);
+    }
+
     @Override
     public String kind() {return "хомяк";}
     public String say() {
@@ -36,6 +44,10 @@ class Hamster extends Animal {
 }
 
 class Duck extends Animal {
+    public Duck(String name) {
+        super(name);
+    }
+
     @Override
     public String kind() { return "утка"; }
     public String say() {
