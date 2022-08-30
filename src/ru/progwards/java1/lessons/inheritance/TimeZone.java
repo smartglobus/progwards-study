@@ -13,14 +13,6 @@ public class TimeZone {
         this.hours = hours;
         this.minutes = minutes;
     }
-
-    public int getMinutes() {
-        return minutes;
-    }
-
-    public int getHours() {
-        return hours;
-    }
 }
 
 
