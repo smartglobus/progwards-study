@@ -43,13 +43,15 @@ class ZonedTime extends Time {
 
         if (this.getTimeZone() == null) {
             seconds1 = this.toSeconds();
+        } else {
+            seconds1 = this.getTimeZone().hours * 3600 + this.getTimeZone().minutes * 60 + this.toSeconds();
         }
-        seconds1 = this.getTimeZone().hours * 3600 + this.getTimeZone().minutes * 60 + this.toSeconds();
 
         if (time.getTimeZone() == null) {
             seconds2 = time.toSeconds();
+        } else {
+            seconds2 = time.getTimeZone().hours * 3600 + time.getTimeZone().minutes * 60 + time.toSeconds();
         }
-        seconds2 = time.getTimeZone().hours * 3600 + time.getTimeZone().minutes * 60 + time.toSeconds();
 
         return Math.abs(seconds1 - seconds2);
     }
