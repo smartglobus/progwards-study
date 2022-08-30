@@ -33,8 +33,7 @@ public class Time {
     }
 
     public int secondsBetween(Time time) {
-        int diff = Math.abs(time.toSeconds() - this.toSeconds());
-        return diff;
+        return Math.abs(time.toSeconds() - this.toSeconds());
     }
 
     public TimeZone getTimeZone() {
