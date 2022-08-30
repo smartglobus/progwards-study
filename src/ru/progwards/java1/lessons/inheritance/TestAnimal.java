@@ -3,7 +3,7 @@ package ru.progwards.java1.lessons.inheritance;
 public class TestAnimal {
 
     public static void printAnimal(Animal animal) {
-        System.out.println(animal.toString() + " - " + animal.say());
+        System.out.println(animal.toString() + " - " + animal.say() + "!");
     }
 
     public static void main(String[] args) {
