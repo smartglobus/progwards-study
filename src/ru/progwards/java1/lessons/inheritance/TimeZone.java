@@ -57,9 +57,9 @@ class ZonedTime extends Time {
             seconds2ByGMT = time.toSeconds();
         } else {
             if (time.getTimeZone().hours < 0) {
-                seconds2ByGMT = time.toSeconds() - time.getTimeZone().hours * 3600 - time.getTimeZone().minutes * 60;
+                seconds2ByGMT = time.toSeconds() - (time.getTimeZone().hours * 3600 - time.getTimeZone().minutes * 60);
             } else {
-                seconds2ByGMT = time.toSeconds() - time.getTimeZone().hours * 3600 + time.getTimeZone().minutes * 60;
+                seconds2ByGMT = time.toSeconds() - (time.getTimeZone().hours * 3600 + time.getTimeZone().minutes * 60);
             }
 
         }
