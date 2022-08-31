@@ -46,9 +46,9 @@ class ZonedTime extends Time {
             seconds1ByGMT = this.toSeconds();
         } else {
             if (this.getTimeZone().hours < 0) {
-                seconds1ByGMT = this.toSeconds() - (this.getTimeZone().hours * 3600 - this.getTimeZone().minutes * 60);
+                seconds1ByGMT = this.toSeconds() - this.getTimeZone().hours * 3600 - this.getTimeZone().minutes * 60;
             } else {
-                seconds1ByGMT = this.toSeconds() - (this.getTimeZone().hours * 3600 + this.getTimeZone().minutes * 60);
+                seconds1ByGMT = this.toSeconds() - this.getTimeZone().hours * 3600 + this.getTimeZone().minutes * 60;
             }
 
         }
@@ -57,9 +57,9 @@ class ZonedTime extends Time {
             seconds2ByGMT = time.toSeconds();
         } else {
             if (time.getTimeZone().hours < 0) {
-                seconds2ByGMT = time.toSeconds() - (time.getTimeZone().hours * 3600 - time.getTimeZone().minutes * 60);
+                seconds2ByGMT = time.toSeconds() - time.getTimeZone().hours * 3600 - time.getTimeZone().minutes * 60;
             } else {
-                seconds2ByGMT = time.toSeconds() - (time.getTimeZone().hours * 3600 + time.getTimeZone().minutes * 60);
+                seconds2ByGMT = time.toSeconds() - time.getTimeZone().hours * 3600 + time.getTimeZone().minutes * 60;
             }
 
         }
@@ -76,10 +76,13 @@ class ZonedTime extends Time {
 //        ZonedTime gmt = new ZonedTime(15, 30, 0);
 //        ZonedTime gmtPlus4_30 = new ZonedTime(15, 30, 45, teheran);
 //        ZonedTime gmtMinus4 = new ZonedTime(7, 55, 30, toronto);
-        ZonedTime zt1 = new ZonedTime(6, 33, 8, new TimeZone(-1));// 27188 gmt
+        ZonedTime zt1 = new ZonedTime(6, 33, 8, new TimeZone(-1));// 27188
         ZonedTime zt2 = new ZonedTime(4, 11, 2, new TimeZone(2));// 7862 gmt
         Time teaTime = new Time(7, 8, 9);
         System.out.println(zt1.secondsBetween(zt2));
+        ZonedTime zt3 = new ZonedTime(18, 7, 43, new TimeZone(-2,5));// 72763
+        Time t4 = new Time(16, 39, 35);// 59975
+        System.out.println(zt3.secondsBetween(t4));
 //        System.out.println(gmt.secondsBetween(gmtPlus4_30));
 //        System.out.println(gmtMinus4.secondsBetween(gmtPlus4_30));
 //        System.out.println(nullTimeZone.secondsBetween(gmt));
