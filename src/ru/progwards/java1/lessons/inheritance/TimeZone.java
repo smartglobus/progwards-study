@@ -45,14 +45,12 @@ class ZonedTime extends Time {
         if (k1 == null)
             sdvigk1 = 0;
         else
-            sdvigk1 = Math.abs(k1.hours * 60 * 60 + k1.minutes * 60);
+            sdvigk1 = k1.hours * 60 * 60 + k1.minutes * 60;
         if (k2 == null)
             sdvigk2 = 0;
         else
-            sdvigk2 = Math.abs(k2.hours * 60 * 60 + k2.minutes * 60);
-        if(zone.hours < 0)
-            return super.secondsBetween(time) + Math.abs(sdvigk1 + sdvigk2);
-        return super.secondsBetween(time) - Math.abs(sdvigk1 + sdvigk2);
+            sdvigk2 = k2.hours * 60 * 60 + k2.minutes * 60;
+        return Math.abs(super.secondsBetween(time) + sdvigk1 + sdvigk2);
     }
 
     public static void main(String[] args) {
