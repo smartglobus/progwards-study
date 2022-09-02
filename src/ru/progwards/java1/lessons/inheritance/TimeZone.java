@@ -38,55 +38,31 @@ class ZonedTime extends Time {
 
     @Override
     public int secondsBetween(Time time) {
-        int seconds1ByGMT;
-        int seconds2ByGMT;
+        TimeZone k1 = this.getTimeZone();
+        TimeZone k2 = time.getTimeZone();
+        int sdvigk1, sdvigk2;
 
+        if (k1 == null)
+            sdvigk1 = 0;
+        else
+            sdvigk1 = Math.abs(k1.hours * 60 * 60 + k1.minutes * 60);
+        if (k2 == null)
+            sdvigk2 = 0;
+        else
+            sdvigk2 = Math.abs(k2.hours * 60 * 60 + k2.minutes * 60);
 
-        if (this.getTimeZone() == null) {
-            seconds1ByGMT = this.toSeconds();
-        } else {
-            if (this.getTimeZone().hours < 0) {
-                seconds1ByGMT = this.toSeconds() - this.getTimeZone().hours * 3600 - this.getTimeZone().minutes * 60;
-            } else {
-                seconds1ByGMT = this.toSeconds() - this.getTimeZone().hours * 3600 + this.getTimeZone().minutes * 60;
-            }
-
-        }
-
-        if (time.getTimeZone() == null) {
-            seconds2ByGMT = time.toSeconds();
-        } else {
-            if (time.getTimeZone().hours < 0) {
-                seconds2ByGMT = time.toSeconds() - (time.getTimeZone().hours * 3600 - time.getTimeZone().minutes * 60);
-            } else {
-                seconds2ByGMT = time.toSeconds() - (time.getTimeZone().hours * 3600 + time.getTimeZone().minutes * 60);
-            }
-
-        }
-
-        return Math.abs(seconds1ByGMT - seconds2ByGMT);
+        return super.secondsBetween(time) + Math.abs(sdvigk1 - sdvigk2);
     }
 
     public static void main(String[] args) {
-//        TimeZone toronto = new TimeZone(-4);
-//        TimeZone teheran = new TimeZone(4, 30);
-//        TimeZone london = new TimeZone(0);
-//        Time nullTimeZone = new Time(12, 40, 25);
-//        ZonedTime gmtLondon = new ZonedTime(5, 15, 7, london);
-//        ZonedTime gmt = new ZonedTime(15, 30, 0);
-//        ZonedTime gmtPlus4_30 = new ZonedTime(15, 30, 45, teheran);
-//        ZonedTime gmtMinus4 = new ZonedTime(7, 55, 30, toronto);
-        ZonedTime zt1 = new ZonedTime(6, 33, 8, new TimeZone(-1));// 27188
-        ZonedTime zt2 = new ZonedTime(4, 11, 2, new TimeZone(2));// 7862 gmt
-        Time teaTime = new Time(7, 8, 9);
+
+        ZonedTime zt1 = new ZonedTime(6, 33, 8, new TimeZone(-1));
+        ZonedTime zt2 = new ZonedTime(4, 11, 2, new TimeZone(2));
         System.out.println(zt1.secondsBetween(zt2));
-        ZonedTime zt3 = new ZonedTime(18, 7, 43, new TimeZone(-2,5));// 72763
-        Time t4 = new Time(16, 39, 35);// 59975
+        ZonedTime zt3 = new ZonedTime(18, 7, 43, new TimeZone(-2,5));
+        Time t4 = new Time(16, 39, 35);
         System.out.println(zt3.secondsBetween(t4));
-//        System.out.println(gmt.secondsBetween(gmtPlus4_30));
-//        System.out.println(gmtMinus4.secondsBetween(gmtPlus4_30));
-//        System.out.println(nullTimeZone.secondsBetween(gmt));
-//        System.out.println(gmtLondon.secondsBetween(gmtPlus4_30));
+
     }
 }
 
