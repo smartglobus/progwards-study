@@ -50,7 +50,7 @@ class ZonedTime extends Time {
             sdvigk2 = 0;
         else
             sdvigk2 = k2.hours * 60 * 60 + k2.minutes * 60;
-        return super.secondsBetween(time) + Math.abs(sdvigk1 - sdvigk2);
+        return Math.abs(super.secondsBetween(time) - sdvigk1 + sdvigk2);
     }
 
     public static void main(String[] args) {
