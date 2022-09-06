@@ -63,6 +63,12 @@ public abstract class Animal {
         if (getFoodKind().equals(FoodKind.CORN)) return calculateFoodWeight() * 15;
         return 0;
     }
+
+    public static void main(String[] args) {
+        System.out.println("Тест для Animal, Cow, Hamster, Duck");
+
+
+    }
 }
 
 class Cow extends Animal {
@@ -140,4 +146,6 @@ class Duck extends Animal {
     }
 
 }
+
+
 
