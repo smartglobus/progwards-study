@@ -41,14 +41,13 @@ class ZonedTime extends Time {
         int seconds1ByGMT;
         int seconds2ByGMT;
 
-
-        if (this.getTimeZone() == null) {
-            seconds1ByGMT = this.toSeconds();
+        if (getTimeZone() == null) {
+            seconds1ByGMT = toSeconds();
         } else {
-            if (this.getTimeZone().hours < 0) {
-                seconds1ByGMT = this.toSeconds() - this.getTimeZone().hours * 3600 + this.getTimeZone().minutes * 60;
+            if (getTimeZone().hours < 0) {
+                seconds1ByGMT = toSeconds() - getTimeZone().hours * 3600 + getTimeZone().minutes * 60;
             } else {
-                seconds1ByGMT = this.toSeconds() - this.getTimeZone().hours * 3600 - this.getTimeZone().minutes * 60;
+                seconds1ByGMT = toSeconds() - getTimeZone().hours * 3600 - getTimeZone().minutes * 60;
             }
         }
 
@@ -72,6 +71,7 @@ class ZonedTime extends Time {
         ZonedTime zt3 = new ZonedTime(18, 10, 43, new TimeZone(-2, 5));
         Time t4 = new Time(18, 40, 44);
         System.out.println(zt3.secondsBetween(t4));
+        
 
     }
 }
