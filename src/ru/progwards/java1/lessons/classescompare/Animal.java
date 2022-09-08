@@ -28,9 +28,6 @@ public abstract class Animal {
     }
 
     int compareTo(Animal animal) {
-//        if (getWeight()>animal.getWeight()){return 1;}
-//        if (getWeight()<animal.getWeight()){return -1;}
-//        return 0;
         return Double.compare(getWeight(), animal.getWeight());
     }
 
@@ -66,7 +63,21 @@ public abstract class Animal {
 
     public static void main(String[] args) {
         System.out.println("Тест для Animal, Cow, Hamster, Duck");
-
+        Animal muha = new Cow("Муха");
+        Animal maha = new Cow("Маха");
+        System.out.println(muha.equals(maha));//diff. names
+        maha.name = "Муха";
+        muha.setWeight(251.6);
+        System.out.println(muha.equals(maha));//diff. weight
+        maha.setWeight(muha.getWeight());
+        System.out.println(muha.equals(maha));//all equals
+        Animal gaga = new Duck("Муха");
+        gaga.setWeight(maha.getWeight());
+        System.out.println(gaga.equals(maha));//diff. kind
+        System.out.print(muha.name + " weights " + muha.getWeight() + "kg and");
+        System.out.println(" eats " + muha.getFoodKind() + ", food coeff =" + Double.toString(muha.getFoodCoeff()));
+        System.out.println(muha.name + " eats " + muha.calculateFoodWeight() + "kg per day");
+        System.out.println("this costs her owner " + muha.calculateFoodPrice() + " bucks per day");
 
     }
 }
