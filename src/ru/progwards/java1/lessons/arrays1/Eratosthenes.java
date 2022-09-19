@@ -2,7 +2,7 @@ package ru.progwards.java1.lessons.arrays1;
 
 public class Eratosthenes {
     private boolean[] sieve;
-
+// Нахождение простых чисел по методу Эратосфена Киренского
     public Eratosthenes(int N) {
         this.sieve = new boolean[N];
         for (int i = 0; i < sieve.length; i++) {
