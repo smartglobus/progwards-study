@@ -29,12 +29,10 @@ public class Eratosthenes {
     public static void main(String[] args) {
         Eratosthenes test100 = new Eratosthenes(100);
         for (int count = 0; count < test100.getSieve().length; count++) {
-
             System.out.print(count + "  ");
-
             System.out.println(test100.getSieve()[count]);
         }
-        System.out.println("\n" + test100.isSimple(13));
+        System.out.println("\n" + test100.isSimple(1));
     }
 
     public boolean[] getSieve() {
