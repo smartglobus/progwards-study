@@ -6,19 +6,19 @@ public class DIntArray {
     private int[] dIntArray;
 
     DIntArray() {
-
+        dIntArray = new int[]{};
     }
 
     public void add(int num) {
-        int[] newArrayAdd = new int[dIntArray.length+1];
-        newArrayAdd = Arrays.copyOf(dIntArray, newArrayAdd.length);
-        newArrayAdd[newArrayAdd.length - 1] = num;
-        dIntArray = Arrays.copyOf(newArrayAdd, newArrayAdd.length);
+
+        int[] newArray = Arrays.copyOf(dIntArray, dIntArray.length + 1);
+        newArray[newArray.length - 1] = num;
+        dIntArray = Arrays.copyOf(newArray, newArray.length);
     }
 
     public void atInsert(int pos, int num) {
-        int[] newArray;
-        newArray = Arrays.copyOf(dIntArray, dIntArray.length + 1);
+
+        int[] newArray = Arrays.copyOf(dIntArray, dIntArray.length + 1);
         for (int i = newArray.length - 1; i > pos; i--) {
             newArray[i] = newArray[i - 1];
         }
@@ -40,7 +40,7 @@ public class DIntArray {
 
     public static void main(String[] args) {
         DIntArray testArray = new DIntArray();
-        int[] a = {1,3,5,7,9};
+        int[] a = {1, 3, 5, 7, 9};
         testArray.setdIntArray(a);
         testArray.add(5);
         System.out.println(Arrays.toString(testArray.getdIntArray()));
