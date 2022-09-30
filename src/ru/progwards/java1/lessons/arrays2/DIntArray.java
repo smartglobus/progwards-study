@@ -40,14 +40,18 @@ public class DIntArray {
 
     public static void main(String[] args) {
         DIntArray testArray = new DIntArray();
-        int[] a = {1, 3, 5, 7, 9};
-        testArray.setdIntArray(a);
+        //int[] a = {1, 3, 5, 7, 9};
+       // testArray.setdIntArray(a);
         testArray.add(5);
+        testArray.add(6);
+        testArray.add(7);
+        testArray.add(58);
         System.out.println(Arrays.toString(testArray.getdIntArray()));
         testArray.atInsert(3, 100);
         System.out.println(Arrays.toString(testArray.getdIntArray()));
         testArray.atDelete(2);
         System.out.println(Arrays.toString(testArray.getdIntArray()));
+        System.out.println(testArray.at(2));
     }
 
     public void setdIntArray(int[] dIntArray) {
