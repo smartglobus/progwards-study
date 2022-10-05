@@ -3,7 +3,7 @@ package ru.progwards.java1.lessons.interfaces2;
 import java.util.Arrays;
 import java.util.Objects;
 
-public abstract class Animal implements IColor, Comparable<Animal>, Home {
+public abstract class Animal implements IColor, Comparable<Animal>, Home, ToString {
     String name;
     double weight;
 
@@ -75,6 +75,11 @@ public abstract class Animal implements IColor, Comparable<Animal>, Home {
         if (getFoodKind().equals(FoodKind.HAY)) return calculateFoodWeight() * 2;
         if (getFoodKind().equals(FoodKind.CORN)) return calculateFoodWeight() * 15;
         return 0;
+    }
+
+    @Override
+    public String getString() {
+        return toString();
     }
 
 }
@@ -250,10 +255,32 @@ class CompareHome {
         Home hamster = new Hamster("hrum");
         Home hawk = new Hawk();
         sameHome(cow, duck);
-        sameHome(cow,hamster);
-        sameHome(cow,hawk);
-        sameHome(duck,hamster);
-        sameHome(duck,hawk);
-        sameHome(hamster,hawk);
+        sameHome(cow, hamster);
+        sameHome(cow, hawk);
+        sameHome(duck, hamster);
+        sameHome(duck, hawk);
+        sameHome(hamster, hawk);
+    }
+}
+
+class TestString {
+
+    public static void print(ToString any) {
+        System.out.println(any.getString());
+    }
+
+    public static void main(String[] args) {
+        Animal pestruha = new Cow("Пеструшка", 350.0);
+        print(pestruha);
+        Animal dasha = new Duck("Даша", 3.0);
+        print(dasha);
+        Animal polykarp = new Hamster("Поликарп", 0.32);
+        print(polykarp);
+        Time time = new Time(1, 12, 55);
+        print(time);
+        ComplexNum complexNum = new ComplexNum(22, 5);
+        print(complexNum);
+
+
     }
 }
