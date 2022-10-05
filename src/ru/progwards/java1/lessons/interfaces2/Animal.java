@@ -3,7 +3,7 @@ package ru.progwards.java1.lessons.interfaces2;
 import java.util.Arrays;
 import java.util.Objects;
 
-public abstract class Animal implements IColor, Comparable<Animal>, Home, ToString {
+public abstract class Animal implements IColor, Comparable<Animal>, Home, ToString, CompareWeight {
     String name;
     double weight;
 
@@ -32,6 +32,7 @@ public abstract class Animal implements IColor, Comparable<Animal>, Home, ToStri
     }
 
 
+    @Override
     public double getWeight() {
         return weight;
     }
@@ -82,6 +83,16 @@ public abstract class Animal implements IColor, Comparable<Animal>, Home, ToStri
         return toString();
     }
 
+    @Override
+    public CompareResult compareWeight(CompareWeight smthHasWeight) {
+        if (getWeight() < smthHasWeight.getWeight()) {
+            return CompareResult.LESS;
+        }
+        if (getWeight() == smthHasWeight.getWeight()) {
+            return CompareResult.EQUAL;
+        }
+        return CompareResult.GREATER;
+    }
 }
 
 class TestCompare {
@@ -282,5 +293,79 @@ class TestString {
         print(complexNum);
 
 
+    }
+}
+
+class Car implements CompareWeight {
+    double weight;
+
+    Car(double weight) {
+        this.weight = weight;
+    }
+
+    @Override
+    public double getWeight() {
+        return weight;
+    }
+
+    @Override
+    public CompareResult compareWeight(CompareWeight smthHasWeight) {
+        if (getWeight() < smthHasWeight.getWeight()) {
+            return CompareResult.LESS;
+        }
+        if (getWeight() == smthHasWeight.getWeight()) {
+            return CompareResult.EQUAL;
+        }
+        return CompareResult.GREATER;
+    }
+
+    public String toString() {
+        return "Это автомобиль грузоподъемностью " + weight;
+    }
+
+
+    public static void sort(CompareWeight[] a) {
+
+        for (int i = 0; i < a.length - 1; i++) {
+            for (int j = i + 1; j < a.length; j++) {
+                if (a[i].getWeight() > a[j].getWeight()) {
+
+                    CompareWeight temp = new CompareWeight() {
+                        @Override
+                        public double getWeight() {
+                            return 0;
+                        }
+
+                        @Override
+                        public CompareResult compareWeight(CompareWeight smthHasWeight) {
+                            return null;
+                        }
+                    };
+                    temp = a[i];
+                    a[i] = a[j];
+                    a[j] = temp;
+
+
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Car ford = new Car(1450);
+        Car honda = new Car(350);
+        Animal pestruha = new Cow("Пеструшка", 350.0);
+        Animal dasha = new Duck("Даша", 3.0);
+        Animal polykarp = new Hamster("Поликарп", 0.32);
+        Animal ryzhaya = new Cow("Рыжая", 250.0);
+        Animal masha = new Duck("Маша", 3.5);
+        Animal akakiy = new Hamster("Акакий", 0.25);
+
+        CompareWeight[] wht = {ford,honda,pestruha,dasha,polykarp,ryzhaya,masha,akakiy};
+        sort(wht);
+        System.out.println(Arrays.toString(wht));
+        System.out.println(ford.compareWeight(honda));
+        System.out.println(ryzhaya.compareWeight(pestruha));
+        System.out.println(pestruha.compareWeight(honda));
     }
 }
