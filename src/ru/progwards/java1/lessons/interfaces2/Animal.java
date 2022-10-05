@@ -1,10 +1,9 @@
-package ru.progwards.java1.lessons.interfaces1;
-
+package ru.progwards.java1.lessons.interfaces2;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public abstract class Animal implements IColor, Comparable<Animal> {
+public abstract class Animal implements IColor, Comparable<Animal>, Home {
     String name;
     double weight;
 
@@ -78,14 +77,11 @@ public abstract class Animal implements IColor, Comparable<Animal> {
         return 0;
     }
 
-
 }
 
 class TestCompare {
 
-
     public static void main(String[] args) {
-
 
         Animal pestruha = new Cow("Пеструшка", 350.0);
         Animal ryzhaya = new Cow("Рыжая", 250.0);
@@ -97,7 +93,6 @@ class TestCompare {
         Animal[] animals = {pestruha, ryzhaya, dasha, masha, akakiy, polykarp};
         Arrays.sort(animals);
         System.out.println(Arrays.toString(animals));
-
     }
 }
 
@@ -128,6 +123,11 @@ class Cow extends Animal implements IColor {
     @Override
     public double getFoodCoeff() {
         return 0.05;
+    }
+
+    @Override
+    public String getHome() {
+        return "ферма";
     }
 
     @Override
@@ -166,6 +166,11 @@ class Hamster extends Animal implements IColor {
     }
 
     @Override
+    public String getHome() {
+        return "поле";
+    }
+
+    @Override
     public Color getColor() {
         return Color.BEIGE;
     }
@@ -200,10 +205,16 @@ class Duck extends Animal implements IColor {
     }
 
     @Override
+    public String getHome() {
+        return "ферма";
+    }
+
+    @Override
     public Color getColor() {
         return Color.GRAY;
     }
 }
+
 
 class Flower implements IColor {
 
@@ -214,4 +225,35 @@ class Flower implements IColor {
 }
 
 
+class Hawk implements Home {
 
+    @Override
+    public String getHome() {
+        return "поле";
+    }
+}
+
+class CompareHome {
+
+    public static boolean sameHome(Home h1, Home h2) {
+        boolean res = h1.getHome().equals(h2.getHome());
+        String xxx1 = h1.getClass().getSimpleName();
+        String xxx2 = h2.getClass().getSimpleName();
+        System.out.println("Результат сравнения " + xxx1 + " и " + xxx2 + " равен " + res);
+
+        return res;
+    }
+
+    public static void main(String[] args) {
+        Home cow = new Cow("mu");
+        Home duck = new Duck("krya");
+        Home hamster = new Hamster("hrum");
+        Home hawk = new Hawk();
+        sameHome(cow, duck);
+        sameHome(cow,hamster);
+        sameHome(cow,hawk);
+        sameHome(duck,hamster);
+        sameHome(duck,hawk);
+        sameHome(hamster,hawk);
+    }
+}
