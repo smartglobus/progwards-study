@@ -21,8 +21,6 @@ public class ArraySort {
                     temp = a[i];
                     a[i] = a[j];
                     a[j] = temp;
-
-
                 }
             }
         }

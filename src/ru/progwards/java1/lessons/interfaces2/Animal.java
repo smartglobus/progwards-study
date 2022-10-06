@@ -149,7 +149,6 @@ class Cow extends Animal implements IColor {
     @Override
     public Color getColor() {
         return Color.RED;
-
     }
 }
 
@@ -231,7 +230,6 @@ class Duck extends Animal implements IColor {
     }
 }
 
-
 class Flower implements IColor {
 
     @Override
@@ -239,7 +237,6 @@ class Flower implements IColor {
         return Color.WHITE;
     }
 }
-
 
 class Hawk implements Home {
 
@@ -291,8 +288,6 @@ class TestString {
         print(time);
         ComplexNum complexNum = new ComplexNum(22, 5);
         print(complexNum);
-
-
     }
 }
 
@@ -323,41 +318,6 @@ class Car implements CompareWeight {
         return "Это автомобиль грузоподъемностью " + weight;
     }
 
-//    public class ArraySort {
-//        public void sortCompareWeight(CompareWeight[] a) {
-//            sort(a);
-//        }
-//    }
-//
-//    public static void sort(CompareWeight[] a) {
-//
-//        for (int i = 0; i < a.length - 1; i++) {
-//            for (int j = i + 1; j < a.length; j++) {
-//                if (a[i].getWeight() > a[j].getWeight()) {
-//
-//                    CompareWeight temp = new CompareWeight() {
-//                        @Override
-//                        public double getWeight() {
-//                            return 0;
-//                        }
-//
-//                        @Override
-//                        public CompareResult compareWeight(CompareWeight smthHasWeight) {
-//                            return null;
-//                        }
-//                    };
-//                    temp = a[i];
-//                    a[i] = a[j];
-//                    a[j] = temp;
-//
-//
-//                }
-//            }
-//        }
-//    }
-//
-//}
-
     public static void main(String[] args) {
         Car ford = new Car(1450);
         Car honda = new Car(350);
@@ -368,7 +328,7 @@ class Car implements CompareWeight {
         Animal masha = new Duck("Маша", 3.5);
         Animal akakiy = new Hamster("Акакий", 0.25);
 
-        CompareWeight[] wht = {ford,honda,pestruha,dasha,polykarp,ryzhaya,masha,akakiy};
+        CompareWeight[] wht = {ford, honda, pestruha, dasha, polykarp, ryzhaya, masha, akakiy};
         ArraySort.sort(wht);
         System.out.println(Arrays.toString(wht));
         System.out.println(ford.compareWeight(honda));
