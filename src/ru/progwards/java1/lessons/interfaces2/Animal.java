@@ -323,33 +323,40 @@ class Car implements CompareWeight {
         return "Это автомобиль грузоподъемностью " + weight;
     }
 
-
-    public static void sort(CompareWeight[] a) {
-
-        for (int i = 0; i < a.length - 1; i++) {
-            for (int j = i + 1; j < a.length; j++) {
-                if (a[i].getWeight() > a[j].getWeight()) {
-
-                    CompareWeight temp = new CompareWeight() {
-                        @Override
-                        public double getWeight() {
-                            return 0;
-                        }
-
-                        @Override
-                        public CompareResult compareWeight(CompareWeight smthHasWeight) {
-                            return null;
-                        }
-                    };
-                    temp = a[i];
-                    a[i] = a[j];
-                    a[j] = temp;
-
-
-                }
-            }
-        }
-    }
+//    public class ArraySort {
+//        public void sortCompareWeight(CompareWeight[] a) {
+//            sort(a);
+//        }
+//    }
+//
+//    public static void sort(CompareWeight[] a) {
+//
+//        for (int i = 0; i < a.length - 1; i++) {
+//            for (int j = i + 1; j < a.length; j++) {
+//                if (a[i].getWeight() > a[j].getWeight()) {
+//
+//                    CompareWeight temp = new CompareWeight() {
+//                        @Override
+//                        public double getWeight() {
+//                            return 0;
+//                        }
+//
+//                        @Override
+//                        public CompareResult compareWeight(CompareWeight smthHasWeight) {
+//                            return null;
+//                        }
+//                    };
+//                    temp = a[i];
+//                    a[i] = a[j];
+//                    a[j] = temp;
+//
+//
+//                }
+//            }
+//        }
+//    }
+//
+//}
 
     public static void main(String[] args) {
         Car ford = new Car(1450);
@@ -362,7 +369,7 @@ class Car implements CompareWeight {
         Animal akakiy = new Hamster("Акакий", 0.25);
 
         CompareWeight[] wht = {ford,honda,pestruha,dasha,polykarp,ryzhaya,masha,akakiy};
-        sort(wht);
+        ArraySort.sort(wht);
         System.out.println(Arrays.toString(wht));
         System.out.println(ford.compareWeight(honda));
         System.out.println(ryzhaya.compareWeight(pestruha));
