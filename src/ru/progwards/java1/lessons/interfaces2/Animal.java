@@ -281,11 +281,11 @@ class TestString {
     }
 
     public static void main(String[] args) {
-        Animal pestruha = new Cow("Пеструшка", 350.0);
+        Animal pestruha = new Cow("Пеструшка");
         print(pestruha);
-        Animal dasha = new Duck("Даша", 3.0);
+        Animal dasha = new Duck("Даша");
         print(dasha);
-        Animal polykarp = new Hamster("Поликарп", 0.32);
+        Animal polykarp = new Hamster("Поликарп");
         print(polykarp);
         Time time = new Time(1, 12, 55);
         print(time);
