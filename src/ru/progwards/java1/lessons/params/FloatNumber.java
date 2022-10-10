@@ -12,51 +12,74 @@ public class FloatNumber {
     }
 
     FloatNumber(String num) {
-        double dNum = Double.valueOf(num);
-        if (dNum >= 0) {
+
+        char[] numToArray = num.toCharArray();
+//        for (char dig: numToArray
+//             ) {
+//            System.out.println(dig);
+//        }
+
+        // блок выделения знака
+        if (numToArray[0] != '-') {
             sign = true;
         } else {
-            //меняем знак, значение sing остаётся false по умолчанию
-            dNum = 0 - dNum;
+            sign = false;
         }
 
-        this.exp = 0;
-        // блок для чисел >= 1
-        if (dNum >= 1) {
-            double extractMnt = dNum;
-// если dNum больше Long.MAX_VALUE , удаляем младшие разряды,
-// деля на 10 и корректируя exp, пока мантисса не заполнит по длине ячейку типа long
-                while (Math.floor(extractMnt) > Long.MAX_VALUE) {
-                    extractMnt /= 10;
-                    exp++;
-                }
-// если dNum меньше Long.MAX_VALUE, умножать на 10, корректируя exp, пока мантисса не заполнит по длине ячейку типа long
-            while (extractMnt < Long.MAX_VALUE/10){
-                extractMnt *= 10;
+
+        int firstNumber = 0;
+        if (numToArray[0] == '-' || numToArray[0] == '+') {
+            firstNumber = 1;
+        }
+// суммирование членов массива, пока не закончатся значимые цифры или не переполнится мантисса
+        long extrMnt = (long) Character.digit(numToArray[firstNumber], 10);
+
+        for (int i = firstNumber; i < numToArray.length - 2; i++) {
+// если extrMnt >= Long.MAX_VALUE перестать заполнять мантиссу и перейти к окончательному вычислению степени
+            if (extrMnt >= Long.MAX_VALUE / 10) {
+                break;
+            }
+
+            // если i-й символ точка, меняем его местами с символом i+1 и уменьшаем exp
+            if (numToArray[i + 1] == '.' && numToArray[i + 1] != 'e' && numToArray[i + 1] != 'E') {
+                char temp = numToArray[i + 1];
+                numToArray[i + 1] = numToArray[i + 2];
+                numToArray[i + 2] = temp;
                 exp--;
             }
 
-            this.mantissa = (long) extractMnt;
-        }
-        // блок для чисел от 0 до 1
-        if (dNum < 1) {
-            double extractMnt = dNum;
+            if (numToArray[i+1] == 'e' || numToArray[i+1] == 'E') {
+                // переход в блок с циклом, который суммирует в число все цифры, начиная с i+1 , и прибавляет результат к exp
+                exp++;
+                break;
 
-            // умножать на 10, пока мантисса не заполнит по длине ячейку типа long
-            do {
-                extractMnt *= 10;
-                exp--;
             }
-            while ((long)extractMnt <= Long.MAX_VALUE/10);
-            this.mantissa = (long) extractMnt;
+            // увеличиваем текущее значение мантиссы с учётом разрядности
+            extrMnt = extrMnt * 10 + Character.digit(numToArray[i + 1], 10);
+            mantissa = extrMnt;
         }
+
+
+        for (int j = 0; j < numToArray.length; j++) {
+            //ищем e или E, .....
+            if (numToArray[j] == '.' && numToArray[j] < numToArray.length) {
+                j++;
+            }
+            if (numToArray[j] == '-' && numToArray[j] < numToArray.length) {
+
+            }
+
+        }
+
+
     }
 
     public static void main(String[] args) {
-        FloatNumber test = new FloatNumber("0.999999999999999");
+        FloatNumber test = new FloatNumber("0.00007092233720368547E455");
         System.out.println(test);
         System.out.println(Long.MAX_VALUE);
-        System.out.println((long)9223372036854775807.567);
+        System.out.println((Double.MAX_VALUE));
+
     }
 
     @Override
