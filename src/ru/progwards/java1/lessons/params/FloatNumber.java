@@ -14,10 +14,6 @@ public class FloatNumber {
     FloatNumber(String num) {
 
         char[] numToArray = num.toCharArray();
-//        for (char dig: numToArray
-//             ) {
-//            System.out.println(dig);
-//        }
 
         // блок выделения знака
         if (numToArray[0] != '-') {
@@ -27,58 +23,76 @@ public class FloatNumber {
         }
 
 
-        int firstNumber = 0;
-        if (numToArray[0] == '-' || numToArray[0] == '+') {
-            firstNumber = 1;
-        }
-// суммирование членов массива, пока не закончатся значимые цифры или не переполнится мантисса
-        long extrMnt = (long) Character.digit(numToArray[firstNumber], 10);
+        // Нахождение ключевых точек
+        long extrMnt = 0;
+        int findDot = numToArray.length - 1; // первая значимая цифра
+        int findE = numToArray.length - 1; // положение 'E'
+        int lastNum = numToArray.length - 1; // последняя значимая цифра, или последняя цифра перед 'Е', если 'Е' обнаружится
 
-        for (int i = firstNumber; i < numToArray.length - 2; i++) {
+        for (int i = 0; i < numToArray.length; i++) {
+
+            if (numToArray[i] == 'e' || numToArray[i] == 'E') {
+                findE = i;
+                lastNum = i - 1;
+            }
+            if (numToArray[i] == '.') {
+                findDot = i;
+            }
+        }
+
+        // если 'E' найдено, а точка нет
+        if (findDot == numToArray.length - 1) {
+            findDot = lastNum;
+        }
+
+        exp = findDot - lastNum;
+
+        for (int i = 0; i <= lastNum; i++) {
 // если extrMnt >= Long.MAX_VALUE перестать заполнять мантиссу и перейти к окончательному вычислению степени
             if (extrMnt >= Long.MAX_VALUE / 10) {
+//коррекция exp по разнице между findDot и i на момент окончания заполнения мантиссы, c поправкой на возможный знак в начале
+                exp = exp + lastNum - i;
                 break;
             }
-
-            // если i-й символ точка, меняем его местами с символом i+1 и уменьшаем exp
-            if (numToArray[i + 1] == '.' && numToArray[i + 1] != 'e' && numToArray[i + 1] != 'E') {
-                char temp = numToArray[i + 1];
-                numToArray[i + 1] = numToArray[i + 2];
-                numToArray[i + 2] = temp;
-                exp--;
-            }
-
-            if (numToArray[i+1] == 'e' || numToArray[i+1] == 'E') {
-                // переход в блок с циклом, который суммирует в число все цифры, начиная с i+1 , и прибавляет результат к exp
+            // не берёт в расчёт символы, не являющиеся цифрами ('-','+','.', и любые другие)
+            if (!Character.isDigit(numToArray[i])) {
                 exp++;
-                break;
-
+                continue;
             }
-            // увеличиваем текущее значение мантиссы с учётом разрядности
-            extrMnt = extrMnt * 10 + Character.digit(numToArray[i + 1], 10);
-            mantissa = extrMnt;
+            extrMnt = extrMnt * 10 + Character.digit(numToArray[i], 10);
+        }
+        mantissa = extrMnt;
+
+        System.out.println("E = " + findE + ", lastNum = " + lastNum + ", Dot = " + findDot + ", exp = " + exp);
+
+// блок поправки к ехр на основании значения 'E'
+        boolean expSign;
+        if (numToArray[findE + 1] != '-') {
+            expSign = true;
+        } else {
+            expSign = false;
         }
 
-
-        for (int j = 0; j < numToArray.length; j++) {
-            //ищем e или E, .....
-            if (numToArray[j] == '.' && numToArray[j] < numToArray.length) {
-                j++;
+        int addToExp = 0;
+        for (int i = findE + 1; i < numToArray.length; i++) {
+            if (!Character.isDigit(numToArray[i])) {
+                continue;
             }
-            if (numToArray[j] == '-' && numToArray[j] < numToArray.length) {
-
-            }
-
+            addToExp = addToExp * 10 + Character.digit(numToArray[i], 10);
         }
 
-
+        if (expSign) {
+            exp += addToExp;
+        } else {
+            exp -= addToExp;
+        }
     }
 
+
     public static void main(String[] args) {
-        FloatNumber test = new FloatNumber("0.00007092233720368547E455");
+        FloatNumber test = new FloatNumber("123456789876543.2123451E-250");
         System.out.println(test);
-        System.out.println(Long.MAX_VALUE);
-        System.out.println((Double.MAX_VALUE));
+
 
     }
 
