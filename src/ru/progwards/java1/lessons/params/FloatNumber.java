@@ -67,8 +67,6 @@ public class FloatNumber {
         }
         mantissa = extrMnt;
 
-        System.out.println("E = " + findE + ", lastNum = " + lastNum + ", Dot = " + findDot + ", exp = " + exp);
-
 // блок поправки к ехр на основании значения 'E'
         boolean expSign = true;
         int addToExp = 0;
@@ -81,13 +79,13 @@ public class FloatNumber {
                 expSign = false;
             }
 
-        for (int i = findE+1; i < numToArray.length; i++) {
-            if (!Character.isDigit(numToArray[i])) {
-                continue;
+            for (int i = findE + 1; i < numToArray.length; i++) {
+                if (!Character.isDigit(numToArray[i])) {
+                    continue;
+                }
+                addToExp = addToExp * 10 + Character.digit(numToArray[i], 10);
             }
-            addToExp = addToExp * 10 + Character.digit(numToArray[i], 10);
         }
-    }
         if (expSign) {
             exp += addToExp;
         } else {
@@ -117,11 +115,7 @@ public class FloatNumber {
                 dosensTimesExpCorr *= 10;
             }
         }
-
         mantissaWithoutFirstDigit = mantissa - mantissaFirstDigit * dosensTimesExpCorr;
-        System.out.println("mantissaFirstDigit = " + mantissaFirstDigit + ", expCorrToStd = " + expCorrToStd + ", dosensTimesExpCorr = " + dosensTimesExpCorr);
-        System.out.println("mantissa = " + mantissa);
-        System.out.println("mantissaWithoutFirstDigit = " + mantissaWithoutFirstDigit + " corr = " + expCorrToStd);
 
 // первая цифра плюс знак
         if (!sign) {
@@ -132,7 +126,6 @@ public class FloatNumber {
         if (exp + expCorrToStd != 0) {
             return mantissaFirstDigit + "." + mantissaWithoutFirstDigit + "E" + (exp + expCorrToStd);
         }
-
         return mantissaFirstDigit + "." + mantissaWithoutFirstDigit;
     }
 }
