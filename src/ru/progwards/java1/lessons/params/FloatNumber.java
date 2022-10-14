@@ -93,11 +93,6 @@ public class FloatNumber {
         }
     }
 
-    public static void main(String[] args) {
-        FloatNumber test = new FloatNumber(".103456789876543234567898765");
-        System.out.println(test);
-    }
-
     @Override
     public String toString() {
         long mantissaFirstDigit = mantissa;
@@ -128,4 +123,33 @@ public class FloatNumber {
         }
         return mantissaFirstDigit + "." + mantissaWithoutFirstDigit;
     }
+
+    double toDouble(){
+        double res = (double) mantissa;
+        if (!sign){
+            res *= -1;
+        }
+        if (exp>=0){
+            for (int i = 0; i < exp; i++){
+                res *= 10;
+            }
+
+        }
+        if (exp<0){
+            for (int i = 0; i < - exp; i++){
+                res /= 10;
+            }
+
+        }
+        return res;
+    }
+
+    public static void main(String[] args) {
+        FloatNumber test = new FloatNumber("-.103456789876543234567898765");
+        System.out.println(test);
+        FloatNumber threeParam = new FloatNumber(false, 12345,-2);
+        System.out.println(threeParam.toDouble());
+    }
+
+
 }
