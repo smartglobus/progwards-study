@@ -28,7 +28,7 @@ public class FloatNumber {
         int findE = numToArray.length - 1; // положение 'E'
         int lastNum = numToArray.length - 1; // последняя значимая цифра, или последняя цифра перед 'Е', если 'Е' обнаружится
         boolean isE = false; // проверка наличия 'E'
-        int dotCount = 0;
+        int dotCount = 0; // учёт точки
 
         for (int i = 0; i < numToArray.length; i++) {
 
@@ -95,22 +95,20 @@ public class FloatNumber {
 
     @Override
     public String toString() {
+
         long mantissaFirstDigit = mantissa;
-        long mantissaWithoutFirstDigit = 0;
+        char[] mantissaArray = Long.toString(mantissa).toCharArray();
+        char[] mantissaWithoutFirstDigitArray = new char[mantissaArray.length - 1];
+        for (int i = 0; i < mantissaWithoutFirstDigitArray.length; i++) {
+            mantissaWithoutFirstDigitArray[i] = mantissaArray[i + 1];
+        }
+
         int expCorrToStd = 0;
 
         while (mantissaFirstDigit >= 10) {
             mantissaFirstDigit /= 10;
             expCorrToStd++;
         }
-        long dosensTimesExpCorr = 0;
-        if (mantissa >= 10) {
-            dosensTimesExpCorr = 1;
-            for (int i = 0; i < expCorrToStd; i++) {
-                dosensTimesExpCorr *= 10;
-            }
-        }
-        mantissaWithoutFirstDigit = mantissa - mantissaFirstDigit * dosensTimesExpCorr;
 
 // первая цифра плюс знак
         if (!sign) {
@@ -119,37 +117,44 @@ public class FloatNumber {
 
 // если 'E' отлична от нуля
         if (exp + expCorrToStd != 0) {
-            return mantissaFirstDigit + "." + mantissaWithoutFirstDigit + "E" + (exp + expCorrToStd);
+            return mantissaFirstDigit + "." + charArrayToString(mantissaWithoutFirstDigitArray) + "E" + (exp + expCorrToStd);
         }
-        return mantissaFirstDigit + "." + mantissaWithoutFirstDigit;
+        return mantissaFirstDigit + "." + charArrayToString(mantissaWithoutFirstDigitArray);
     }
 
-    double toDouble(){
-        double res = (double) mantissa;
-        if (!sign){
-            res *= -1;
-        }
-        if (exp>=0){
-            for (int i = 0; i < exp; i++){
-                res *= 10;
-            }
-
-        }
-        if (exp<0){
-            for (int i = 0; i < - exp; i++){
-                res /= 10;
-            }
-
+    String charArrayToString(char[] a) {
+        String res = Character.toString(a[0]);
+        for (int i = 1; i < a.length; i++) {
+            res += Character.toString(a[i]);
         }
         return res;
     }
 
-    public static void main(String[] args) {
-        FloatNumber test = new FloatNumber("-.103456789876543234567898765");
-        System.out.println(test);
-        FloatNumber threeParam = new FloatNumber(false, 12345,-2);
-        System.out.println(threeParam.toDouble());
+    double toDouble() {
+        double res = (double) mantissa;
+        if (!sign) {
+            res *= -1;
+        }
+        if (exp >= 0) {
+            for (int i = 0; i < exp; i++) {
+                res *= 10;
+            }
+        }
+        if (exp < 0) {
+            for (int i = 0; i < -exp; i++) {
+                res /= 10;
+            }
+        }
+        return res;
     }
 
 
+
+
+    public static void main(String[] args) {
+        FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
+        System.out.println(test);
+        FloatNumber threeParam = new FloatNumber(false, 12345, -2);
+        System.out.println(threeParam.toDouble());
+    }
 }
