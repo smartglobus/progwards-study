@@ -165,32 +165,31 @@ public class FloatNumber {
         }
 
         double extractMnt = num;
-
+        exp = 0;
         if (extractMnt > Long.MAX_VALUE) {
             while (true) {
                 extractMnt /= 10;
                 exp++;
                 if (extractMnt < Long.MAX_VALUE) {
-                    if (extractMnt - (long) extractMnt > 0.1) {
-                        extractMnt *= 10;
-                        exp--;
-                        break;
-                    }
+                    break;
                 }
             }
+        }else {
+            while (extractMnt < Long.MAX_VALUE/10){
+                extractMnt *= 10;
+                exp--;
+            }
         }
-
         mantissa = (long) extractMnt;
     }
 
 
     public static void main(String[] args) {
-//        FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
-//        System.out.println(test);
-        FloatNumber threeParam = new FloatNumber(false,1234567898,18);
+        FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
+        System.out.println(test);
+        FloatNumber threeParam = new FloatNumber(false,1234567898677788456L,18);
         System.out.println(threeParam.toDouble());
+        threeParam.fromDouble(-3456.87e5);
         System.out.println("sing "+threeParam.sign + ", mantissa "+threeParam.mantissa+", exp " + threeParam.exp);
-
-        threeParam.fromDouble(threeParam.toDouble());
     }
 }
