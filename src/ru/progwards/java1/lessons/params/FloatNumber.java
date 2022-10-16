@@ -180,16 +180,16 @@ public class FloatNumber {
             }
         }
 
-        this.mantissa = (long) extractMnt;
+        mantissa = (long) extractMnt;
     }
 
 
     public static void main(String[] args) {
 //        FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
 //        System.out.println(test);
-        FloatNumber threeParam = new FloatNumber(false, 7, 0);
+        FloatNumber threeParam = new FloatNumber(false,1234567898,18);
         System.out.println(threeParam.toDouble());
-        System.out.println(threeParam);
+        System.out.println("sing "+threeParam.sign + ", mantissa "+threeParam.mantissa+", exp " + threeParam.exp);
 
         threeParam.fromDouble(threeParam.toDouble());
     }
