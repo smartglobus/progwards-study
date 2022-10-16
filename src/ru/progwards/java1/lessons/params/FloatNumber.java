@@ -1,5 +1,7 @@
 package ru.progwards.java1.lessons.params;
 
+import java.util.Arrays;
+
 public class FloatNumber {
     boolean sign;
     long mantissa;
@@ -98,11 +100,16 @@ public class FloatNumber {
 
         long mantissaFirstDigit = mantissa;
         char[] mantissaArray = Long.toString(mantissa).toCharArray();
-        char[] mantissaWithoutFirstDigitArray = new char[mantissaArray.length - 1];
+        char[] mantissaWithoutFirstDigitArray = null;
+        if (mantissaArray.length <=1){
+            mantissaWithoutFirstDigitArray = new char[]{0};
+            mantissaWithoutFirstDigitArray[0]='0';
+        }else {
+        mantissaWithoutFirstDigitArray = new char[mantissaArray.length - 1];
         for (int i = 0; i < mantissaWithoutFirstDigitArray.length; i++) {
             mantissaWithoutFirstDigitArray[i] = mantissaArray[i + 1];
         }
-
+    }
         int expCorrToStd = 0;
 
         while (mantissaFirstDigit >= 10) {
@@ -148,13 +155,42 @@ public class FloatNumber {
         return res;
     }
 
+    void fromDouble(double num) {
+        if (num >= 0) {
+            sign = true;
+        } else {
+            //меняем знак
+            num *= -1;
+            sign = false;
+        }
 
+        double extractMnt = num;
+
+        if (extractMnt > Long.MAX_VALUE) {
+            while (true) {
+                extractMnt /= 10;
+                exp++;
+                if (extractMnt < Long.MAX_VALUE) {
+                    if (extractMnt - (long) extractMnt > 0.1) {
+                        extractMnt *= 10;
+                        exp--;
+                        break;
+                    }
+                }
+            }
+        }
+
+        this.mantissa = (long) extractMnt;
+    }
 
 
     public static void main(String[] args) {
-        FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
-        System.out.println(test);
-        FloatNumber threeParam = new FloatNumber(false, 12345, -2);
+//        FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
+//        System.out.println(test);
+        FloatNumber threeParam = new FloatNumber(false, 7, 0);
         System.out.println(threeParam.toDouble());
+        System.out.println(threeParam);
+
+        threeParam.fromDouble(threeParam.toDouble());
     }
 }
