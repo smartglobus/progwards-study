@@ -101,15 +101,15 @@ public class FloatNumber {
         long mantissaFirstDigit = mantissa;
         char[] mantissaArray = Long.toString(mantissa).toCharArray();
         char[] mantissaWithoutFirstDigitArray = null;
-        if (mantissaArray.length <=1){
+        if (mantissaArray.length <= 1) {
             mantissaWithoutFirstDigitArray = new char[]{0};
-            mantissaWithoutFirstDigitArray[0]='0';
-        }else {
-        mantissaWithoutFirstDigitArray = new char[mantissaArray.length - 1];
-        for (int i = 0; i < mantissaWithoutFirstDigitArray.length; i++) {
-            mantissaWithoutFirstDigitArray[i] = mantissaArray[i + 1];
+            mantissaWithoutFirstDigitArray[0] = '0';
+        } else {
+            mantissaWithoutFirstDigitArray = new char[mantissaArray.length - 1];
+            for (int i = 0; i < mantissaWithoutFirstDigitArray.length; i++) {
+                mantissaWithoutFirstDigitArray[i] = mantissaArray[i + 1];
+            }
         }
-    }
         int expCorrToStd = 0;
 
         while (mantissaFirstDigit >= 10) {
@@ -174,8 +174,8 @@ public class FloatNumber {
                     break;
                 }
             }
-        }else {
-            while (extractMnt < Long.MAX_VALUE/10){
+        } else {
+            while (extractMnt < Long.MAX_VALUE / 10) {
                 extractMnt *= 10;
                 exp--;
             }
@@ -183,13 +183,45 @@ public class FloatNumber {
         mantissa = (long) extractMnt;
     }
 
+    void negative() {
+        sign = !sign;
+    }
+
+    FloatNumber add(FloatNumber num) {
+        FloatNumber addResult = num;
+        if (addResult.sign == sign) {
+            addResult.sign = true;
+        } else {
+            addResult.sign = false;
+        }
+        int thisExp = exp;
+        int numExp = addResult.exp;
+        long thisMantissa = mantissa;
+        long numMantissa = addResult.mantissa;
+        long sumMantissa = 0;
+        addResult.exp = thisExp + numExp;
+//во избежание переполнения мантиссы после сложения, перед сложением делим обе исходных мантиссы на 10, и увеличиваем exp на 1
+        if ((thisMantissa / 10 + numMantissa / 10) >= Long.MAX_VALUE / 10) {
+            sumMantissa = thisMantissa / 10 + numMantissa / 10;
+            exp++;
+        } else {
+            sumMantissa = (addResult.mantissa + num.mantissa);
+        }
+        addResult.mantissa = sumMantissa;
+
+        return addResult;
+    }
 
     public static void main(String[] args) {
         FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
         System.out.println(test);
-        FloatNumber threeParam = new FloatNumber(false,1234567898677788456L,18);
+        FloatNumber threeParam = new FloatNumber(false, 1844674407370955160L, 18);
         System.out.println(threeParam.toDouble());
         threeParam.fromDouble(-3456.87e5);
-        System.out.println("sing "+threeParam.sign + ", mantissa "+threeParam.mantissa+", exp " + threeParam.exp);
+//        System.out.println("sing " + threeParam.sign + ", mantissa " + threeParam.mantissa + ", exp " + threeParam.exp);
+        FloatNumber a = new FloatNumber(true, 44444, 50);
+        FloatNumber b = new FloatNumber(false, 4444444444444444444L, 40);
+        System.out.println(a.add(b));
+
     }
 }
