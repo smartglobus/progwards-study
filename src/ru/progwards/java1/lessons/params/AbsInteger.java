@@ -2,7 +2,6 @@ package ru.progwards.java1.lessons.params;
 
 public abstract class AbsInteger {
 
-
     public AbsInteger() {
     }
 
@@ -77,7 +76,7 @@ class IntInteger extends AbsInteger {
 
     public static void main(String[] args) {
         AbsInteger int1 = new IntInteger(214748364);
-        AbsInteger short1 = new ShortInteger((short) 4567);
+        AbsInteger short1 = new ShortInteger((short)32667);
         AbsInteger byte1 = new ByteInteger((byte)125);
         System.out.println(add(int1,byte1));
         System.out.println(add(short1,byte1));
