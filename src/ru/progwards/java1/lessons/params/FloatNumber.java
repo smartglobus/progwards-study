@@ -7,7 +7,7 @@ public class FloatNumber {
     long mantissa;
     int exp;
 
-    FloatNumber(){
+    FloatNumber() {
 
     }
 
@@ -213,14 +213,12 @@ public class FloatNumber {
 
     public static void main(String[] args) {
         FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
-//        System.out.println(test);
         FloatNumber threeParam = new FloatNumber(false, 1844674407370955160L, 18);
-//        System.out.println(threeParam.toDouble());
         threeParam.fromDouble(-3456.87e5);
-//        System.out.println("sing " + threeParam.sign + ", mantissa " + threeParam.mantissa + ", exp " + threeParam.exp);
-        FloatNumber a = new FloatNumber(true, 9223372036854775807L, 10);
-        FloatNumber b = new FloatNumber(true, 92235807L, -20);
+        FloatNumber a = new FloatNumber(false, 125, 0);
+        FloatNumber b = new FloatNumber(true, 25, 0);
         System.out.println(a.add(b));
+        System.out.println(a.sub(b));
         System.out.println(Long.MAX_VALUE);
 
     }
