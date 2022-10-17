@@ -7,6 +7,10 @@ public class FloatNumber {
     long mantissa;
     int exp;
 
+    FloatNumber(){
+
+    }
+
     FloatNumber(boolean sign, long mantissa, int exp) {
         this.sign = sign;
         this.mantissa = mantissa;
@@ -156,6 +160,7 @@ public class FloatNumber {
     }
 
     void fromDouble(double num) {
+
         if (num >= 0) {
             sign = true;
         } else {
@@ -176,6 +181,9 @@ public class FloatNumber {
             }
         } else {
             while (extractMnt < Long.MAX_VALUE / 10) {
+                if (num == 0) {
+                    break;
+                }
                 extractMnt *= 10;
                 exp--;
             }
@@ -188,40 +196,32 @@ public class FloatNumber {
     }
 
     FloatNumber add(FloatNumber num) {
-        FloatNumber addResult = num;
-        if (addResult.sign == sign) {
-            addResult.sign = true;
-        } else {
-            addResult.sign = false;
-        }
-        int thisExp = exp;
-        int numExp = addResult.exp;
-        long thisMantissa = mantissa;
-        long numMantissa = addResult.mantissa;
-        long sumMantissa = 0;
-        addResult.exp = thisExp + numExp;
-//во избежание переполнения мантиссы после сложения, перед сложением делим обе исходных мантиссы на 10, и увеличиваем exp на 1
-        if ((thisMantissa / 10 + numMantissa / 10) >= Long.MAX_VALUE / 10) {
-            sumMantissa = thisMantissa / 10 + numMantissa / 10;
-            exp++;
-        } else {
-            sumMantissa = (addResult.mantissa + num.mantissa);
-        }
-        addResult.mantissa = sumMantissa;
-
+        double addResultDouble = 0;
+        FloatNumber addResult = new FloatNumber();
+        addResultDouble = toDouble() + num.toDouble();
+        addResult.fromDouble(addResultDouble);
         return addResult;
+    }
+
+    FloatNumber sub(FloatNumber num) {
+        double subResultDouble = 0;
+        FloatNumber subResult = new FloatNumber();
+        subResultDouble = toDouble() - num.toDouble();
+        subResult.fromDouble(subResultDouble);
+        return subResult;
     }
 
     public static void main(String[] args) {
         FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
-        System.out.println(test);
+//        System.out.println(test);
         FloatNumber threeParam = new FloatNumber(false, 1844674407370955160L, 18);
-        System.out.println(threeParam.toDouble());
+//        System.out.println(threeParam.toDouble());
         threeParam.fromDouble(-3456.87e5);
 //        System.out.println("sing " + threeParam.sign + ", mantissa " + threeParam.mantissa + ", exp " + threeParam.exp);
-        FloatNumber a = new FloatNumber(true, 44444, 50);
-        FloatNumber b = new FloatNumber(false, 4444444444444444444L, 40);
+        FloatNumber a = new FloatNumber(true, 9223372036854775807L, 10);
+        FloatNumber b = new FloatNumber(true, 92235807L, -20);
         System.out.println(a.add(b));
+        System.out.println(Long.MAX_VALUE);
 
     }
 }
