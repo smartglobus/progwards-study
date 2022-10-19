@@ -129,7 +129,7 @@ public class FloatNumber {
 
 // если 'E' отлична от нуля
         if (exp + expCorrToStd != 0) {
-            return mantissaFirstDigit + "." + charArrayToString(mantissaWithoutFirstDigitArray) + "E" + (expCorrToStd - exp);
+            return mantissaFirstDigit + "." + charArrayToString(mantissaWithoutFirstDigitArray) + "E" + (expCorrToStd + exp);
         }
         return mantissaFirstDigit + "." + charArrayToString(mantissaWithoutFirstDigitArray);
     }
@@ -149,12 +149,12 @@ public class FloatNumber {
         }
         if (exp >= 0) {
             for (int i = 0; i < exp; i++) {
-                res /= 10;
+                res *= 10;
             }
         }
         if (exp < 0) {
             for (int i = 0; i < -exp; i++) {
-                res *= 10;
+                res /= 10;
             }
         }
         return res;
@@ -213,7 +213,8 @@ public class FloatNumber {
     }
 
     public static void main(String[] args) {
-        FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
+        FloatNumber test = new FloatNumber("6.55372E2");
+        System.out.println(test);
         FloatNumber threeParam = new FloatNumber(true, 50144, 3);
         System.out.println(threeParam.toDouble());
 
