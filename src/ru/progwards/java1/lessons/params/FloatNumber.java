@@ -97,7 +97,7 @@ public class FloatNumber {
         } else {
             exp -= addToExp;
         }
-        exp *=-1;
+//        exp *=-1;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class FloatNumber {
 
 // если 'E' отлична от нуля
         if (exp + expCorrToStd != 0) {
-            return mantissaFirstDigit + "." + charArrayToString(mantissaWithoutFirstDigitArray) + "E" + (exp + expCorrToStd);
+            return mantissaFirstDigit + "." + charArrayToString(mantissaWithoutFirstDigitArray) + "E" + (expCorrToStd - exp);
         }
         return mantissaFirstDigit + "." + charArrayToString(mantissaWithoutFirstDigitArray);
     }
@@ -149,12 +149,12 @@ public class FloatNumber {
         }
         if (exp >= 0) {
             for (int i = 0; i < exp; i++) {
-                res *= 10;
+                res /= 10;
             }
         }
         if (exp < 0) {
             for (int i = 0; i < -exp; i++) {
-                res /= 10;
+                res *= 10;
             }
         }
         return res;
@@ -214,8 +214,12 @@ public class FloatNumber {
 
     public static void main(String[] args) {
         FloatNumber test = new FloatNumber("-1010999.999999999999999977777777777773e2");
-        FloatNumber threeParam = new FloatNumber(false, 1844674407370955160L, 18);
-        threeParam.fromDouble(-3456.87e5);
+        FloatNumber threeParam = new FloatNumber(true, 50144, 3);
+        System.out.println(threeParam.toDouble());
+
+
+        threeParam.fromDouble(607.534);
+        System.out.println(threeParam);
         FloatNumber a = new FloatNumber(false, 125, 0);
         FloatNumber b = new FloatNumber(true, 25, 0);
         System.out.println(a.add(b));

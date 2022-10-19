@@ -26,6 +26,7 @@ public class ArrayInteger {
         for (int i = digits.length - 1; i >= 0; i--) {
             forString = forString * 10 + digits[i];
         }
+
         return Long.toString(forString);
     }
 
@@ -78,7 +79,7 @@ public class ArrayInteger {
     }
 
     public static void main(String[] args) {
-        ArrayInteger test1 = new ArrayInteger(2147483647);
+        ArrayInteger test1 = new ArrayInteger(8);
         ArrayInteger test2 = new ArrayInteger(2147483647);
 
         System.out.println(test1);
