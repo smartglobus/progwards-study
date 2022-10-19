@@ -97,6 +97,7 @@ public class FloatNumber {
         } else {
             exp -= addToExp;
         }
+        exp *=-1;
     }
 
     @Override
