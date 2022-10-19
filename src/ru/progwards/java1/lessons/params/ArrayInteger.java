@@ -6,16 +6,15 @@ public class ArrayInteger {
     byte[] digits;
 
     ArrayInteger(int n) {
-        fromString(Integer.toString(n));
+        digits = new byte[n];
     }
 
 
     void fromString(String value) {
 
-        char[] nToCharArray = value.toCharArray();
-        digits = new byte[nToCharArray.length];
-        for (int i = digits.length - 1, j = 0; i >= 0; i--, j++) {
-            digits[i] = (byte) Character.digit(nToCharArray[j], 10);
+        char[] valueToCharArray = value.toCharArray();
+        for (int i = digits.length - 1, j = 0; i >= 0 && j < valueToCharArray.length; i--, j++) {
+            digits[i] = (byte) Character.digit(valueToCharArray[j], 10);
         }
     }
 
@@ -79,9 +78,10 @@ public class ArrayInteger {
     }
 
     public static void main(String[] args) {
-        ArrayInteger test1 = new ArrayInteger(8);
-        ArrayInteger test2 = new ArrayInteger(2147483647);
+        ArrayInteger test1 = new ArrayInteger(11);
 
+        ArrayInteger test2 = new ArrayInteger(2);
+        test1.fromString("123456789");
         System.out.println(test1);
         System.out.println(test1.add(test2));
         System.out.println(test1);
