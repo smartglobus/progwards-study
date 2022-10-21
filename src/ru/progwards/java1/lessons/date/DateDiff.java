@@ -34,6 +34,19 @@ public class DateDiff {
                 + " дней, " + minutesDiff + " минут, " + secondsDiff + " секунд, " + millisDiff + " миллисекунд");
     }
 
+    public static void timeToBirthday(Date now, Date birthday) {
+        now.setTime(System.currentTimeMillis());
+        Calendar nowTime = Calendar.getInstance();
+        Calendar birthdayTime = Calendar.getInstance();
+// проверить, меньше ли месяц дня рождения текущего месяца. Если да (ДР уже прошёл), то YEAR++ в birthdayTime
+// если месяц совпадает, проверить, меньше ли день ДР, чем текущий день месяца (ДР уже прошёл), то YEAR++ в birthdayTime
+if (nowTime.get(Calendar.MONTH) >= birthdayTime.get(Calendar.MONTH) && nowTime.get(Calendar.DAY_OF_MONTH) > birthdayTime.get(Calendar.DAY_OF_MONTH)){
+//    YEAR++ в birthdayTime
+}
+        birthdayTime.set(Calendar.YEAR ,nowTime.get(Calendar.YEAR));
+
+    }
+
     public static void main(String[] args) {
         Date d1 = new Date(10800000);
         Date d2 = new Date(31554000000L);
