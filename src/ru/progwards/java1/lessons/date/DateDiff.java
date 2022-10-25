@@ -1,43 +1,65 @@
 package ru.progwards.java1.lessons.date;
 
+import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class DateDiff {
     public static void timeBetween(Date date1, Date date2) {
 
-        Calendar zeroTime = Calendar.getInstance();
-        Calendar timeBtwCal = Calendar.getInstance();
+//        Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//        timeBtwCal.clear();
+//
+//        timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
+//
+//        int yearDiff = timeBtwCal.get(Calendar.YEAR) - 1970;
 
-        zeroTime.clear();
+        System.out.println("Между date1 и date2 " + yearsBetween(date1, date2) + " лет, " + timeBetweenFromMonthToMillis(date1, date2));
+    }
+
+
+    public static String timeBetweenFromMonthToMillis(Date date1, Date date2) {
+        Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         timeBtwCal.clear();
 
         timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
 
-        int yearDiff = Math.abs(timeBtwCal.get(Calendar.YEAR) - zeroTime.get(Calendar.YEAR));
-        int monthDiff = Math.abs(timeBtwCal.get(Calendar.MONTH) - zeroTime.get(Calendar.MONTH));
-        int daysDiff = Math.abs(timeBtwCal.get(Calendar.DAY_OF_MONTH) - zeroTime.get(Calendar.DAY_OF_MONTH));
-        int hoursDiff = Math.abs(timeBtwCal.get(Calendar.HOUR) - zeroTime.get(Calendar.HOUR));
-        int minutesDiff = Math.abs(timeBtwCal.get(Calendar.MINUTE) - zeroTime.get(Calendar.MINUTE)) + hoursDiff * 60;
-        int secondsDiff = Math.abs(timeBtwCal.get(Calendar.SECOND) - zeroTime.get(Calendar.SECOND));
-        int millisDiff = Math.abs(timeBtwCal.get(Calendar.MILLISECOND) - zeroTime.get(Calendar.MILLISECOND));
 
-        System.out.println("Между date1 и date2 " + yearDiff + " лет, " + monthDiff + " месяцев, " + daysDiff
-                + " дней, " + minutesDiff + " минут, " + secondsDiff + " секунд, " + millisDiff + " миллисекунд");
+        int monthDiff = timeBtwCal.get(Calendar.MONTH);
+        int daysDiff = timeBtwCal.get(Calendar.DAY_OF_MONTH) - 1;
+        int hoursDiff = timeBtwCal.get(Calendar.HOUR_OF_DAY);
+        int minutesDiff = timeBtwCal.get(Calendar.MINUTE);
+        int secondsDiff = timeBtwCal.get(Calendar.SECOND);
+        int millisDiff = timeBtwCal.get(Calendar.MILLISECOND);
+
+
+        return monthDiff + " месяцев, " + daysDiff + " дней, " + hoursDiff + " часов, " + minutesDiff + " минут, " +
+                secondsDiff + " секунд, " + millisDiff + " миллисекунд";
     }
 
+    public static int yearsBetween(Date date1, Date date2) {
+        Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        timeBtwCal.clear();
+
+        timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
+
+        return timeBtwCal.get(Calendar.YEAR) - 1970;
+    }
+
+
     public static void timeToBirthday(Date now, Date birthday) {
-        Calendar zeroTime = Calendar.getInstance();
+//        Calendar zeroTime = Calendar.getInstance();
         Calendar nowTime = Calendar.getInstance();
         Calendar birthdayTime = Calendar.getInstance();
 
-        zeroTime.clear();
+//        zeroTime.clear();
         nowTime.clear();
         birthdayTime.clear();
 
         nowTime.setTime(now);
         birthdayTime.setTime(birthday);
-//        birthdayTime.setTime(birthday);
+
         birthdayTime.set(Calendar.YEAR, nowTime.get(Calendar.YEAR));
         birthdayTime.set(Calendar.MONTH, birthdayTime.get(Calendar.MONTH));
         birthdayTime.set(Calendar.DAY_OF_MONTH, birthdayTime.get(Calendar.DAY_OF_MONTH));
@@ -48,29 +70,47 @@ public class DateDiff {
             birthdayTime.set(Calendar.YEAR, nowTime.get(Calendar.YEAR) + 1);
         }
 
-        Date timeToNextBD = new Date(birthdayTime.getTimeInMillis() - nowTime.getTimeInMillis());
-        Calendar timeToNextBdCal = Calendar.getInstance();
-        timeToNextBdCal.setTimeInMillis(timeToNextBD.getTime());
+//        Date timeToNextBD = new Date(birthdayTime.getTimeInMillis() - nowTime.getTimeInMillis());
+        Date nextBirthdayTimeDate = new Date(birthdayTime.getTimeInMillis());
 
-        int monthDiff = Math.abs(timeToNextBdCal.get(Calendar.MONTH) - zeroTime.get(Calendar.MONTH));
-        int daysDiff = Math.abs(timeToNextBdCal.get(Calendar.DAY_OF_MONTH) - zeroTime.get(Calendar.DAY_OF_MONTH));
-        int hoursDiff = Math.abs(timeToNextBdCal.get(Calendar.HOUR) - zeroTime.get(Calendar.HOUR));
-        int minutesDiff = Math.abs(timeToNextBdCal.get(Calendar.MINUTE) - zeroTime.get(Calendar.MINUTE)) + hoursDiff * 60;
-        int secondsDiff = Math.abs(timeToNextBdCal.get(Calendar.SECOND) - zeroTime.get(Calendar.SECOND));
-        int millisDiff = Math.abs(timeToNextBdCal.get(Calendar.MILLISECOND) - zeroTime.get(Calendar.MILLISECOND));
+//        Calendar timeToNextBdCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//        timeToNextBdCal.setTimeInMillis(timeToNextBD.getTime());
+//
+//        int monthDiff = Math.abs(timeToNextBdCal.get(Calendar.MONTH) - zeroTime.get(Calendar.MONTH));
+//        int daysDiff = Math.abs(timeToNextBdCal.get(Calendar.DAY_OF_MONTH) - zeroTime.get(Calendar.DAY_OF_MONTH));
+//        int hoursDiff = Math.abs(timeToNextBdCal.get(Calendar.HOUR) - zeroTime.get(Calendar.HOUR));
+//        int minutesDiff = Math.abs(timeToNextBdCal.get(Calendar.MINUTE) - zeroTime.get(Calendar.MINUTE)) + hoursDiff * 60;
+//        int secondsDiff = Math.abs(timeToNextBdCal.get(Calendar.SECOND) - zeroTime.get(Calendar.SECOND));
+//        int millisDiff = Math.abs(timeToNextBdCal.get(Calendar.MILLISECOND) - zeroTime.get(Calendar.MILLISECOND));
 
-        System.out.println("До дня рождения " + monthDiff + " месяцев, " + daysDiff
-                + " дней, " + minutesDiff + " минут, " + secondsDiff + " секунд, " + millisDiff + " миллисекунд");
+        System.out.println("До дня рождения " + timeBetweenFromMonthToMillis(now, nextBirthdayTimeDate));
     }
 
+
+    public static void averageTime(Date[] events) {
+//        long sumOfDiffs = 0;
+        long averageDiff = 0;
+//        for (int i = 0; i < events.length - 1; i++) {
+//    sumOfDiffs += Math.abs(events[i].getTime() + events[i+1].getTime());
+//        }
+        averageDiff = (events[events.length - 1].getTime() - events[0].getTime()) / (events.length - 1);
+        Date firstEvent = new Date(events[0].getTime());
+        Date nextEventAverage = new Date(events[0].getTime() + averageDiff);
+
+        System.out.println("Среднее время между событиями " + yearsBetween(firstEvent, nextEventAverage) + " лет, " +
+                timeBetweenFromMonthToMillis(firstEvent, nextEventAverage));
+    }
+
+
     public static void main(String[] args) {
-        Date d1 = new Date(10800000);
-        Date d2 = new Date(31554000000L);
+        Date d1 = new Date(0);
+        Date d2 = new Date(97200000L);
+
         timeBetween(d1, d2);
-        Date currentTime = new Date(System.currentTimeMillis());
-        Calendar myBirthday = Calendar.getInstance();
+        Date currentTime = new Date(7200600);
+        Calendar myBirthday = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         myBirthday.clear();
-        myBirthday.set(1973, 8, 14);
+        myBirthday.set(1973, 11, 2);
         Date myBirthdayDate = new Date(myBirthday.getTimeInMillis());
         timeToBirthday(currentTime, myBirthdayDate);
     }
