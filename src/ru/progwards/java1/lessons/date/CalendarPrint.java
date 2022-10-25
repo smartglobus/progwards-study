@@ -9,8 +9,9 @@ public class CalendarPrint {
         Locale locale = new Locale("ru", "RU");
         prntMnth.set(Calendar.MONTH, month);
         prntMnth.set(Calendar.YEAR, year);
-        System.out.println(prntMnth.get(Calendar.YEAR));
-        System.out.println(prntMnth.getDisplayName(Calendar.MONTH, Calendar.LONG,locale));
+        String[] monthNames = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+        System.out.print(prntMnth.get(Calendar.YEAR) + " ");
+        System.out.println(monthNames[prntMnth.get(Calendar.MONTH)]);
     }
 
     public static void main(String[] args) {
