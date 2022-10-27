@@ -8,12 +8,12 @@ public class CalendarPrint {
     public static void printMonth(int month, int year) {
         Calendar prntMnth = Calendar.getInstance();
         prntMnth.clear();
-        prntMnth.set(year, month, 1, 0, 0, 0);
+        prntMnth.set(year, month-1, 1, 0, 0, 0);
 
         String[] monthNames = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
 
         System.out.print(prntMnth.get(Calendar.YEAR) + " ");
-        System.out.println(monthNames[prntMnth.get(Calendar.MONTH)-1]);
+        System.out.println(monthNames[prntMnth.get(Calendar.MONTH)]);
         System.out.println("ПН ВТ СР ЧТ ПТ СБ ВС");
 
         int[] calendarTableInt = new int[42];
@@ -60,6 +60,6 @@ public class CalendarPrint {
     }
 
     public static void main(String[] args) {
-        printMonth(1, 2022);
+        printMonth(11, 1981);
     }
 }

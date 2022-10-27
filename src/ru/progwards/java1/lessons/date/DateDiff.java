@@ -62,7 +62,7 @@ public class DateDiff {
 
         birthdayTime.set(Calendar.YEAR, nowTime.get(Calendar.YEAR));
         birthdayTime.set(Calendar.MONTH, birthdayTime.get(Calendar.MONTH));
-        birthdayTime.set(Calendar.DAY_OF_MONTH, birthdayTime.get(Calendar.DAY_OF_MONTH)-1);
+        birthdayTime.set(Calendar.DAY_OF_MONTH, birthdayTime.get(Calendar.DAY_OF_MONTH));
 // проверить, меньше ли месяц дня рождения текущего месяца. Если да (месяц ДР уже прошёл), и,
 // если месяц совпадает, проверить, меньше ли день ДР, чем текущий день месяца (ДР уже прошёл), то YEAR++ в birthdayTime
         if (nowTime.get(Calendar.MONTH) >= birthdayTime.get(Calendar.MONTH) && nowTime.get(Calendar.DAY_OF_MONTH) > birthdayTime.get(Calendar.DAY_OF_MONTH)) {
