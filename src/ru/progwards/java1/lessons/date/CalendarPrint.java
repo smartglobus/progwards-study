@@ -8,12 +8,10 @@ public class CalendarPrint {
     public static void printMonth(int month, int year) {
         Calendar prntMnth = Calendar.getInstance();
         prntMnth.clear();
-
-
         prntMnth.set(year, month, 1, 0, 0, 0);
-//        System.out.println(prntMnth);
-//        System.out.println(prntMnth.get(Calendar.DAY_OF_WEEK));
+
         String[] monthNames = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+
         System.out.print(prntMnth.get(Calendar.YEAR) + " ");
         System.out.println(monthNames[prntMnth.get(Calendar.MONTH)]);
         System.out.println("ПН ВТ СР ЧТ ПТ СБ ВС");
@@ -28,13 +26,20 @@ public class CalendarPrint {
         }
 
         for (int i = startPoint, j = 1; i < calendarTableInt.length; i++, j++) {
+// остановка заполнения массива при обнаружении первого числа следующего месяца
             if (i > 27 && prntMnth.get(Calendar.DAY_OF_MONTH) == 1) {
                 break;
             }
-//            System.out.println("prntMnth.get(Calendar.DAY_OF_MONTH)" + prntMnth.get(Calendar.DAY_OF_MONTH));
-//            System.out.println("prntMnth.get(Calendar.DAY_OF_WEEK)" + prntMnth.get(Calendar.DAY_OF_WEEK));
+
             calendarTableInt[i] = prntMnth.get(Calendar.DAY_OF_MONTH);
             prntMnth.set(Calendar.DAY_OF_MONTH, j + 1);
+        }
+//        Сокращение массива для избавления от пустых строк внизу распечатки календаря, если они обнаружились
+        if (calendarTableInt[27]==0){ // Февраль с первым днём в понедельник
+            Arrays.copyOf(calendarTableInt,28);
+        }
+        if (calendarTableInt[34]==0){
+            Arrays.copyOf(calendarTableInt,34);
         }
 
         for (int i = 0;  i < calendarTableInt.length; i++){
@@ -48,19 +53,13 @@ public class CalendarPrint {
             if (calendarTableInt[i]>=10){
                 System.out.print(calendarTableInt[i]+" ");
             }
-            if ((i+1)%7==0){
+            if (i < calendarTableInt.length-1 && (i+1)%7==0){
                 System.out.println();
             }
         }
-
-
-
-
-
-
     }
 
     public static void main(String[] args) {
-        printMonth(11, 2022);
+        printMonth(1, 2022);
     }
 }
