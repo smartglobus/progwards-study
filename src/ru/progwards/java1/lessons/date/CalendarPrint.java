@@ -13,7 +13,7 @@ public class CalendarPrint {
         String[] monthNames = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
 
         System.out.print(prntMnth.get(Calendar.YEAR) + " ");
-        System.out.println(monthNames[prntMnth.get(Calendar.MONTH)]);
+        System.out.println(monthNames[prntMnth.get(Calendar.MONTH)-1]);
         System.out.println("ПН ВТ СР ЧТ ПТ СБ ВС");
 
         int[] calendarTableInt = new int[42];
