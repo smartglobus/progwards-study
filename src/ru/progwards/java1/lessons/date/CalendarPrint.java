@@ -2,7 +2,6 @@ package ru.progwards.java1.lessons.date;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class CalendarPrint {
     public static void printMonth(int month, int year) {
