@@ -30,15 +30,15 @@ public class BubbleTest {
         long outCycleEndTime = 0;
 
         for (int i = 0; i < a.length; i++) {
-            if (i==90000){startSortIteration = System.currentTimeMillis();}
+            if (i==90000){startSortIteration = System.currentTimeMillis();}// сделать для каждой декады
 
 //            outCycleStartTime = System.currentTimeMillis();
-            for (int j = 0; j < a.length - i - 1; j++) {// 1/70 ms ?????
+            for (int j = 0; j < a.length - i - 1; j++) {// 1/70 ms ????? - вывести сумму всех обращений
 //              startSortIteration = System.currentTimeMillis();
                 int n = j + 1; // 12 - 24 ms за 100000-2 циклов
 
-                if (a[j].compareTo(a[n]) < 0) {// 12-20 ms за 100000-2 циклов
-
+                if (a[j].compareTo(a[n]) < 0) {// 12-20 ms за 100000-2 циклов - вывестисумму всех обращений
+// замерить суммарное время перестановки членов местами, со счётчиком таких перестановок
                     Integer tmp = a[j];
                     a[j] = a[n];
                     a[j] = tmp;
