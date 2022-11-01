@@ -22,42 +22,99 @@ public class BubbleTest {
 
     public static void bubbleSort(Integer[] a) {
         long startTime = System.currentTimeMillis();
-        long outCycleTime = 0;
+
         long sortTime = 0;
-        long outCycleStartTime = 0;
+        long innerCycleStartTime = 0;
+
         long startSortIteration = 0;
-        long stopSortIteration = 0;
-        long outCycleEndTime = 0;
+        long startSortIteration10 = 0;
+        long startSortIteration30 = 0;
+        long startSortIteration50 = 0;
+        long startSortIteration70 = 0;
+        long startSortIteration90 = 0;
+
+        long innerCycleSumTime = 0;
+        long beforeIf = 0;
+        long startShift = 0;
+
+        long shiftTime = 0;
+        long shiftCount = 0;
+        long ifSumTime = 0;
+
+        System.out.println("Выборочная оценка времени сортировки на разных фазах выполнения (для COUNT=100000):");
 
         for (int i = 0; i < a.length; i++) {
-            if (i==90000){startSortIteration = System.currentTimeMillis();}// сделать для каждой декады
+            if (i == 0) {
+                startSortIteration = System.currentTimeMillis();
+            }
+            if (i == 10000) {
+                startSortIteration10 = System.currentTimeMillis();
+            }
+            if (i == 30000) {
+                startSortIteration30 = System.currentTimeMillis();
+            }
+            if (i == 50000) {
+                startSortIteration50 = System.currentTimeMillis();
+            }
+            if (i == 70000) {
+                startSortIteration70 = System.currentTimeMillis();
+            }
+            if (i == 90000) {
+                startSortIteration90 = System.currentTimeMillis();
+            }// сделать для каждой декады
 
-//            outCycleStartTime = System.currentTimeMillis();
-            for (int j = 0; j < a.length - i - 1; j++) {// 1/70 ms ????? - вывести сумму всех обращений
-//              startSortIteration = System.currentTimeMillis();
-                int n = j + 1; // 12 - 24 ms за 100000-2 циклов
+            innerCycleStartTime = System.currentTimeMillis();
+            for (int j = 0; j < a.length - i - 1; j++) {
 
-                if (a[j].compareTo(a[n]) < 0) {// 12-20 ms за 100000-2 циклов - вывестисумму всех обращений
+
+                int n = j + 1;
+                beforeIf = System.currentTimeMillis();
+                if (a[j].compareTo(a[n]) < 0) {
 // замерить суммарное время перестановки членов местами, со счётчиком таких перестановок
+                    startShift = System.currentTimeMillis();
                     Integer tmp = a[j];
                     a[j] = a[n];
                     a[j] = tmp;
+
+                    shiftTime += System.currentTimeMillis() - startShift;
+                    ifSumTime += System.currentTimeMillis() - beforeIf;
+                    shiftCount++;
                 }
 
-
             }
-            if (i==100000-1){System.out.println(System.currentTimeMillis() - startSortIteration);}
+            innerCycleSumTime += System.currentTimeMillis() - innerCycleStartTime;
 
+            if (i == 10000) {
+                System.out.println("Время сортировки итераций     0-10000 " + (System.currentTimeMillis() - startSortIteration));
+            }
+            if (i == 20000) {
+                System.out.println("Время сортировки итераций 10000-20000 " + (System.currentTimeMillis() - startSortIteration10));
+            }
+            if (i == 40000) {
+                System.out.println("Время сортировки итераций 30000-40000 " + (System.currentTimeMillis() - startSortIteration30));
+            }
+            if (i == 60000) {
+                System.out.println("Время сортировки итераций 50000-60000 " + (System.currentTimeMillis() - startSortIteration50));
+            }
+            if (i == 80000) {
+                System.out.println("Время сортировки итераций 70000-80000 " + (System.currentTimeMillis() - startSortIteration70));
+            }
+            if (i == 100000 - 1) {
+                System.out.println("Время сортировки итераций 90000-100000 " + (System.currentTimeMillis() - startSortIteration90));
+            }
         }
-        long endTime = System.currentTimeMillis();
-//        System.out.println("outCycleStartTime  " + outCycleStartTime);
-//        System.out.println("startSortIteration  " + startSortIteration);
-        System.out.println("Вся сортировка  " + (endTime - startTime));
-//        System.out.println("Внешний цикл в сумме = " + outCycleTime);
-//        System.out.println("Собственно сортировка = " + sortTime);
+        sortTime = System.currentTimeMillis() - startTime;
+
+
+        System.out.println("Вся сортировка " + sortTime + "мс,    100%");
+        System.out.println("Время работы внутреннего цикла " + innerCycleSumTime + "мс   " + innerCycleSumTime * 100 / sortTime + "%");
+        System.out.println("Суммарное время выполнения блока перестановки  " + ifSumTime + "мс   " + ifSumTime * 100 / sortTime + "%");
+        System.out.println("Суммарное время собственно операций перестановки членов местами  " + shiftTime + "мс   " + shiftTime * 100 / sortTime + "%");
+        System.out.println("Количество произведённых перестановок  " + shiftCount + " раз");
+
     }
 
-    // bubbleSort целиком 57228 (57512, 57801, мс
+
     public static void main(String[] args) {
         Integer[] a = new Integer[COUNT];
         fill(a);
