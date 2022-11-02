@@ -85,31 +85,31 @@ public class BubbleTest {
             innerCycleSumTime += System.currentTimeMillis() - innerCycleStartTime;
 
             if (i == 10000) {
-                System.out.println("Время сортировки итераций     0-10000 " + (System.currentTimeMillis() - startSortIteration));
+                System.out.println("Время сортировки итераций     0-10000   " + (System.currentTimeMillis() - startSortIteration)+ " мс   ");
             }
             if (i == 20000) {
-                System.out.println("Время сортировки итераций 10000-20000 " + (System.currentTimeMillis() - startSortIteration10));
+                System.out.println("Время сортировки итераций 10000-20000   " + (System.currentTimeMillis() - startSortIteration10)+  " мс   ");
             }
             if (i == 40000) {
-                System.out.println("Время сортировки итераций 30000-40000 " + (System.currentTimeMillis() - startSortIteration30));
+                System.out.println("Время сортировки итераций 30000-40000   " + (System.currentTimeMillis() - startSortIteration30)+ " мс   ");
             }
             if (i == 60000) {
-                System.out.println("Время сортировки итераций 50000-60000 " + (System.currentTimeMillis() - startSortIteration50));
+                System.out.println("Время сортировки итераций 50000-60000   " + (System.currentTimeMillis() - startSortIteration50)+ " мс   ");
             }
             if (i == 80000) {
-                System.out.println("Время сортировки итераций 70000-80000 " + (System.currentTimeMillis() - startSortIteration70));
+                System.out.println("Время сортировки итераций 70000-80000   " + (System.currentTimeMillis() - startSortIteration70)+ " мс   ");
             }
             if (i == 100000 - 1) {
-                System.out.println("Время сортировки итераций 90000-100000 " + (System.currentTimeMillis() - startSortIteration90));
+                System.out.println("Время сортировки итераций 90000-100000   " + (System.currentTimeMillis() - startSortIteration90)+ " мс   ");
             }
         }
         sortTime = System.currentTimeMillis() - startTime;
 
 
-        System.out.println("Вся сортировка                                         " + sortTime + "мс,  100%");
-        System.out.println("Время работы внутреннего цикла                         " + innerCycleSumTime + "мс   " + innerCycleSumTime * 100 / sortTime + "%");
-        System.out.println("Суммарное время выполнения блока перестановки           " + ifSumTime + "мс   " + ifSumTime * 100 / sortTime + "%");
-        System.out.println("Суммарное время непосредственно операций перестановки   " + shiftTime + "мс   " + shiftTime * 100 / sortTime + "%");
+        System.out.println("Вся сортировка                                                            " + sortTime + " мс   100%");
+        System.out.println("Время работы внутреннего цикла (исх. строки  23-30)                       " + innerCycleSumTime + " мс   " + innerCycleSumTime * 100 / sortTime + "%");
+        System.out.println("Суммарное время выполнения блока перестановки (исх. строки  25-29)         " + ifSumTime + " мс   " + ifSumTime * 100 / sortTime + "%");
+        System.out.println("Суммарное время непосредственно операций перестановки (исх. строки  26-28) " + shiftTime + " мс   " + shiftTime * 100 / sortTime + "%");
         System.out.println("Количество произведённых перестановок  " + shiftCount + " раз");
 
     }
