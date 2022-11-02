@@ -13,19 +13,9 @@ public class DateDiff {
 
     public static String timeBetweenFromMonthToMillis(Date date1, Date date2) {
 
-        // предположение, что нумерация месяцев на входе робота начинается с 1 ( январь = 1, февраль = 2, и т.д.)
-//        Calendar d1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-//        Calendar d2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-//
-//        d1.setTimeInMillis(date1.getTime());
-//        d2.setTimeInMillis(date2.getTime());
-//        d1.set(Calendar.MONTH, d1.get(Calendar.MONTH) - 1);
-//        d2.set(Calendar.MONTH, d2.get(Calendar.MONTH) - 1);
-
         Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         timeBtwCal.clear();
 
-//        timeBtwCal.setTimeInMillis(Math.abs(d1.getTimeInMillis() - d2.getTimeInMillis()));
         timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
 
 
@@ -42,19 +32,10 @@ public class DateDiff {
     }
 
     public static int yearsBetween(Date date1, Date date2) {
-        // предположение, что нумерация месяцев на входе робота начинается с 1 ( январь = 1, февраль = 2, и т.д.)
-//        Calendar d1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-//        Calendar d2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-//
-//        d1.setTimeInMillis(date1.getTime());
-//        d2.setTimeInMillis(date2.getTime());
-//        d1.set(Calendar.MONTH, d1.get(Calendar.MONTH) - 1);
-//        d2.set(Calendar.MONTH, d2.get(Calendar.MONTH) - 1);
 
         Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         timeBtwCal.clear();
 
-//        timeBtwCal.setTimeInMillis(Math.abs(d1.getTimeInMillis() - d2.getTimeInMillis()));
         timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
 
         return timeBtwCal.get(Calendar.YEAR) - 1970;
@@ -63,8 +44,8 @@ public class DateDiff {
 
     public static void timeToBirthday(Date now, Date birthday) {
 
-        Calendar nowTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        Calendar birthdayTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar nowTime = Calendar.getInstance();
+        Calendar birthdayTime = Calendar.getInstance();
 
         nowTime.clear();
         birthdayTime.clear();
@@ -105,18 +86,18 @@ public class DateDiff {
         Date d2 = new Date(2592000000L * 8);
         timeBetween(d1, d2);
 
-        Calendar birthDayExpectancy = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar birthDayExpectancy = Calendar.getInstance();
         birthDayExpectancy.clear();
-        birthDayExpectancy.set(2022, Calendar.NOVEMBER, 2, 11, 46, 11);
+        birthDayExpectancy.set(2022, Calendar.NOVEMBER, 2, 13, 38, 15);
         Date currentTime = new Date(birthDayExpectancy.getTimeInMillis());
 
-        Calendar myBirthday = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar myBirthday = Calendar.getInstance();
         myBirthday.clear();
-        myBirthday.set(2007, Calendar.JUNE, 9, 15, 35, 16);
+        myBirthday.set(1983, Calendar.JULY, 12, 10, 33, 10);
         Date myBirthdayDate = new Date(myBirthday.getTimeInMillis());
 
-        Calendar test1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        Calendar test2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar test1 = Calendar.getInstance();
+        Calendar test2 = Calendar.getInstance();
         test1.set(2049, Calendar.JUNE, 17, 12, 1, 7);
         test2.set(2087, Calendar.OCTOBER, 12, 18, 34, 17);
         Date testDate1 = new Date(test1.getTimeInMillis());
@@ -127,11 +108,11 @@ public class DateDiff {
         timeToBirthday(currentTime, myBirthdayDate);
     }
 }
-/*
-Метод, вызванный с параметром, соответствующим 09 июня 2007 года, 15:35:16.499, дата и время выполнения 02 ноября 2022 года, 11:46:11.095 вывел на консоль:
-До дня рождения 7 месяцев, 7 дней, 2 часов, 49 минут, 5 секунд, 404 миллисекунд
+/*Метод, вызванный с параметром, соответствующим 12 июля 1983 года, 10:33:10.654, дата и время выполнения 02 ноября 2022 года, 13:38:15.303 вывел на консоль:
+        До дня рождения 8 месяцев, 9 дней, 19 часов, 54 минут, 55 секунд, 351 миллисекунд
 
-Ожидалось:
-До дня рождения 7 месяцев, 7 дней, 3 часов, 49 минут, 5 секунд, 404 миллисекунд
+        Ожидалось:
+        До дня рождения 8 месяцев, 9 дней, 20 часов, 54 минут, 55 секунд, 351 миллисекунд
+
 
  */
