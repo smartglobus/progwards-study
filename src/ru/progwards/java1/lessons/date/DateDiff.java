@@ -41,8 +41,8 @@ public class DateDiff {
 
     public static void timeToBirthday(Date now, Date birthday) {
 
-        Calendar nowTime = Calendar.getInstance();
-        Calendar birthdayTime = Calendar.getInstance();
+        Calendar nowTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar birthdayTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
         nowTime.clear();
         birthdayTime.clear();
@@ -51,11 +51,9 @@ public class DateDiff {
         birthdayTime.setTime(birthday);
 
         birthdayTime.set(Calendar.YEAR, nowTime.get(Calendar.YEAR));
-        birthdayTime.set(Calendar.MONTH, birthdayTime.get(Calendar.MONTH));
-        birthdayTime.set(Calendar.DAY_OF_MONTH, birthdayTime.get(Calendar.DAY_OF_MONTH));
-// проверить, меньше ли месяц дня рождения текущего месяца. Если да (месяц ДР уже прошёл), и,
-// если месяц совпадает, проверить, меньше ли день ДР, чем текущий день месяца (ДР уже прошёл), то YEAR++ в birthdayTime
-        if (nowTime.get(Calendar.MONTH) >= birthdayTime.get(Calendar.MONTH) && nowTime.get(Calendar.DAY_OF_MONTH) > birthdayTime.get(Calendar.DAY_OF_MONTH)) {
+
+// если ДР в этом году уже прошёл, то YEAR++ в birthdayTime
+        if (birthdayTime.before(nowTime)) {
 
             birthdayTime.set(Calendar.YEAR, nowTime.get(Calendar.YEAR) + 1);
         }
@@ -87,17 +85,16 @@ public class DateDiff {
 
         Calendar birthDayExpectancy = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         birthDayExpectancy.clear();
-        birthDayExpectancy.set(2022, 9, 27, 8, 44, 10);
-
+        birthDayExpectancy.set(2022, 10, 2, 10, 40, 13);
         Date currentTime = new Date(birthDayExpectancy.getTimeInMillis());
 
         Calendar myBirthday = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         myBirthday.clear();
-        myBirthday.set(1979, 11, 7, 0, 13, 53);
+        myBirthday.set(1997, 7, 13, 5, 8, 22);
         Date myBirthdayDate = new Date(myBirthday.getTimeInMillis());
 
-        Calendar test1 = Calendar.getInstance();
-        Calendar test2 = Calendar.getInstance();
+        Calendar test1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar test2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         test1.set(2049, 5, 17, 12, 1, 7);
         test2.set(2087, 9, 12, 18, 34, 17);
         Date testDate1 = new Date(test1.getTimeInMillis());
@@ -108,3 +105,10 @@ public class DateDiff {
         timeToBirthday(currentTime, myBirthdayDate);
     }
 }
+/*
+Метод, вызванный с параметром, соответствующим 13 августа 1997 года, 05:08:22.681, дата и время выполнения 02 ноября 2022 года, 10:40:13.156 вывел на консоль:
+До дня рождения 2 месяцев, 22 дней, 5 часов, 31 минут, 50 секунд, 475 миллисекунд
+
+Ожидалось:
+До дня рождения 9 месяцев, 10 дней, 18 часов, 28 минут, 9 секунд, 525 миллисекунд
+ */
