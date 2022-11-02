@@ -106,10 +106,10 @@ public class BubbleTest {
         sortTime = System.currentTimeMillis() - startTime;
 
 
-        System.out.println("Вся сортировка " + sortTime + "мс,    100%");
-        System.out.println("Время работы внутреннего цикла " + innerCycleSumTime + "мс   " + innerCycleSumTime * 100 / sortTime + "%");
-        System.out.println("Суммарное время выполнения блока перестановки  " + ifSumTime + "мс   " + ifSumTime * 100 / sortTime + "%");
-        System.out.println("Суммарное время собственно операций перестановки членов местами  " + shiftTime + "мс   " + shiftTime * 100 / sortTime + "%");
+        System.out.println("Вся сортировка                                         " + sortTime + "мс,  100%");
+        System.out.println("Время работы внутреннего цикла                         " + innerCycleSumTime + "мс   " + innerCycleSumTime * 100 / sortTime + "%");
+        System.out.println("Суммарное время выполнения блока перестановки           " + ifSumTime + "мс   " + ifSumTime * 100 / sortTime + "%");
+        System.out.println("Суммарное время непосредственно операций перестановки   " + shiftTime + "мс   " + shiftTime * 100 / sortTime + "%");
         System.out.println("Количество произведённых перестановок  " + shiftCount + " раз");
 
     }
