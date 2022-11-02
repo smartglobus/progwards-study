@@ -14,18 +14,20 @@ public class DateDiff {
     public static String timeBetweenFromMonthToMillis(Date date1, Date date2) {
 
         // предположение, что нумерация месяцев на входе робота начинается с 1 ( январь = 1, февраль = 2, и т.д.)
-        Calendar d1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        Calendar d2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-
-        d1.setTimeInMillis(date1.getTime());
-        d2.setTimeInMillis(date2.getTime());
-        d1.set(Calendar.MONTH, d1.get(Calendar.MONTH) - 1);
-        d2.set(Calendar.MONTH, d2.get(Calendar.MONTH) - 1);
+//        Calendar d1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//        Calendar d2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//
+//        d1.setTimeInMillis(date1.getTime());
+//        d2.setTimeInMillis(date2.getTime());
+//        d1.set(Calendar.MONTH, d1.get(Calendar.MONTH) - 1);
+//        d2.set(Calendar.MONTH, d2.get(Calendar.MONTH) - 1);
 
         Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         timeBtwCal.clear();
 
-        timeBtwCal.setTimeInMillis(Math.abs(d1.getTimeInMillis() - d2.getTimeInMillis()));
+//        timeBtwCal.setTimeInMillis(Math.abs(d1.getTimeInMillis() - d2.getTimeInMillis()));
+        timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
+
 
         int monthDiff = timeBtwCal.get(Calendar.MONTH);
         int daysDiff = timeBtwCal.get(Calendar.DAY_OF_MONTH) - 1;
@@ -41,18 +43,19 @@ public class DateDiff {
 
     public static int yearsBetween(Date date1, Date date2) {
         // предположение, что нумерация месяцев на входе робота начинается с 1 ( январь = 1, февраль = 2, и т.д.)
-        Calendar d1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        Calendar d2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-
-        d1.setTimeInMillis(date1.getTime());
-        d2.setTimeInMillis(date2.getTime());
-        d1.set(Calendar.MONTH, d1.get(Calendar.MONTH) - 1);
-        d2.set(Calendar.MONTH, d2.get(Calendar.MONTH) - 1);
+//        Calendar d1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//        Calendar d2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//
+//        d1.setTimeInMillis(date1.getTime());
+//        d2.setTimeInMillis(date2.getTime());
+//        d1.set(Calendar.MONTH, d1.get(Calendar.MONTH) - 1);
+//        d2.set(Calendar.MONTH, d2.get(Calendar.MONTH) - 1);
 
         Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         timeBtwCal.clear();
 
-        timeBtwCal.setTimeInMillis(Math.abs(d1.getTimeInMillis() - d2.getTimeInMillis()));
+//        timeBtwCal.setTimeInMillis(Math.abs(d1.getTimeInMillis() - d2.getTimeInMillis()));
+        timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
 
         return timeBtwCal.get(Calendar.YEAR) - 1970;
     }
@@ -104,18 +107,18 @@ public class DateDiff {
 
         Calendar birthDayExpectancy = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         birthDayExpectancy.clear();
-        birthDayExpectancy.set(2022, 11, 2, 11, 46, 11);
+        birthDayExpectancy.set(2022, Calendar.NOVEMBER, 2, 11, 46, 11);
         Date currentTime = new Date(birthDayExpectancy.getTimeInMillis());
 
         Calendar myBirthday = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         myBirthday.clear();
-        myBirthday.set(2007, 6, 9, 15, 35, 16);
+        myBirthday.set(2007, Calendar.JUNE, 9, 15, 35, 16);
         Date myBirthdayDate = new Date(myBirthday.getTimeInMillis());
 
         Calendar test1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         Calendar test2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        test1.set(2049, 6, 17, 12, 1, 7);
-        test2.set(2087, 10, 12, 18, 34, 17);
+        test1.set(2049, Calendar.JUNE, 17, 12, 1, 7);
+        test2.set(2087, Calendar.OCTOBER, 12, 18, 34, 17);
         Date testDate1 = new Date(test1.getTimeInMillis());
         Date testDate2 = new Date(test2.getTimeInMillis());
         timeBetween(testDate1, testDate2);
