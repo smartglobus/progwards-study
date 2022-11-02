@@ -12,10 +12,20 @@ public class DateDiff {
 
 
     public static String timeBetweenFromMonthToMillis(Date date1, Date date2) {
+
+        // предположение, что нумерация месяцев на входе робота начинается с 1 ( январь = 1, февраль = 2, и т.д.)
+        Calendar d1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar d2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+
+        d1.setTimeInMillis(date1.getTime());
+        d2.setTimeInMillis(date2.getTime());
+        d1.set(Calendar.MONTH, d1.get(Calendar.MONTH) - 1);
+        d2.set(Calendar.MONTH, d2.get(Calendar.MONTH) - 1);
+
         Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         timeBtwCal.clear();
 
-        timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
+        timeBtwCal.setTimeInMillis(Math.abs(d1.getTimeInMillis() - d2.getTimeInMillis()));
 
         int monthDiff = timeBtwCal.get(Calendar.MONTH);
         int daysDiff = timeBtwCal.get(Calendar.DAY_OF_MONTH) - 1;
@@ -30,10 +40,19 @@ public class DateDiff {
     }
 
     public static int yearsBetween(Date date1, Date date2) {
+        // предположение, что нумерация месяцев на входе робота начинается с 1 ( январь = 1, февраль = 2, и т.д.)
+        Calendar d1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar d2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+
+        d1.setTimeInMillis(date1.getTime());
+        d2.setTimeInMillis(date2.getTime());
+        d1.set(Calendar.MONTH, d1.get(Calendar.MONTH) - 1);
+        d2.set(Calendar.MONTH, d2.get(Calendar.MONTH) - 1);
+
         Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         timeBtwCal.clear();
 
-        timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
+        timeBtwCal.setTimeInMillis(Math.abs(d1.getTimeInMillis() - d2.getTimeInMillis()));
 
         return timeBtwCal.get(Calendar.YEAR) - 1970;
     }
@@ -55,7 +74,7 @@ public class DateDiff {
 // если ДР в этом году уже прошёл, то YEAR++ в birthdayTime
         if (birthdayTime.before(nowTime)) {
 
-            birthdayTime.set(Calendar.YEAR, nowTime.get(Calendar.YEAR) + 1);
+            birthdayTime.add(Calendar.YEAR, 1);
         }
 
         Date nextBirthdayTimeDate = new Date(birthdayTime.getTimeInMillis());
@@ -85,18 +104,18 @@ public class DateDiff {
 
         Calendar birthDayExpectancy = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         birthDayExpectancy.clear();
-        birthDayExpectancy.set(2022, 10, 2, 10, 40, 13);
+        birthDayExpectancy.set(2022, 11, 2, 11, 46, 11);
         Date currentTime = new Date(birthDayExpectancy.getTimeInMillis());
 
         Calendar myBirthday = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         myBirthday.clear();
-        myBirthday.set(1997, 7, 13, 5, 8, 22);
+        myBirthday.set(2007, 6, 9, 15, 35, 16);
         Date myBirthdayDate = new Date(myBirthday.getTimeInMillis());
 
         Calendar test1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         Calendar test2 = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        test1.set(2049, 5, 17, 12, 1, 7);
-        test2.set(2087, 9, 12, 18, 34, 17);
+        test1.set(2049, 6, 17, 12, 1, 7);
+        test2.set(2087, 10, 12, 18, 34, 17);
         Date testDate1 = new Date(test1.getTimeInMillis());
         Date testDate2 = new Date(test2.getTimeInMillis());
         timeBetween(testDate1, testDate2);
@@ -106,9 +125,10 @@ public class DateDiff {
     }
 }
 /*
-Метод, вызванный с параметром, соответствующим 13 августа 1997 года, 05:08:22.681, дата и время выполнения 02 ноября 2022 года, 10:40:13.156 вывел на консоль:
-До дня рождения 2 месяцев, 22 дней, 5 часов, 31 минут, 50 секунд, 475 миллисекунд
+Метод, вызванный с параметром, соответствующим 09 июня 2007 года, 15:35:16.499, дата и время выполнения 02 ноября 2022 года, 11:46:11.095 вывел на консоль:
+До дня рождения 7 месяцев, 7 дней, 2 часов, 49 минут, 5 секунд, 404 миллисекунд
 
 Ожидалось:
-До дня рождения 9 месяцев, 10 дней, 18 часов, 28 минут, 9 секунд, 525 миллисекунд
+До дня рождения 7 месяцев, 7 дней, 3 часов, 49 минут, 5 секунд, 404 миллисекунд
+
  */
