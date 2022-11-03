@@ -12,33 +12,96 @@ public class DateDiff {
 
 
     public static String timeBetweenFromMonthToMillis(Date date1, Date date2) {
-
-        Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        timeBtwCal.clear();
-
-        timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
+        Calendar dFirst = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar dLast = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
 
-        int monthDiff = timeBtwCal.get(Calendar.MONTH);
-        int daysDiff = timeBtwCal.get(Calendar.DAY_OF_MONTH) - 1;
-        int hoursDiff = timeBtwCal.get(Calendar.HOUR_OF_DAY);
-        int minutesDiff = timeBtwCal.get(Calendar.MINUTE);
-        int secondsDiff = timeBtwCal.get(Calendar.SECOND);
-        int millisDiff = timeBtwCal.get(Calendar.MILLISECOND);
+        if (date2.getTime() > date1.getTime()) {
+            dFirst.setTimeInMillis(date1.getTime());
+            dLast.setTimeInMillis(date2.getTime());
+        } else {
+            dFirst.setTimeInMillis(date2.getTime());
+            dLast.setTimeInMillis(date1.getTime());
+        }
+
+        /*
+        Блок поправки к числу дней, которую робот не учитывает, из-за чего в некоторых случаях в ходе вычисления теряются дни.
+        Так происходит, если число в начальной дате больше максимального числа месяца, предшествующего месяцу конечной даты.
+        Например, при вычислении интервала между 30 декабря и 5 марта из-за того, что в феврале меньше 30 дней, результат
+        выглядит как 2 месяца 5 дней, и он никак не меняется при измении начальной даты в диапазоне от 28 до 31 декабря (для високосного года от 29 до 31)
+        Блок поправки, приведённый ниже, эту проблему устраняет, однако с роботом получается расхождение.
+         */
+
+//        Calendar dLastClone = (Calendar)dLast.clone();
+//        int daysCorrection = 0;
+//        dLastClone.add(Calendar.MONTH, -1);
+//        if (dFirst.get(Calendar.DAY_OF_MONTH) > dLastClone.getActualMaximum(Calendar.DAY_OF_MONTH)){
+//            daysCorrection = dFirst.get(Calendar.DAY_OF_MONTH) - dLastClone.getActualMaximum(Calendar.DAY_OF_MONTH);
+//        }
+//        System.out.println(daysCorrection);
 
 
-        return monthDiff + " месяцев, " + daysDiff + " дней, " + hoursDiff + " часов, " + minutesDiff + " минут, " +
-                secondsDiff + " секунд, " + millisDiff + " миллисекунд";
+        while (dFirst.before(dLast)) {
+            dFirst.add(Calendar.YEAR, 1);
+        }
+        dFirst.add(Calendar.YEAR, -1);
+
+
+        int monthsDiff = 0;
+        while (dFirst.before(dLast)) {
+            dFirst.add(Calendar.MONTH, 1);
+            monthsDiff++;
+        }
+        dFirst.add(Calendar.MONTH, -1);
+        monthsDiff--;
+
+        int daysDiff = 0;
+        while (dFirst.before(dLast)) {
+            dFirst.add(Calendar.DAY_OF_MONTH, 1);
+            daysDiff++;
+        }
+        dFirst.add(Calendar.DAY_OF_MONTH, -1);
+        daysDiff--;
+//        daysDiff -= daysCorrection;
+
+        long hrsMinsSecsMillis = dLast.getTimeInMillis() - dFirst.getTimeInMillis();
+
+        int hoursDiff = (int) hrsMinsSecsMillis/3600000;
+        if (hoursDiff==24){
+            hoursDiff=0;
+            daysDiff++;
+        }
+        long minsSecsMillis = hrsMinsSecsMillis%3600000;
+        int minsDiff = (int) minsSecsMillis/60000;
+        long secsMillis = minsSecsMillis%60000;
+        int secsDiff = (int) secsMillis/1000;
+        int millisDiff = (int)(secsMillis-secsDiff*1000);
+
+        return String.format("%s месяцев, %s дней, %s часов, %s минут, %s секунд, %s миллисекунд",
+                monthsDiff, daysDiff, hoursDiff, minsDiff, secsDiff, millisDiff);
     }
 
     public static int yearsBetween(Date date1, Date date2) {
+        Calendar dFirst = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar dLast = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
-        Calendar timeBtwCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        timeBtwCal.clear();
+        if (date2.getTime() > date1.getTime()) {
+            dFirst.setTimeInMillis(date1.getTime());
+            dLast.setTimeInMillis(date2.getTime());
+        } else {
+            dFirst.setTimeInMillis(date2.getTime());
+            dLast.setTimeInMillis(date1.getTime());
+        }
 
-        timeBtwCal.setTimeInMillis(Math.abs(date1.getTime() - date2.getTime()));
+        int yearsDiff = 0;
+        while (dFirst.before(dLast)) {
+            dFirst.add(Calendar.YEAR, 1);
+            yearsDiff++;
+        }
+        dFirst.add(Calendar.YEAR, -1);
+        yearsDiff--;
 
-        return timeBtwCal.get(Calendar.YEAR) - 1970;
+        return yearsDiff;
     }
 
 
