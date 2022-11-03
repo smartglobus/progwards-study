@@ -1,7 +1,6 @@
 
 package ru.progwards.java1.lessons.date;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
