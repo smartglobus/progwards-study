@@ -5,6 +5,6 @@ import java.util.StringTokenizer;
 public class JavaFormatter {
     public static String format(String code){
         StringTokenizer test = new StringTokenizer(code," \n");
-        return code;
+        return "тестируем пробелы \n ещё один \n  табуляция, отсюда\tдосюда";
     }
 }
