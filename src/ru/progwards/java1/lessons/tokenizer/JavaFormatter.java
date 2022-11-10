@@ -10,9 +10,9 @@ public class JavaFormatter {
 
         // создаём и заполняем массив полученными неформатированными строками
         int n = rawCode.countTokens();
-        String[] codeStringsRaw = new String[n];
         String[] codeStringsFormated = new String[n];// инициализация массива для конечного варианта
 
+        String[] codeStringsRaw = new String[n];// массив необработанных строк кода
         for (int i = 0; i < n; i++) {
             codeStringsRaw[i] = rawCode.nextToken();
         }
@@ -25,15 +25,36 @@ public class JavaFormatter {
         int roundBracketsCount = 0;
         int angledBracketsCount = 0;
 
+// цикл до n. Предполагаем, что конечный код по кол-ву строк не длиннее исходного (???)
         for (int i = 0; i < n; i++) {
-            // раскладываем строку на лексемы, включая все возможные знаки
+
+            // раскладываем строку на лексемы и все возможные знаки, включая пробелы (чтобы в дальнейшем не исказить комментарии)
             StringTokenizer rawString = new StringTokenizer(codeStringsRaw[i], " \t\n\r\f.![]{}()\";:+-/*%=<>", true);
-            // представляем строку как массив
-            String[] rawCodeStr = new String[rawString.countTokens()];
-            /*
-            определять, является ли лексема ключевым словом. Если да, то после него пробел, за исключением случаев,
-             когда сразу после стоит .;[()
-             */
+            // представляем строку как массив отдельных слов и символов
+            int strElementsNum = rawString.countTokens();
+            String[] rawCodeStr = new String[strElementsNum];
+            for (int j = 0; j < strElementsNum; j++) {
+                rawCodeStr[j] = rawString.nextToken();
+                System.out.println(rawCodeStr[j]);
+            }
+// форматируем отдельную строку, предварительно представленную как массив отдельных слов и символов
+            codeStringsFormated[i] = singleStringFormat(rawCodeStr);
+
+
+            //считаем фигурные скобки. '{' curlyBracketsCount++; '}' curlyBracketsCount--;
+            //
+            for (String element : rawCodeStr) {
+                if (element == "{") {
+                    curlyBracketsCount++;
+                }
+                if (element == "}") {
+                    curlyBracketsCount--;
+                }
+            }
+
+//            while (rawString.hasMoreTokens()) {
+//                System.out.println(rawString.nextToken());
+//            }
 
         }
 
@@ -41,19 +62,71 @@ public class JavaFormatter {
         return "тестируем пробелы \n ещё один \n  табуляция, отсюда\tдосюда";
     }
 
-    static boolean isKeyWord(String word) {
+    static boolean isKeyWord(String lex) {
         String keyWordList = " abstract assert boolean break byte case catch char class const continue default do " +
                 " double else enum extends final finally float for goto if implements import instanceof int interface " +
                 " long native new package private protected public return short static strictfp super switch " +
                 " synchronized this throw Throws transient try void volatile while ";
-        if (keyWordList.contains(" " + word + " ")) {
+        if (keyWordList.contains(" " + lex + " ")) {
             return true;
         }
         return false;
     }
 
+    static boolean isSign(String lex){
+        String signList = " + - / % * = < > ! ";
+
+        return false;
+    }
+
+    public static String singleStringFormat(String[] str) {
+        String result = "";
+        int firstWordNum = 0;
+        for (int i = 0; i < str.length; i++) {
+            // пропускаем пробелы в начале строки, если они там есть
+            if (str[0] == " ") {
+                while (str[i] == " ") {
+                    i++;
+                }
+            }
+            result += str[i];// вписываем в начало строки первый значимый элемент
+            firstWordNum = i;// номер первого значимого слова в массиве
+        }
+
+// основной цикл фоматирования строки
+        for (int i = firstWordNum + 1; i < str.length; i++) {
+
+            if (str[i]==" "){
+                continue;
+            }
+            if (str[i] == ".") {
+                result += str[i];
+                continue;
+            }
+            if (str[i-1] == "."){
+                result += str[i];
+                continue;
+            }
+
+            //проверка в том числе на наличие двойных знаков (<=, !=, ...)
+
+            if (str[i] == "("){
+if (isKeyWord(str[i])){
+    result += " " + str[i];
+}
+            }
+
+        }
+        return result;
+        /*
+            определять, является ли лексема ключевым словом. Если да, то после него пробел, за исключением случаев,
+             когда сразу после стоит .;[()
+             */
+    }
+
+
     public static void main(String[] args) {
-        String code = "public static void main(String[] args)\n" +
+        String code = "   public static void main(String[] args)\n" +
                 "{\n" +
                 "System.out.println(\"Enter two numbers\");\n" +
                 "int first = 10;\n" +
@@ -63,7 +136,7 @@ public class JavaFormatter {
                 "System.out.println(\"The sum is: \" + sum);\n" +
                 "  }";
         format(code);
-        System.out.println(isKeyWord("enum"));
+
     }
 }
 /*
