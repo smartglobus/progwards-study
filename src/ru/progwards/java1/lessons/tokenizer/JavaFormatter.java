@@ -28,8 +28,8 @@ public class JavaFormatter {
 // цикл до n. Предполагаем, что конечный код по кол-ву строк не длиннее исходного (???)
         for (int i = 0; i < n; i++) {
 
-            // раскладываем строку на лексемы и все возможные знаки, включая пробелы (чтобы в дальнейшем не исказить комментарии)
-            StringTokenizer rawString = new StringTokenizer(codeStringsRaw[i], " \t\n\r\f.![]{}()\";:+-/*%=<>", true);
+            // раскладываем строку на лексемы и все возможные знаки, кроме пробелов (считаем, что комментарии в задание не включены)
+            StringTokenizer rawString = new StringTokenizer(codeStringsRaw[i], "\t\n\r\f.![]{}()\";:+-/*%=<>", true);
             // представляем строку как массив отдельных слов и символов
             int strElementsNum = rawString.countTokens();
             String[] rawCodeStr = new String[strElementsNum];
@@ -62,7 +62,7 @@ public class JavaFormatter {
         return "тестируем пробелы \n ещё один \n  табуляция, отсюда\tдосюда";
     }
 
-    static boolean isKeyWord(String lex) {
+    static boolean isOperator(String lex) {
         String keyWordList = " abstract assert boolean break byte case catch char class const continue default do " +
                 " double else enum extends final finally float for goto if implements import instanceof int interface " +
                 " long native new package private protected public return short static strictfp super switch " +
@@ -73,9 +73,11 @@ public class JavaFormatter {
         return false;
     }
 
-    static boolean isSign(String lex){
-        String signList = " + - / % * = < > ! ";
-
+    static boolean isSign(String lex) {
+        String signList = " + - / % * = < > ! & | : ";
+        if (signList.contains(" " + lex + " ")) {
+            return true;
+        }
         return false;
     }
 
@@ -94,28 +96,57 @@ public class JavaFormatter {
         }
 
 // основной цикл фоматирования строки
-        for (int i = firstWordNum + 1; i < str.length; i++) {
+        int strLength = str.length;
+        for (int i = firstWordNum + 1; i < strLength; i++) {
 
-            if (str[i]==" "){
+            if (str[i] == " ") {
                 continue;
             }
             if (str[i] == ".") {
                 result += str[i];
                 continue;
             }
-            if (str[i-1] == "."){
+            if (str[i - 1] == ".") {
                 result += str[i];
                 continue;
             }
 
-            //проверка в том числе на наличие двойных знаков (<=, !=, ...)
-
-            if (str[i] == "("){
-if (isKeyWord(str[i])){
-    result += " " + str[i];
-}
+            //проверка на наличие двойных знаков (<=, !=, ...)
+            if (i < strLength - 2 && isSign(str[i]) && isSign(str[i + 1])) {
+                result += str[i] + str[i + 1] + " ";
+                i++;
+                continue;
             }
 
+
+// если лексема не оператор и за ней идёт круглая скобка (, пишем без пробела лексему и скобку
+            if (i < strLength - 2 && !isOperator(str[i]) && str[i + 1] == "(") {
+                result += str[i] + str[i + 1];
+                i++;
+                continue;
+            }
+
+// после открывающей круглой скобки пробела нет
+            if (str[i] == "(") {
+                result += str[i];
+                continue;
+            }
+// после закрывающей круглой скобки пробел есть, кроме случаев: ';', ')', '.', ','
+            if (i < strLength - 2 && str[i] == ")") {
+                int next = i + 1;
+                if (str[next] == ";" || str[next] == ")" || str[next] == "." || str[next] == ",") {
+                    result += str[i] + str[next];
+                    i++;
+                    continue;
+                } else {
+                    result += str[i] + " ";
+                    continue;
+                }
+            }
+
+// по умолчанию добавляем пробел после дописывания любой лексемы, если далее не следует ';'
+            if (i < strLength - 2 && str[i + 1] != ";")
+                result += str[i] + " ";
         }
         return result;
         /*
