@@ -41,7 +41,7 @@ public class DIntArray {
     public static void main(String[] args) {
         DIntArray testArray = new DIntArray();
         //int[] a = {1, 3, 5, 7, 9};
-       // testArray.setdIntArray(a);
+        // testArray.setdIntArray(a);
         testArray.add(5);
         testArray.add(6);
         testArray.add(7);

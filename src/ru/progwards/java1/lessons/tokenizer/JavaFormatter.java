@@ -28,8 +28,8 @@ public class JavaFormatter {
 // цикл до n. Предполагаем, что конечный код по кол-ву строк не длиннее исходного (???)
         for (int i = 0; i < n; i++) {
 
-            // раскладываем строку на лексемы и все возможные знаки, кроме пробелов (считаем, что комментарии в задание не включены)
-            StringTokenizer rawString = new StringTokenizer(codeStringsRaw[i], "\t\n\r\f.![]{}()\";:+-/*%=<>", true);
+// раскладываем строку на лексемы и все возможные знаки, включая пробелы (чтобы не потерять оригинальный формат фраз в кавычках и комментариев)
+            StringTokenizer rawString = new StringTokenizer(codeStringsRaw[i], " \t\n\r\f.,!?|[]{}()\";:+-/*%=<>", true);
             // представляем строку как массив отдельных слов и символов
             int strElementsNum = rawString.countTokens();
             String[] rawCodeStr = new String[strElementsNum];
@@ -58,7 +58,10 @@ public class JavaFormatter {
 
         }
 
-
+        for (String s : codeStringsFormated
+        ) {
+            System.out.println(s);
+        }
         return "тестируем пробелы \n ещё один \n  табуляция, отсюда\tдосюда";
     }
 
@@ -74,8 +77,8 @@ public class JavaFormatter {
     }
 
     static boolean isSign(String lex) {
-        String signList = " + - / % * = < > ! & | : ";
-        if (signList.contains(" " + lex + " ")) {
+        String signList = "+-/%*=<>!&|:^?";
+        if (signList.contains(lex)) {
             return true;
         }
         return false;
@@ -83,70 +86,119 @@ public class JavaFormatter {
 
     public static String singleStringFormat(String[] str) {
         String result = "";
+        String lastLex = "";
         int firstWordNum = 0;
-        for (int i = 0; i < str.length; i++) {
+        for (int i = 0; i < str.length; ) {
             // пропускаем пробелы в начале строки, если они там есть
-            if (str[0] == " ") {
-                while (str[i] == " ") {
+            if (str[0].equals(" ")) {
+                while (str[i].equals(" ")) {
                     i++;
                 }
             }
             result += str[i];// вписываем в начало строки первый значимый элемент
+            lastLex = str[i];
             firstWordNum = i;// номер первого значимого слова в массиве
+            break;
         }
 
+
 // основной цикл фоматирования строки
+// решение о вписывании пробела перед str[i] принимается по предшествующему контексту
         int strLength = str.length;
         for (int i = firstWordNum + 1; i < strLength; i++) {
+//            while (i < strLength && !str[i].equals("\"")){   // || !(str[i].equals("/") && str[i + 1].equals("/"))
+//                if (str[i].equals(" ")) {
+//                i++;
+//            }
+//
+//            }
 
-            if (str[i] == " ") {
+            // если лексема кавычка, то дописываем строку без форматирования до следующей кавычки
+            // вписываем пробел перед открывающими кавычками только в случаях, если перед ними '+', ',', '=' или 'return'
+            if (str[i].equals("\"")) {
+                if (lastLex.equals("+") || lastLex.equals(",") || lastLex.equals("=") || lastLex.equals("return")){
+                    result += " \"";
+//                    lastLex = str[i];
+                }else {
+                    result += "\"";
+//                    lastLex = str[i];
+                }
+                do {
+                    i++;
+                    result += str[i];
+//                    lastLex = str[i];
+
+                } while (!str[i].equals("\""));
+                lastLex = str[i];
+                i++;
+            }
+            // комментарии дописываем без форматирования до конца строки
+//            if (str[i].equals("/") && str[i + 1].equals("/")) {
+//                while (true) {// ???????????????????????????????
+//                    result += str[i];
+//                    lastLex = str[i];
+//                    i++;
+//                }
+//            }
+
+            // после исключения из форматирования комментариев и фраз в кавычках, пропускаем пробелы исходного кода
+            if (str[i].equals(" ")) {
                 continue;
             }
-            if (str[i] == ".") {
+
+            // если лексема ';', ')', '.', ',', '[', ']', '}' то вписываем её без пробела
+            if (str[i].equals(")") || str[i].equals(",") || str[i].equals(".") || str[i].equals(";") || str[i].equals("[") || str[i].equals("]") || str[i].equals("}")) {
                 result += str[i];
+                lastLex = str[i];
                 continue;
             }
-            if (str[i - 1] == ".") {
+            // если предыдущая лексема точка, то текущую вписываем без пробела
+            if (lastLex.equals(".")) {
                 result += str[i];
+                lastLex = str[i];
                 continue;
             }
 
             //проверка на наличие двойных знаков (<=, !=, ...)
-            if (i < strLength - 2 && isSign(str[i]) && isSign(str[i + 1])) {
-                result += str[i] + str[i + 1] + " ";
-                i++;
-                continue;
-            }
-
-
-// если лексема не оператор и за ней идёт круглая скобка (, пишем без пробела лексему и скобку
-            if (i < strLength - 2 && !isOperator(str[i]) && str[i + 1] == "(") {
-                result += str[i] + str[i + 1];
-                i++;
-                continue;
-            }
-
-// после открывающей круглой скобки пробела нет
-            if (str[i] == "(") {
+            if (isSign(lastLex) && isSign(str[i])) {
                 result += str[i];
+                lastLex = str[i];
                 continue;
             }
-// после закрывающей круглой скобки пробел есть, кроме случаев: ';', ')', '.', ','
-            if (i < strLength - 2 && str[i] == ")") {
-                int next = i + 1;
-                if (str[next] == ";" || str[next] == ")" || str[next] == "." || str[next] == ",") {
-                    result += str[i] + str[next];
-                    i++;
+
+            // перед открывающей круглой скобкой вписывается пробел, только если скобке предшествует оператор или знак операций арифметических, сравнения и логических
+            if (str[i].equals("(")) {
+                if (isOperator(lastLex) || isSign(lastLex)) {
+                    result += " " + str[i];
+                    lastLex = str[i];
                     continue;
                 } else {
-                    result += str[i] + " ";
+                    result += str[i];
+                    lastLex = str[i];
                     continue;
                 }
             }
-
-// по умолчанию добавляем пробел после дописывания любой лексемы, если далее не следует ';'
-            if (i < strLength - 2 && str[i + 1] != ";")
-                result += str[i] + " ";
+            // перед открывающей фигурной скобкой вписывается пробел, кроме случаев, когда ей предшествует '{' или ']'
+            if (str[i].equals("{")) {
+                if (lastLex.equals("]") || lastLex.equals("{")) {
+                    result += str[i];
+                    lastLex = str[i];
+                    continue;
+                } else {
+                    result += " " + str[i];
+                    lastLex = str[i];
+                    continue;
+                }
+            }
+            // после открывающих скобок пробел не ставится
+            if (lastLex.equals("(") || lastLex.equals("{") || lastLex.equals("[")){
+                result += str[i];
+                lastLex = str[i];
+                continue;
+            }
+            // все остальные варианты вписываются после пробела
+            result += " " + str[i];
+            lastLex = str[i];
         }
         return result;
         /*
@@ -157,15 +209,49 @@ public class JavaFormatter {
 
 
     public static void main(String[] args) {
-        String code = "   public static void main(String[] args)\n" +
+        String code = "   public    static void main(String[] args)\n" +
                 "{\n" +
                 "System.out.println(\"Enter two numbers\");\n" +
                 "int first = 10;\n" +
                 "int second = 20;\n" +
                 "System.out.println(first + \" \" + second);\n" +
                 "int sum = first + second;\n" +
-                "System.out.println(\"The sum is: \" + sum);\n" +
-                "  }";
+                "System.out.println(\"The   sum is: \" + sum);\n" +
+                "  }\n"+
+                "public static void main(String [] args)\n" +
+                "   {\n" +
+                "     int num = 1234, reversed = 0;\n" +
+                "  System.out.println(\"Original Number: \" + num);\n" +
+                "    while(num != 0)\n" +
+                " {\n" +
+                "        int digit = num%10;\n" +
+                "        reversed=reversed*10+    digit ;\n" +
+                "        num /= 10;\n" +
+                "    }\n" +
+                "    System.out.println(\"Reversed Number: \" + reversed);}\n"+
+                "public static void main(String  []  args) {\n" +
+                "    int row=2 , column=   3;\n" +
+                "    int [ ] [ ] matrix = { { 2,3,4 } , { 5,6,4 } };\n" +
+                "\n" +
+                "    display ( matrix );\n" +
+                "\n" +
+                "    int [ ] [ ] transpose = new int [ column ] [ row ] ;\n" +
+                "        for(int i=0; i < row; i++) {\n" +
+                "            for ( int j = 0; j<column; j ++) {\n" +
+                "                transpose [ j ] [ i ] = matrix [ i ] [ j ] ;}\n" +
+                "     }\n" +
+                "\n" +
+                "  display(transpose);\n" +
+                "}\n" +
+                "\n" +
+                "public static void display(int[][] matrix) {\n" +
+                "    System.out.println( \"The matrix is: \" ) ;\n" +
+                "  for(int [ ] row : matrix)\n" +
+                "  {\n" +
+                "     for (int column : row) {\n" +
+                "            System.out.print( column + \"    \") ;\n" +
+                "        }\n" +
+                "     System.out.println ();    }}\n";
         format(code);
 
     }
