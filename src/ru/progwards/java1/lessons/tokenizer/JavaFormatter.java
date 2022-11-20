@@ -8,16 +8,7 @@ public class JavaFormatter {
     public static String format(String code) {
 
 
-
-        int curlyBracketsCount = 0;
-        int squareBracketsCount = 0;
-        int roundBracketsCount = 0;
-        int angledBracketsCount = 0;
-
-// цикл до n. Предполагаем, что конечный код по кол-ву строк не длиннее исходного (???)
-//        for (int i = 0; i < n; i++) {
-
-// раскладываем строку на лексемы и все возможные знаки, включая пробелы (чтобы не потерять оригинальный формат фраз в кавычках и комментариев)
+// раскладываем строку на лексемы и все возможные знаки, включая пробелы (чтобы не потерять оригинальный формат фраз в кавычках)
 
         StringTokenizer rawString = new StringTokenizer(code, " \t\n\r\f.,!?|[]{}()\";:+-/*%=<>", true);
         // представляем строку как массив отдельных слов и символов
@@ -26,42 +17,103 @@ public class JavaFormatter {
         Arrays.fill(rawCodeStr, ""); // предварительное заполнение массива, чтобы избежать значения null в пустых строках
         for (int j = 0; j < strElementsNum; j++) {
             rawCodeStr[j] = rawString.nextToken();
-            System.out.println(rawCodeStr[j]);
+//            System.out.println(rawCodeStr[j]);
         }
-// форматируем отдельную строку, предварительно представленную как массив отдельных слов и символов
-//            codeStringsFormated[i] = singleStringFormat(rawCodeStr);
+
         String codeStringFormated = singleStringFormat(rawCodeStr);
+//        System.out.println(codeStringFormated);
 
-        //считаем фигурные скобки. '{' curlyBracketsCount++; '}' curlyBracketsCount--;
-        //
-        for (String element : rawCodeStr) {
-            if (element == "{") {
-                curlyBracketsCount++;
+        StringTokenizer secondTake = new StringTokenizer(codeStringFormated, "\n{};", true);
+        int finalStringElementsNum = secondTake.countTokens();
+        String[] finalString = new String[finalStringElementsNum];
+        Arrays.fill(finalString, "");
+        for (int i = 0; i < finalStringElementsNum; i++) {
+            finalString[i] = secondTake.nextToken();
+        }
+
+        // форматирование фигурных скобок
+        for (int i = 2; i < finalStringElementsNum; i++) {
+
+            // форматирование открывающих фигурных скобок
+            if (finalString[i - 1].equals("\n") && finalString[i].equals("{")) {
+                if (finalString[i - 1].equals("\n") && finalString[i].equals("{") && finalString[i + 1].equals("\n")) {
+
+                    finalString[i - 1] = "";
+                    continue;
+                } else {
+
+                    finalString[i - 1] = "{";
+                    finalString[i] = "\n";
+                    continue;
+                }
             }
-            if (element == "}") {
-                curlyBracketsCount--;
+
+
+            // форматирование закрывающих фигурных скобок
+            if (finalString[i - 1].equals(";") && finalString[i].equals("}")) {
+                finalString[i - 1] = ";\n";
+                i++;
+                while (i < finalStringElementsNum && finalString[i].equals("}")) {
+                    finalString[i] = "\n}";
+                    i++;
+                }
             }
         }
 
-        System.out.println(codeStringFormated);
+        for (String a : finalString) {
+            System.out.print(a);
+        }
+
+
         return "тестируем пробелы \n ещё один \n  табуляция, отсюда\tдосюда";
     }
 
 
+    public static String tabsFormat(String[] str) {
+        int curlyBracketsCount = 0;
+
+        String result = str[0];
+        String lastLex = "";
+        int strLength = str.length;
+        for (int i = 0; i < strLength; i++) {
+
+
+            // считаем фигурные скобки
+            if (str[i].equals("{")) {
+                curlyBracketsCount++;
+            }
+            if (str[i].equals("}")) {
+                curlyBracketsCount--;
+            }
+
+
+            if (lastLex.equals("\n") || i == 0) {
+
+                for (int j = 0; j < curlyBracketsCount; j++) {
+                    result += "    ";
+                }
+                // заолняем строку, пока не встретится абзац или фигурная скобка
+                do {
+                    i++;
+                    result += str[i];
+                    lastLex = str[i];
+
+                } while (!str[i].equals("\n") || !str[i].equals("{") || !str[i].equals("}"));
+
+            }
+        }
+        return result;
+    }
+
+
+    // основной цикл фоматирования строки
+    // решение о вписывании пробела перед str[i] принимается по предшествующему контексту
     public static String singleStringFormat(String[] str) {
         String result = "";
         String lastLex = "";
         int strLength = str.length;
 
-
-
-// основной цикл фоматирования строки
-// решение о вписывании пробела перед str[i] принимается по предшествующему контексту
-
-        for (int i = 0; i < strLength; i++) {  // c i=0
-
-            // сначала расставлям абзацы по нужным местам
-
+        for (int i = 0; i < strLength; i++) {
 
             if (lastLex.equals("\n") || i == 0) {
                 while (i < strLength - 1 && str[i].equals(" ")) {
@@ -83,16 +135,12 @@ public class JavaFormatter {
             if (str[i].equals("\"")) {
                 if (lastLex.equals("+") || lastLex.equals(",") || lastLex.equals("=") || lastLex.equals("return")) {
                     result += " \"";
-//                    lastLex = str[i];
                 } else {
                     result += "\"";
-//                    lastLex = str[i];
                 }
                 do {
                     i++;
                     result += str[i];
-//                    lastLex = str[i];
-
                 } while (!str[i].equals("\""));
                 lastLex = str[i];
                 continue;
@@ -159,6 +207,7 @@ public class JavaFormatter {
             // все остальные варианты вписываются после пробела
             result += " " + str[i];
             lastLex = str[i];
+
         }
         return result;
     }
@@ -186,7 +235,6 @@ public class JavaFormatter {
 
     public static void main(String[] args) {
         String code = "   public    static void main(String[] args)\n" +
-                "\n" +
                 "{\n" +
                 "System.out.println(\"Enter two numbers\");\n" +
                 "int first = 10;\n" +
@@ -228,19 +276,8 @@ public class JavaFormatter {
                 "     for (int column : row) {\n" +
                 "            System.out.print( column + \"    \") ;\n" +
                 "        }\n" +
-                "     System.out.println ();    }}\n";
+                "     System.out.println ();    }}";
         format(code);
 
     }
 }
-/*
-public static void main(String[] args)   - проверить все пробелы
-{                                        - перенести наверх, посчитать номер
-System.out.println("Enter two numbers");
-int first = 10;
-int second = 20;
-System.out.println(first + " " + second);
-int sum = first + second;
-System.out.println("The sum is: " + sum);
-  }
- */
