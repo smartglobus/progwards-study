@@ -61,9 +61,7 @@ public class JavaFormatter {
         for (String a : curlyBracketsFormatedString) {
             curlyBracketsFormated += a;
         }
-        System.out.println("----------");
-        System.out.println(curlyBracketsFormated);
-        System.out.println("----------");
+
         StringTokenizer thirdPace = new StringTokenizer(curlyBracketsFormated, "\n{}", true);
         int finalyFormatedStringElementsNum = thirdPace.countTokens();
         //последний, "подсадной" элемент (+1) для корректной работы tabsFormat (обработка str[i+1]). Там в рабочем цикле он игнорируется
@@ -92,6 +90,10 @@ public class JavaFormatter {
             }
 
             if (str[i].equals("\n")) {
+                if (str[i].equals("\n") && (str[i+1].equals("\n"))){
+                    result += str[i];
+                    continue;
+                }
 
                 for (int j = 0; j < curlyBracketsCount; j++) {
                     str[i] += "    ";
