@@ -7,4 +7,17 @@ public class Binary {
         this.num = num;
     }
 
+    @Override
+    public String toString(){
+        String result = "";
+for(int i = 7; i >=0; i--){
+    result += CheckBit.checkBit(num,i);
+}
+return result;
+    }
+
+    public static void main(String[] args) {
+        Binary test = new Binary((byte) 113);
+        System.out.println(test);
+    }
 }

@@ -2,15 +2,11 @@ package ru.progwards.java1.lessons.bitsworld;
 
 public class CheckBit {
     public static int checkBit(byte value, int bitNumber) {
-        int bitValue = 0;
-        if ((value >> bitNumber) % 2 != 0) {
-            bitValue = 1;
-        }
-        return bitValue;
+        return (value >> bitNumber) % 2 == 0 ? 0 : 1;
     }
 
     public static void main(String[] args) {
-        System.out.println(checkBit((byte) -124, 7));
+        System.out.println(checkBit((byte) 127, 6));
 
     }
 }
