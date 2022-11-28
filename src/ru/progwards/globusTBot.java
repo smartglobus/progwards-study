@@ -33,7 +33,7 @@ public class globusTBot extends ProgwardsTelegramBot {
             return "Можем предложить: \n" + extract();
         }
 
-        return "Уточните, пожалуйста! Или свяжитесь с нами круглосуточно по тел. 112 для получения подробной консультации";
+        return "Уточните, пожалуйста! Или свяжитесь с нами круглосуточно по тел. 112 для получения подробной консультации.\n" + assortiment;
     }
 
     public static void main(String[] args) {
@@ -46,7 +46,7 @@ public class globusTBot extends ProgwardsTelegramBot {
         bot.token = "5853830848:AAFrer2JPb7wFXuyM-jOxbugjy1AHVVVRFc";
 
         bot.addTags("привет", "привет, здрасьте, здравствуй, добр, день, вечер, утро, hi, hello");
-        bot.addTags("оформление", "конец, все, стоп, нет, цена, стоит, оформление, оплат, достав");
+        bot.addTags("оформление", "конец, все, стоп, нет, цена, стоит, оформ, оплат, достав");
         bot.addTags("пардон, был неправ", "дурак, придурок, идиот, тупой, фигня");
 
         bot.addTags("версия \"Компакт\"", "тренаж, компакт, складн, склады, разбор, дом");
