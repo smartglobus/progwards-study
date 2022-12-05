@@ -45,8 +45,8 @@ public class Bit {
 
         public String toDecString() {
             int result = eightBits[7].value ? 1 : 0;
-            for (int i = 6; i >=0; i--) {
-result = result*2 + (eightBits[i].value ? 1 : 0);
+            for (int i = 6; i >= 0; i--) {
+                result = result * 2 + (eightBits[i].value ? 1 : 0);
             }
 
             return Integer.toString(result);
