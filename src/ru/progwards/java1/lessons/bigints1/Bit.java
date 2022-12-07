@@ -80,6 +80,10 @@ public class Bit {
         }
 
         public static void right(ByteRegister value) {
+            for (int i = 0; i < 7; i++) {
+                value.eightBits[i].value = value.eightBits[i + 1].value;
+            }
+            value.eightBits[7].value = true;
 
         }
     }
@@ -95,7 +99,7 @@ public class Bit {
         System.out.println(a);
         ByteRegister b = new ByteRegister((byte) 234);
         System.out.println(b);
-        ByteShiftRegister.left(b);
+        ByteShiftRegister.right(b);
         System.out.println(b.toDecString());
         System.out.println(b);
 
