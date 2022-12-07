@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class BigAlgebra {
-    BigDecimal fastPow(BigDecimal num, int pow) {
+    public static BigDecimal fastPow(BigDecimal num, int pow) {
         BigDecimal result = BigDecimal.ONE;
         BigDecimal z = num;
 
@@ -18,7 +18,7 @@ public class BigAlgebra {
     }
 
 
-    BigInteger fibonacci(int n) {
+    public static BigInteger fibonacci(int n) {
         BigInteger F = BigInteger.ZERO;
         if (n == 1) {
             return BigInteger.ONE;
