@@ -21,8 +21,12 @@ public class ByteRegister {
     @Override
     public String toString() {
         String result = "";
-        for (Bit bit : eightBits) {
-            result = bit.toString() + result;
+        boolean firstTrue = false;
+        for (int i = 7; i >= 0; i--) {
+            if (i==0 && !firstTrue) result = "0";
+            if (!eightBits[i].value && !firstTrue) continue;
+            if (eightBits[i].value) firstTrue = true;
+            result = result + eightBits[i].toString();
         }
         return result;
     }
