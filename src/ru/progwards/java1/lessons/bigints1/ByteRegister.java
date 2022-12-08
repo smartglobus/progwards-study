@@ -39,14 +39,14 @@ public class ByteRegister {
 
     public static class ByteCounter {
 
-        public static void inc(Bit.ByteRegister value) {
+        public static void inc(ByteRegister value) {
             for (int i = 0; i < 8; i++) {
                 value.eightBits[i].value = !value.eightBits[i].value;
                 if (value.eightBits[i].value) break;
             }
         }
 
-        public static void dec(Bit.ByteRegister value) {
+        public static void dec(ByteRegister value) {
             for (int i = 0; i < 8; i++) {
                 value.eightBits[i].value = !value.eightBits[i].value;
                 if (!value.eightBits[i].value) break;
@@ -56,14 +56,14 @@ public class ByteRegister {
     }
 
     public static class ByteShiftRegister {
-        public static void left(Bit.ByteRegister value) {
+        public static void left(ByteRegister value) {
             for (int i = 7; i > 0; i--) {
                 value.eightBits[i].value = value.eightBits[i - 1].value;
             }
             value.eightBits[0].value = false;
         }
 
-        public static void right(Bit.ByteRegister value) {
+        public static void right(ByteRegister value) {
             for (int i = 0; i < 7; i++) {
                 value.eightBits[i].value = value.eightBits[i + 1].value;
             }
@@ -71,5 +71,22 @@ public class ByteRegister {
         }
     }
 
+    public static class ByteSummator {
+        public static boolean add(ByteRegister value1, ByteRegister value2) {
+            boolean isSumTrue = Integer.valueOf(value1.toDecString()) + Integer.valueOf(value2.toDecString()) <= 255;
+            boolean a;
+            boolean b;
+            boolean addOn = false;
+            boolean res;
 
+            for (int i = 0; i < 8; i++) {
+                a = value1.eightBits[i].value;
+                b = value2.eightBits[i].value;
+                res = a ^ b ^ addOn;
+                addOn = a & b || a & addOn || b & addOn;
+                value1.eightBits[i].value = res;
+            }
+            return isSumTrue;
+        }
+    }
 }
