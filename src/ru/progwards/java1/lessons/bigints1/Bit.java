@@ -16,7 +16,7 @@ public class Bit {
     }
 
 
-    public static class ByteRegister  {
+    public static class ByteRegister {
         public Bit[] eightBits = new Bit[8];
 
         public ByteRegister() {
