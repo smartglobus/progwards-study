@@ -8,8 +8,8 @@ public class BigAlgebra {
         BigDecimal result = BigDecimal.ONE;
         BigDecimal z = num;
 
-        for (int i = 1; i < pow; i <<= 1) {
-            if ((pow & i) != 0) {
+        for (int i = 1; i <= pow; i <<= 1) {
+            if ((pow & i) != 0) { //
                 result = result.multiply(z);
             }
             z = z.multiply(z);
@@ -37,7 +37,7 @@ public class BigAlgebra {
 
 
     public static void main(String[] args) {
-        System.out.println(new BigAlgebra().fastPow(new BigDecimal("-10"), 5));
+        System.out.println(new BigAlgebra().fastPow(new BigDecimal("671"), 16));
         System.out.println(new BigAlgebra().fibonacci(12));
     }
 }
