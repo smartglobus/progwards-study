@@ -9,7 +9,7 @@ public class BigAlgebra {
         BigDecimal z = num;
 
         for (int i = 1; i <= pow; i <<= 1) {
-            if ((pow & i) != 0) { //
+            if ((pow & i) != 0) {
                 result = result.multiply(z);
             }
             z = z.multiply(z);
