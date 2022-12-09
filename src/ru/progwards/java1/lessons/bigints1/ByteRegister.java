@@ -1,12 +1,11 @@
 package ru.progwards.java1.lessons.bigints1;
 
-public class ByteRegister {
-    public Bit[] eightBits = new Bit[8];
+public class ByteRegister extends Register{
+    public Bit[] eightBits;
 
     public ByteRegister() {
-        for (int i = 0; i < 8; i++) {
-            eightBits[i] = new Bit(false);
-        }
+        super(8);
+        eightBits = super.register;
     }
 
     public ByteRegister(byte value) {
@@ -16,19 +15,6 @@ public class ByteRegister {
                 eightBits[i].value = true;
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        String result = "";
-        boolean firstTrue = false;
-        for (int i = 7; i >= 0; i--) {
-            if (i==0 && !firstTrue) result = "0";
-            if (!eightBits[i].value && !firstTrue) continue;
-            if (eightBits[i].value) firstTrue = true;
-            result = result + eightBits[i].toString();
-        }
-        return result;
     }
 
     public String toDecString() {
@@ -92,5 +78,26 @@ public class ByteRegister {
             }
             return isSumTrue;
         }
+    }
+
+    public static void main(String[] args) {
+//        System.out.println(new Bit(true));
+//        System.out.println(new ByteRegister((byte) 255));
+        ByteRegister a = new ByteRegister((byte) 10);
+        System.out.println(a.toDecString());
+        System.out.println(a);
+        ByteCounter.dec(a);
+        System.out.println(a.toDecString());
+        System.out.println(a);
+        ByteRegister b = new ByteRegister((byte) 233);
+        System.out.println(b);
+        ByteShiftRegister.right(b);
+        System.out.println(b.toDecString());
+        System.out.println(b);
+        System.out.println(ByteSummator.add(a, b));
+
+
+//        System.out.println(Integer.toBinaryString(232));
+//        System.out.println(Integer.toBinaryString(231));
     }
 }

@@ -1,12 +1,11 @@
 package ru.progwards.java1.lessons.bigints1;
 
-public class IntRegister {
-    public Bit[] thirtyTwoBits = new Bit[32];
+public class IntRegister extends Register{
+    public Bit[] thirtyTwoBits;
 
     public IntRegister() {
-        for (int i = 0; i < 32; i++) {
-            thirtyTwoBits[i] = new Bit(false);
-        }
+        super(32);
+        thirtyTwoBits = super.register;
     }
 
     public IntRegister(int value) {
@@ -16,19 +15,6 @@ public class IntRegister {
                 thirtyTwoBits[i].value = true;
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        String result = "";
-        boolean firstTrue = false;
-        for (int i = 31; i >= 0; i--) {
-            if (i == 0 && !firstTrue) result = "0";
-            if (!thirtyTwoBits[i].value && !firstTrue) continue;
-            if (thirtyTwoBits[i].value) firstTrue = true;
-            result = result + thirtyTwoBits[i].toString();
-        }
-        return result;
     }
 
     public String toDecString() {
@@ -41,7 +27,7 @@ public class IntRegister {
         if (thirtyTwoBits[31].value) {
             result = Integer.MIN_VALUE + result;
         }
-
+        
         return Integer.toString(result);
     }
 
