@@ -9,14 +9,11 @@ public class IntRegister extends Register{
     }
 
     public IntRegister(int value) {
-        this();
-        for (int i = 0, j = 1; i < 32; i++, j <<= 1) {
-            if ((value & j) != 0) {
-                thirtyTwoBits[i].value = true;
-            }
-        }
+        super(32,value);
+        thirtyTwoBits = super.register;
     }
 
+    @Override
     public String toDecString() {
         int result = thirtyTwoBits[30].value ? 1 : 0;
 

@@ -1,14 +1,24 @@
 package ru.progwards.java1.lessons.bigints1;
 
-public  class Register {
+public abstract class Register {
 public int regVolume;
 public Bit[] register;
+
 
     public Register(int regVolume) {
         this.regVolume = regVolume;
         this.register = new Bit[regVolume];
         for (int i = 0; i < regVolume; i++) {
             register[i] = new Bit(false);
+        }
+    }
+
+    public Register(int regVolume, int value){
+        this(regVolume);
+        for (int i = 0, j = 1; i < regVolume; i++, j <<= 1) {
+            if ((value & j) != 0) {
+                register[i].value = true;
+            }
         }
     }
 
@@ -24,11 +34,18 @@ public Bit[] register;
         return result;
     }
 
+    public abstract String toDecString();
+
     public static void main(String[] args) {
         System.out.println(new Register(10) {
             @Override
             public String toString() {
                 return super.register[4].toString();
+            }
+
+            @Override
+            public String toDecString() {
+                return null;
             }
         });
     }

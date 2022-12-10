@@ -9,14 +9,11 @@ public class ByteRegister extends Register{
     }
 
     public ByteRegister(byte value) {
-        this();
-        for (int i = 0, j = 1; i < 8; i++, j <<= 1) {
-            if ((value & j) != 0) {
-                eightBits[i].value = true;
-            }
-        }
+        super(8,value);
+        eightBits = super.register;
     }
 
+    @Override
     public String toDecString() {
         int result = eightBits[7].value ? 1 : 0;
         for (int i = 6; i >= 0; i--) {
