@@ -28,10 +28,32 @@ public class IntRegister extends Register{
         return Integer.toString(result);
     }
 
+    public static class IntCounter extends Counter{
+
+        public static void inc(IntRegister value){
+            boolean signBefore = value.register[31].value;
+            Counter.inc(value);
+            if (!signBefore && value.register[31].value){ // если знаковый бит изменился с 0 на 1, результат стал 1000000.....
+                value.register[31].value = false; // превращаем его в ноль
+            }
+        }
+
+        public static void dec(IntRegister value){
+            boolean signBefore = value.register[31].value;
+            Counter.dec(value);
+            if (signBefore && !value.register[31].value){ // если знаковый бит изменился с 1 на 0, результат стал 0111111111.....
+                value.register[31].value = true; // превращаем его в единицу (зачем только?...)
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        IntRegister a = new IntRegister(-120);
-        System.out.println(Integer.toBinaryString(-120) + "   (check!)");
+        IntRegister a = new IntRegister(0b10000000_00000000_00000000_00000000);
+//        System.out.println(Integer.toBinaryString(-120) + "   (check!)");
         System.out.println(a);
         System.out.println(a.toDecString());
+        IntCounter.dec(a);
+        System.out.println(a.toDecString());
+        System.out.println(a);
     }
 }

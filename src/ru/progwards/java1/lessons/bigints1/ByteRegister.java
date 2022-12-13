@@ -24,20 +24,23 @@ public class ByteRegister extends Register{
 
 
 
-    public static class ByteCounter {
+    public static class ByteCounter extends Counter{
+
 
         public static void inc(ByteRegister value) {
-            for (int i = 0; i < 8; i++) {
-                value.eightBits[i].value = !value.eightBits[i].value;
-                if (value.eightBits[i].value) break;
-            }
+//            for (int i = 0; i < 8; i++) {
+//                value.eightBits[i].value = !value.eightBits[i].value;
+//                if (value.eightBits[i].value) break;
+//            }
+            Counter.inc(value);
         }
 
         public static void dec(ByteRegister value) {
-            for (int i = 0; i < 8; i++) {
-                value.eightBits[i].value = !value.eightBits[i].value;
-                if (!value.eightBits[i].value) break;
-            }
+//            for (int i = 0; i < 8; i++) {
+//                value.eightBits[i].value = !value.eightBits[i].value;
+//                if (!value.eightBits[i].value) break;
+//            }
+            Counter.dec(value);
         }
 
     }
@@ -80,18 +83,18 @@ public class ByteRegister extends Register{
     public static void main(String[] args) {
 //        System.out.println(new Bit(true));
 //        System.out.println(new ByteRegister((byte) 255));
-        ByteRegister a = new ByteRegister((byte) 10);
+        Register a = new ByteRegister((byte) 10);
         System.out.println(a.toDecString());
         System.out.println(a);
-        ByteCounter.dec(a);
+        ByteCounter.inc(a);
         System.out.println(a.toDecString());
         System.out.println(a);
-        ByteRegister b = new ByteRegister((byte) 233);
-        System.out.println(b);
-        ByteShiftRegister.right(b);
-        System.out.println(b.toDecString());
-        System.out.println(b);
-        System.out.println(ByteSummator.add(a, b));
+//        ByteRegister b = new ByteRegister((byte) 233);
+//        System.out.println(b);
+//        ByteShiftRegister.right(b);
+//        System.out.println(b.toDecString());
+//        System.out.println(b);
+//        System.out.println(ByteSummator.add(a, b));
 
 
 //        System.out.println(Integer.toBinaryString(232));

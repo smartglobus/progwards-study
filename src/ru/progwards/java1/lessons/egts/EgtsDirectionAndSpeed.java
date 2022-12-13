@@ -20,7 +20,7 @@ public class EgtsDirectionAndSpeed {
 
     public static void main(String[] args) {
 
-        System.out.println(getDirection((byte) 0b11100111, (short) 0b00011100_00111010));
+        System.out.println(getDirection((byte) 0b01100111, (short) 0b10011100_00111010));
         System.out.println(getSpeed((short) 0b10011100_00111010));
 
     }
