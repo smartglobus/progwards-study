@@ -24,65 +24,6 @@ public class ByteRegister extends Register{
 
 
 
-//    public static class ByteCounter extends Counter{
-//
-//        public static void inc(Register value) {
-////            for (int i = 0; i < 8; i++) {
-////                value.eightBits[i].value = !value.eightBits[i].value;
-////                if (value.eightBits[i].value) break;
-////            }
-//            Counter.inc(value);
-//        }
-//
-//        public static void dec(Register value) {
-////            for (int i = 0; i < 8; i++) {
-////                value.eightBits[i].value = !value.eightBits[i].value;
-////                if (!value.eightBits[i].value) break;
-////            }
-//            Counter.dec(value);
-//        }
-//
-//    }
-
-    public static class ByteShiftRegister extends ShiftRegister {
-        public static void left(Register value) {
-//            for (int i = 7; i > 0; i--) {
-//                value.eightBits[i].value = value.eightBits[i - 1].value;
-//            }
-//            value.eightBits[0].value = false;
-            ShiftRegister.left(value);
-        }
-
-        public static void right(Register value) {
-//            for (int i = 0; i < 7; i++) {
-//                value.eightBits[i].value = value.eightBits[i + 1].value;
-//            }
-//            value.eightBits[7].value = true;
-            ShiftRegister.right(value);
-        }
-    }
-
-    public static class ByteSummator extends Summator {
-
-        public static boolean add(ByteRegister value1, ByteRegister value2) {
-            boolean isSumTrue = Integer.valueOf(value1.toDecString()) + Integer.valueOf(value2.toDecString()) <= 255;
-            boolean a;
-            boolean b;
-            boolean addOn = false;
-            boolean res;
-
-            for (int i = 0; i < 8; i++) {
-                a = value1.eightBits[i].value;
-                b = value2.eightBits[i].value;
-                res = a ^ b ^ addOn;
-                addOn = a & b || a & addOn || b & addOn;
-                value1.eightBits[i].value = res;
-            }
-
-            return isSumTrue;
-        }
-    }
-
     public static void main(String[] args) {
 //        System.out.println(new Bit(true));
 //        System.out.println(new ByteRegister((byte) 255));
