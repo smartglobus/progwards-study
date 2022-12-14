@@ -24,25 +24,25 @@ public class ByteRegister extends Register{
 
 
 
-    public static class ByteCounter extends Counter{
-
-        public static void inc(Register value) {
-//            for (int i = 0; i < 8; i++) {
-//                value.eightBits[i].value = !value.eightBits[i].value;
-//                if (value.eightBits[i].value) break;
-//            }
-            Counter.inc(value);
-        }
-
-        public static void dec(Register value) {
-//            for (int i = 0; i < 8; i++) {
-//                value.eightBits[i].value = !value.eightBits[i].value;
-//                if (!value.eightBits[i].value) break;
-//            }
-            Counter.dec(value);
-        }
-
-    }
+//    public static class ByteCounter extends Counter{
+//
+//        public static void inc(Register value) {
+////            for (int i = 0; i < 8; i++) {
+////                value.eightBits[i].value = !value.eightBits[i].value;
+////                if (value.eightBits[i].value) break;
+////            }
+//            Counter.inc(value);
+//        }
+//
+//        public static void dec(Register value) {
+////            for (int i = 0; i < 8; i++) {
+////                value.eightBits[i].value = !value.eightBits[i].value;
+////                if (!value.eightBits[i].value) break;
+////            }
+//            Counter.dec(value);
+//        }
+//
+//    }
 
     public static class ByteShiftRegister extends ShiftRegister {
         public static void left(Register value) {
@@ -89,7 +89,7 @@ public class ByteRegister extends Register{
         ByteRegister a = new ByteRegister((byte) 10);
         System.out.println(a.toDecString());
         System.out.println(a);
-//        ByteCounter.inc(a);
+        ByteCounter.inc(a);
         System.out.println(a.toDecString());
         System.out.println(a);
         System.out.println("----------");
