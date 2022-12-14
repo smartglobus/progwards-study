@@ -4,6 +4,7 @@ public abstract class Register {
 public int regVolume;
 public Bit[] register;
 
+public Register(){}
 
     public Register(int regVolume) {
         this.regVolume = regVolume;
@@ -26,9 +27,9 @@ public Bit[] register;
         String result = "";
         boolean firstTrue = false;
         for (int i = regVolume-1; i >= 0; i--) {
-            if (i == 0 && !firstTrue && !register[i].value) result = "0";
-            if (!register[i].value && !firstTrue) continue;
-            if (register[i].value) firstTrue = true;
+//            if (i == 0 && !firstTrue && !register[i].value) result = "0";
+//            if (!register[i].value && !firstTrue) continue;
+//            if (register[i].value) firstTrue = true;
             result = result + register[i].toString();
         }
         return result;
