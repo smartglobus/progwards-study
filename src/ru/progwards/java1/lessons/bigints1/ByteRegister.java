@@ -26,8 +26,7 @@ public class ByteRegister extends Register{
 
     public static class ByteCounter extends Counter{
 
-
-        public static void inc(ByteRegister value) {
+        public static void inc(Register value) {
 //            for (int i = 0; i < 8; i++) {
 //                value.eightBits[i].value = !value.eightBits[i].value;
 //                if (value.eightBits[i].value) break;
@@ -35,7 +34,7 @@ public class ByteRegister extends Register{
             Counter.inc(value);
         }
 
-        public static void dec(ByteRegister value) {
+        public static void dec(Register value) {
 //            for (int i = 0; i < 8; i++) {
 //                value.eightBits[i].value = !value.eightBits[i].value;
 //                if (!value.eightBits[i].value) break;
@@ -45,23 +44,26 @@ public class ByteRegister extends Register{
 
     }
 
-    public static class ByteShiftRegister {
-        public static void left(ByteRegister value) {
-            for (int i = 7; i > 0; i--) {
-                value.eightBits[i].value = value.eightBits[i - 1].value;
-            }
-            value.eightBits[0].value = false;
+    public static class ByteShiftRegister extends ShiftRegister {
+        public static void left(Register value) {
+//            for (int i = 7; i > 0; i--) {
+//                value.eightBits[i].value = value.eightBits[i - 1].value;
+//            }
+//            value.eightBits[0].value = false;
+            ShiftRegister.left(value);
         }
 
-        public static void right(ByteRegister value) {
-            for (int i = 0; i < 7; i++) {
-                value.eightBits[i].value = value.eightBits[i + 1].value;
-            }
-            value.eightBits[7].value = true;
+        public static void right(Register value) {
+//            for (int i = 0; i < 7; i++) {
+//                value.eightBits[i].value = value.eightBits[i + 1].value;
+//            }
+//            value.eightBits[7].value = true;
+            ShiftRegister.right(value);
         }
     }
 
-    public static class ByteSummator {
+    public static class ByteSummator extends Summator {
+
         public static boolean add(ByteRegister value1, ByteRegister value2) {
             boolean isSumTrue = Integer.valueOf(value1.toDecString()) + Integer.valueOf(value2.toDecString()) <= 255;
             boolean a;
@@ -76,6 +78,7 @@ public class ByteRegister extends Register{
                 addOn = a & b || a & addOn || b & addOn;
                 value1.eightBits[i].value = res;
             }
+
             return isSumTrue;
         }
     }
@@ -83,18 +86,19 @@ public class ByteRegister extends Register{
     public static void main(String[] args) {
 //        System.out.println(new Bit(true));
 //        System.out.println(new ByteRegister((byte) 255));
-        Register a = new ByteRegister((byte) 10);
+        ByteRegister a = new ByteRegister((byte) 10);
         System.out.println(a.toDecString());
         System.out.println(a);
-        ByteCounter.inc(a);
+//        ByteCounter.inc(a);
         System.out.println(a.toDecString());
         System.out.println(a);
-//        ByteRegister b = new ByteRegister((byte) 233);
-//        System.out.println(b);
-//        ByteShiftRegister.right(b);
-//        System.out.println(b.toDecString());
-//        System.out.println(b);
-//        System.out.println(ByteSummator.add(a, b));
+        System.out.println("----------");
+        ByteRegister b = new ByteRegister((byte) 233);
+        System.out.println(b);
+//        ByteShiftRegister.left(b);
+        System.out.println(b.toDecString());
+        System.out.println(b);
+        System.out.println(ByteSummator.add(a, b));
 
 
 //        System.out.println(Integer.toBinaryString(232));
