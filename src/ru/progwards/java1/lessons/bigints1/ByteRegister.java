@@ -16,7 +16,7 @@ public class ByteRegister extends Register{
         eightBits = super.register;
     }
 
-    @Override
+
     public String toDecString() {
         int result = eightBits[7].value ? 1 : 0;
         for (int i = 6; i >= 0; i--) {

@@ -13,7 +13,7 @@ public class IntRegister extends Register {
         thirtyTwoBits = super.register;
     }
 
-    @Override
+
     public String toDecString() {
         int result = thirtyTwoBits[30].value ? 1 : 0;
 

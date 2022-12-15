@@ -38,16 +38,6 @@ public Register(){}
     public abstract String toDecString();
 
     public static void main(String[] args) {
-        System.out.println(new Register(10) {
-            @Override
-            public String toString() {
-                return super.register[4].toString();
-            }
 
-            @Override
-            public String toDecString() {
-                return null;
-            }
-        });
     }
 }
