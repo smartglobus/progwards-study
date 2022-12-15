@@ -4,7 +4,6 @@ public abstract class Register {
 public int regVolume;
 public Bit[] register;
 
-public Register(){}
 
     public Register(int regVolume) {
         this.regVolume = regVolume;
@@ -25,7 +24,8 @@ public Register(){}
 
     public String toString() {
         String result = "";
-        boolean firstTrue = false;
+        // закомментированы строки кода нужные для удаления лишних нулей вначале строки.
+//        boolean firstTrue = false;
         for (int i = regVolume-1; i >= 0; i--) {
 //            if (i == 0 && !firstTrue && !register[i].value) result = "0";
 //            if (!register[i].value && !firstTrue) continue;

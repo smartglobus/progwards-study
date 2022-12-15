@@ -29,13 +29,9 @@ public class IntRegister extends Register {
     }
 
 
-
-
-
-
     public static void main(String[] args) {
         IntRegister a = new IntRegister(0b11100000_00010000_00000000_00000000);
-//        System.out.println(Integer.toBinaryString(-120) + "   (check!)");
+
         System.out.println(a);
         System.out.println(a.toDecString());
         IntShiftRegister.right(a);

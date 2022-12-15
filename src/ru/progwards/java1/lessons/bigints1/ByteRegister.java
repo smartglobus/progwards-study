@@ -1,14 +1,14 @@
 package ru.progwards.java1.lessons.bigints1;
 
 public class ByteRegister extends Register{
-    public Bit[] eightBits = new Bit[8];
+    public Bit[] eightBits;// = new Bit[8];
 
     public ByteRegister() {
-//        super(8);
-//        eightBits = super.register;
-        for (int i = 0; i < 8; i++) {
-            eightBits[i] = new Bit(false);
-        }
+        super(8);
+        eightBits = super.register;
+//        for (int i = 0; i < 8; i++) {
+//            eightBits[i] = new Bit(false);
+//        }
     }
 
     public ByteRegister(byte value) {
@@ -28,8 +28,7 @@ public class ByteRegister extends Register{
 
 
     public static void main(String[] args) {
-//        System.out.println(new Bit(true));
-//        System.out.println(new ByteRegister((byte) 255));
+
         ByteRegister a = new ByteRegister((byte) 0);
         System.out.println(a.toDecString());
         System.out.println(a);
@@ -48,8 +47,5 @@ public class ByteRegister extends Register{
         ByteRegister zero = new ByteRegister();
         System.out.println(zero);
 
-
-//        System.out.println(Integer.toBinaryString(232));
-//        System.out.println(Integer.toBinaryString(231));
     }
 }

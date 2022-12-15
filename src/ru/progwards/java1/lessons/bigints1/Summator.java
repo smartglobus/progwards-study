@@ -2,9 +2,6 @@ package ru.progwards.java1.lessons.bigints1;
 
 public class Summator {
     public static void add(Register value1, Register value2){
-        // пока исходим из того, что оба Register одного типа
-
-
 
         boolean a;
         boolean b;
@@ -20,7 +17,18 @@ public class Summator {
         }
     }
 
-    public static void sub(Register value1, Register value2){
+    public static void sub(Register value1, Register value2) {
+       toTwosComplement(value2);
+        Summator.add(value1, value2);
 
+    }
+
+    private static Register toTwosComplement(Register value) {
+
+        for (int i = 0; i < value.regVolume; i++) {
+            value.register[i].value = !value.register[i].value;
+        }
+        Counter.inc(value);
+        return value;
     }
 }
