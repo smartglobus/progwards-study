@@ -17,21 +17,21 @@ public class CharFilter {
                     }
                     writer.write(ch);
                 }
-            }finally {
+            } finally {
                 reader.close();
                 writer.close();
             }
         } catch (IOException e) {
-           throw new IOException(e);
+            throw new IOException(e);
         }
     }
 
     public static void main(String[] args) {
-      String inFile = "C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\io1\\testFile.txt";
+        String inFile = "C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\io1\\testFile.txt";
         String outFile = "C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\io1\\testOutFile.txt";
         String fltr = " -,.()";
         try {
-            filterFile(inFile,outFile,fltr);
+            filterFile(inFile, outFile, fltr);
 
         } catch (IOException e) {
             e.printStackTrace();
