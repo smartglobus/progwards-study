@@ -24,4 +24,8 @@ try{
 }
         return emptyLine;
     }
+
+    public static void main(String[] args) {
+        System.out.println(calcEmpty("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\io1\\DateDiff current.txt"));
+    }
 }
