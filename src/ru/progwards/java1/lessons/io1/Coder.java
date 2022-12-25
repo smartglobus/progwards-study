@@ -4,32 +4,22 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Coder {
-    public static void codeFile(String inFileName, String outFileName, char[] code, String logName) {
-
+    public static void codeFile(String inFileName, String outFileName, char[] code, String logName) throws Exception {
         try {
             FileReader reader = new FileReader(inFileName);
-
             FileWriter writer = new FileWriter(outFileName, true);
-            FileWriter logWriter = new FileWriter(logName, true);
-
             try {
                 for (int c; (c = reader.read()) >= 0; ) {
-
                     writer.write(code[c]);
                 }
-
-            } catch (Exception e) {
-
-                logWriter.write(e.getMessage() + "\n");
             } finally {
-
+                reader.close();
                 writer.close();
-                logWriter.close();
             }
         } catch (Exception e) {
-
-
+            FileWriter logWriter = new FileWriter(logName, true);
+            logWriter.write(e.getMessage() + "\n");
+            logWriter.close();
         }
-
     }
 }
