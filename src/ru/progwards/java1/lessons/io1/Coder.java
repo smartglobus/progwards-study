@@ -3,7 +3,7 @@ package ru.progwards.java1.lessons.io1;
 import java.io.*;
 
 public class Coder {
-    public static void codeFile(String inFileName, String outFileName, char[] code, String logName) throws IOException{
+    public static void codeFile(String inFileName, String outFileName, char[] code, String logName) throws IOException {
         try {
             FileReader reader = new FileReader(inFileName);
             FileWriter writer = new FileWriter(outFileName, true);
@@ -17,11 +17,13 @@ public class Coder {
                 writer.close();
             }
         } catch (Exception e) {
-
-            FileWriter logWriter = new FileWriter(logName, true);
-            logWriter.write(e.getMessage() + "\n");
-            logWriter.close();
-            throw new IOException();
+            try {
+                FileWriter logWriter = new FileWriter(logName, true);
+                logWriter.write(e.getMessage() + "\n");
+                logWriter.close();
+            } catch (IOException e1) {
+                throw new IOException();
+            }
         }
 
 
