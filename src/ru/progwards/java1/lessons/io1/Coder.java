@@ -22,7 +22,7 @@ public class Coder {
                 logWriter.write(e.getMessage() + "\n");
                 logWriter.close();
             } catch (IOException e1) {
-                throw new IOException();
+                throw new IOException(e1);
             }
         }
 
