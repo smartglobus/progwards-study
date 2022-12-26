@@ -19,8 +19,11 @@ public class Coder {
         } catch (Exception e) {
             try {
                 FileWriter logWriter = new FileWriter(logName, true);
-                logWriter.write(e.getMessage() + "\n");
-                logWriter.close();
+                try {
+                    logWriter.write(e.getMessage() + "\n");
+                }finally {
+                    logWriter.close();
+                }
             } catch (IOException e1) {
                 throw new IOException(e1);
             }
