@@ -16,7 +16,7 @@ public class Censor {
     // для каждого слова проверяем, есть ли оно в массиве obscene
     // если слово подлежит цензуре, ставим курсор на позицию (начало строки + место найденного слова в этой строке)
     // и перезаписываем звездочки в кол-ве, равном кол-ву букв в этом слове
-                String[] currLineArr = currentLine.split("[ ,.!\"?#()]");//разбиваем строку на слова по пробелам и др.
+                String[] currLineArr = currentLine.split("[ ,\\-.!\"?#()]");//разбиваем строку на слова по пробелам и др.
                 for (int j = 0; j < currLineArr.length; j++) {
                     for (String s : obscene) {
                         if (currLineArr[j].equals(s)) {
