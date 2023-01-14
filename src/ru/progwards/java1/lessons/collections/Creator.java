@@ -16,8 +16,6 @@ public class Creator {
     public static Collection<Integer> fillOdd(int n) {
         List<Integer> list = new ArrayList<>();
         int lim = n * 2;
-
-//        for (int i = lim; i > 0; i -= 2)
         for (int i = 1; i < lim; i += 2)
             list.add(0, i);
         return list;
@@ -25,13 +23,12 @@ public class Creator {
 
     public static Collection<Integer> fill3(int n) {
         Collection<Integer> list = new ArrayList<>();
-
-        for (int i = 0; i < n; i++) {
+        int lim = n * 3;
+        for (int i = 0; i < lim; i += 3) {
             list.add(i);
             list.add(i * i);
             list.add(i * i * i);
         }
-
         return list;
     }
 
@@ -43,7 +40,7 @@ public class Creator {
         for (Integer i : fillOdd(6))
             System.out.println(i);
         System.out.println("");
-        for (Integer i : fill3(6))
+        for (Integer i : fill3(3))
             System.out.println(i);
     }
 }
