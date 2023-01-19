@@ -51,9 +51,45 @@ public class Finder {
         return lokalMaxRecord;
     }
 
+    // проверить, содержит ли коллекция все числа от 1 до size(), порядок может быть произвольный
+    public static boolean findSequence(Collection<Integer> numbers) {
+        Collection<Integer> numsToSize = new ArrayList<>();
+        for (int i = 1; i <= numbers.size(); i++)
+            numsToSize.add(i);
+        return numbers.containsAll(numsToSize);
+    }
+
+    // найдите максимальное количество повторяющихся подряд элементов.
+    // Результат вернуть в виде строки <элемент>:<количество>, например Василий:5.
+    // При равенстве максимального количества у разных повторяющихся элементов,
+    // вернуть результат для элемента, повторяющаяся последовательность которого началась с наименьшего индекса.
+    public static String findSimilar(Collection<String> names) {
+        Iterator<String> nameList = names.iterator();
+        String maxRepName = nameList.next();
+        int repMax = 0;
+        int currentRep = 1;
+        String currentName = nameList.next();
+        String previousName;
+        while (nameList.hasNext()) {
+            previousName = currentName;
+            currentName = nameList.next();
+            if (currentName.equals(previousName)) {
+                currentRep++;
+                if (currentRep > repMax) {
+                    maxRepName = currentName;
+                    repMax = currentRep;
+                }
+            } else {
+                currentRep = 1;
+            }
+        }
+        return maxRepName + ":" + repMax;
+    }
+
     public static void main(String[] args) {
 
         List<Integer> nt = new ArrayList<>(Arrays.asList(-7, -4, 9, 54, -5, 9, 25, 24, 45, 8));
+        List<Integer> oneTwoThree = new ArrayList<>(Arrays.asList(1, 3, 2, 5, 4));
 
         for (Integer value : nt) System.out.print(value + " ");
         System.out.println("\n");
@@ -61,6 +97,11 @@ public class Finder {
         System.out.println("\n");
         for (Integer integer : findLocalMax(nt)) System.out.print(integer + " ");
         System.out.println("\n");
+        System.out.println(findSequence(nt));
+        System.out.println(findSequence(oneTwoThree));
+        System.out.println("\n");
+        List<String> names = new ArrayList<>(Arrays.asList("Fedor", "Masha", "Masha", "Petya", "Petya", "Masha", "Masha", "Masha", "Vasya", "Petya", "Masha", "Masha", "Masha", "Masha", "Vasya", "Vasya", "Vasya", "Vasya", "Petya"));
+        System.out.println(findSimilar(names) + "\n");
 
     }
 }
