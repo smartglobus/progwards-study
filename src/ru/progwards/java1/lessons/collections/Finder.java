@@ -9,13 +9,13 @@ public class Finder {
         List<Integer> nums = new ArrayList<>(numbers);
         List<Integer> twoInd = new ArrayList<>();
 
-        Iterator<Integer> iterFromZero = nums.iterator();
+        ListIterator<Integer> iterFromZero = nums.listIterator();
         ListIterator<Integer> iterFromOne = nums.listIterator(1);
         int numCurrent = iterFromZero.next();
         int numNxtCurrent = iterFromOne.next();
         int sumResult = numCurrent + numNxtCurrent;
-        int num = numCurrent;
-        int numNxt = numNxtCurrent;
+        int numIndex = 0;
+        int numNxtIndex = 0;
 
         while (iterFromOne.hasNext()) {
             numCurrent = iterFromZero.next();
@@ -23,12 +23,12 @@ public class Finder {
 
             if ((numCurrent + numNxtCurrent) < sumResult) {
                 sumResult = numCurrent + numNxtCurrent;
-                num = numCurrent;
-                numNxt = numNxtCurrent;
+                numIndex = iterFromZero.nextIndex() - 1;
+                numNxtIndex = iterFromOne.nextIndex() - 1;
             }
         }
-        twoInd.add(0, num);
-        twoInd.add(1, numNxt);
+        twoInd.add(0, numIndex);
+        twoInd.add(1, numNxtIndex);
 
         return twoInd;
     }
@@ -88,7 +88,7 @@ public class Finder {
 
     public static void main(String[] args) {
 
-        List<Integer> nt = new ArrayList<>(Arrays.asList(-7, -4, 9, 54, -5, 9, 25, 24, 45, 8));
+        List<Integer> nt = new ArrayList<>(Arrays.asList(7, 4, 9, 54, -5, 9, 25, 24, 45, 8));
         List<Integer> oneTwoThree = new ArrayList<>(Arrays.asList(1, 3, 2, 5, 4));
 
         for (Integer value : nt) System.out.print(value + " ");
@@ -102,6 +102,5 @@ public class Finder {
         System.out.println("\n");
         List<String> names = new ArrayList<>(Arrays.asList("Fedor", "Masha", "Masha", "Petya", "Petya", "Masha", "Masha", "Masha", "Vasya", "Petya", "Masha", "Masha", "Masha", "Masha", "Vasya", "Vasya", "Vasya", "Vasya", "Petya"));
         System.out.println(findSimilar(names) + "\n");
-
     }
 }
