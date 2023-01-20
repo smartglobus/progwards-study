@@ -38,15 +38,19 @@ public class Finder {
     public static Collection<Integer> findLocalMax(Collection<Integer> numbers) {
         List<Integer> nums = new ArrayList<>(numbers);
         List<Integer> lokalMaxRecord = new ArrayList<>();
-        ListIterator<Integer> iterator = nums.listIterator(1);
-        int last = iterator.next();
+        ListIterator<Integer> iterator = nums.listIterator();
+        int last= iterator.next();
+        int current= iterator.next();
+        int next = iterator.next();
 
         while (iterator.hasNext()) {
-            int current = iterator.next();
-            if (last > current) {
-                lokalMaxRecord.add(last);
+
+            if (current > next && current > last) {
+                lokalMaxRecord.add(current);
             }
             last = current;
+            current = next;
+            next = iterator.next();
         }
         return lokalMaxRecord;
     }
@@ -90,12 +94,13 @@ public class Finder {
 
         List<Integer> nt = new ArrayList<>(Arrays.asList(7, 4, 9, 54, -5, 9, 25, 24, 45, 8));
         List<Integer> oneTwoThree = new ArrayList<>(Arrays.asList(1, 3, 2, 5, 4));
+        List<Integer> nt2 = new ArrayList<>(Arrays.asList(98, 52, -14, -62, 57, -40, 8));
 
-        for (Integer value : nt) System.out.print(value + " ");
+        for (Integer value : nt2) System.out.print(value + " ");
         System.out.println("\n");
         for (Integer integer : findMinSumPair(nt)) System.out.print(integer + " ");
         System.out.println("\n");
-        for (Integer integer : findLocalMax(nt)) System.out.print(integer + " ");
+        for (Integer integer : findLocalMax(nt2)) System.out.print(integer + " ");
         System.out.println("\n");
         System.out.println(findSequence(nt));
         System.out.println(findSequence(oneTwoThree));
