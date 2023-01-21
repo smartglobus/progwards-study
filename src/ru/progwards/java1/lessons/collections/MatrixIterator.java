@@ -33,13 +33,17 @@ if (array.length !=0) {
     @Override
     public T next() throws NoSuchElementException {
 
-
-if (this.hasNext()) {
+try{
     i++;
     return arr1D.get(i);
-}else {
-    throw new NoSuchElementException();
+} catch (Exception e) {throw new NoSuchElementException();
+//    e.printStackTrace();
 }
+//        if (this.hasNext()) {
+//
+//}else {
+//
+//}
 
     }
 
@@ -47,7 +51,7 @@ if (this.hasNext()) {
         String[][] zero = new String[0][0];
         String[][] names = {{"Александр", "Александр", "Григорий"}, {"Дмитрий", "Дмитрий", "Григорий"}, {"Александр", "Григорий", "Дмитрий"}};
 
-        MatrixIterator<String> namesIterator = new MatrixIterator<>(zero);
+        MatrixIterator<String> namesIterator = new MatrixIterator<>(names);
         System.out.println(namesIterator.next());
         System.out.println(namesIterator.next());
         System.out.println(namesIterator.next());
