@@ -5,7 +5,7 @@ import java.util.Iterator;
 public class ArrayIterator<T> implements Iterator<T> {
 
     private T[] array;
-    private int i = 0;
+    private int i = -1;
 
     ArrayIterator(T[] array) {
         this.array = array;
