@@ -20,15 +20,23 @@ public class ArrayIterator<T> implements Iterator<T> {
     @Override
     public boolean hasNext() {
         // TODO Auto-generated method stub
-        if (i >= array.length-1) return false;
+        if (i >= array.length - 1) return false;
         return true;
     }
 
     @Override
     public T next() {
         // TODO Auto-generated method stub
+        i++;
+        return array[i];
+    }
 
-        return array[i + 1];
+    public static void main(String[] args) {
+        String[] names = {"Александр","Александр","Григорий","Дмитрий","Дмитрий","Григорий","Александр","Григорий","Дмитрий"};
+        ArrayIterator<String> namesIterator = new ArrayIterator<String>(names);
+        System.out.println(namesIterator.next());
+        System.out.println(namesIterator.next());
+        System.out.println(namesIterator.next());
     }
 }
 /*

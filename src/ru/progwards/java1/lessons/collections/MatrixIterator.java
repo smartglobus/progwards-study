@@ -19,6 +19,10 @@ public class MatrixIterator<T> implements Iterator<T> {
     public T next() {
         return null;
     }
+
+    public static void main(String[] args) {
+
+    }
 }
 /*
 Сделать итератор по одномерному массиву, реализовать методы hasNext() и next(). Шаблон пустого итератора:
