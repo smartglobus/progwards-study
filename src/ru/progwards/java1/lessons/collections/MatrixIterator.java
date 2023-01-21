@@ -3,6 +3,7 @@ package ru.progwards.java1.lessons.collections;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MatrixIterator<T> implements Iterator<T> {
 
@@ -15,13 +16,13 @@ public class MatrixIterator<T> implements Iterator<T> {
 
     MatrixIterator(T[][] array) {
         this.array = array;
-
-        for (int i = 0; i < array[0].length; i++) {
-            for (int j = 0; j < array.length; j++) {
-                arr1D.add(array[i][j]);
-            }
+if (array.length !=0) {
+    for (int i = 0; i < array[0].length; i++) {
+        for (int j = 0; j < array.length; j++) {
+            arr1D.add(array[i][j]);
         }
-
+    }
+}
     }
 
     @Override
@@ -30,18 +31,23 @@ public class MatrixIterator<T> implements Iterator<T> {
     }
 
     @Override
-    public T next() {
+    public T next() throws NoSuchElementException {
 
 
+if (this.hasNext()) {
+    i++;
+    return arr1D.get(i);
+}else {
+    throw new NoSuchElementException();
+}
 
-        i++;
-        return arr1D.get(i);
     }
 
     public static void main(String[] args) {
+        String[][] zero = new String[0][0];
         String[][] names = {{"Александр", "Александр", "Григорий"}, {"Дмитрий", "Дмитрий", "Григорий"}, {"Александр", "Григорий", "Дмитрий"}};
 
-        MatrixIterator<String> namesIterator = new MatrixIterator<>(names);
+        MatrixIterator<String> namesIterator = new MatrixIterator<>(zero);
         System.out.println(namesIterator.next());
         System.out.println(namesIterator.next());
         System.out.println(namesIterator.next());
