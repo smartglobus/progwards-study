@@ -1,31 +1,56 @@
 package ru.progwards.java1.lessons.collections;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class MatrixIterator<T> implements Iterator<T> {
 
     private T[][] array;
+//    private T[] array1D;
+    private List<T> arr1D = new ArrayList<>();
+
+
+    private int i = -1;
 
     MatrixIterator(T[][] array) {
         this.array = array;
+
+        for (int i = 0; i < array[0].length; i++) {
+            for (int j = 0; j < array.length; j++) {
+                arr1D.add(array[i][j]);
+            }
+        }
+
     }
 
     @Override
     public boolean hasNext() {
-        return false;
+        return i < arr1D.size() - 1;
     }
 
     @Override
     public T next() {
-        return null;
+
+
+
+        i++;
+        return arr1D.get(i);
     }
 
     public static void main(String[] args) {
+        String[][] names = {{"Александр", "Александр", "Григорий"}, {"Дмитрий", "Дмитрий", "Григорий"}, {"Александр", "Григорий", "Дмитрий"}};
 
+        MatrixIterator<String> namesIterator = new MatrixIterator<>(names);
+        System.out.println(namesIterator.next());
+        System.out.println(namesIterator.next());
+        System.out.println(namesIterator.next());
     }
 }
 /*
-Сделать итератор по одномерному массиву, реализовать методы hasNext() и next(). Шаблон пустого итератора:
+Сделать итератор MatrixIterator по двумерному массиву (матрице), который разворачивает матрицу в линейную последовательность построчно: a[0][0], a[0][1], ...a[0][N],a[1][0], a[1][1]...a[1][N]... a[M][N]
+
+Шаблон для итератора взять от ArrayIterator :
 
 	public class ArrayIterator<T> implements Iterator<T> {
 

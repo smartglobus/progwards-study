@@ -11,28 +11,23 @@ public class ArrayIterator<T> implements Iterator<T> {
         this.array = array;
     }
 
-    ArrayIterator(T[] array, int i) {
-        super();
-//        this.array=array;
-        this.i = i;
-    }
 
     @Override
     public boolean hasNext() {
-        // TODO Auto-generated method stub
-        if (i >= array.length - 1) return false;
-        return true;
+
+//        if (i >= array.length - 1) return false;
+        return i < array.length - 1;
     }
 
     @Override
     public T next() {
-        // TODO Auto-generated method stub
+
         i++;
         return array[i];
     }
 
     public static void main(String[] args) {
-        String[] names = {"Александр","Александр","Григорий","Дмитрий","Дмитрий","Григорий","Александр","Григорий","Дмитрий"};
+        String[] names = {"Александр", "Александр", "Григорий", "Дмитрий", "Дмитрий", "Григорий", "Александр", "Григорий", "Дмитрий"};
         ArrayIterator<String> namesIterator = new ArrayIterator<String>(names);
         System.out.println(namesIterator.next());
         System.out.println(namesIterator.next());
