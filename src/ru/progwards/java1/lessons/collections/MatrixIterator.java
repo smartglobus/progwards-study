@@ -21,7 +21,6 @@ public class MatrixIterator<T> implements Iterator<T> {
                     arr1D.add(it.next());
                 }
             }
-
         }
     }
 
