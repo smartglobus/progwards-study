@@ -70,7 +70,7 @@ public class Finder {
     public static String findSimilar(Collection<String> names) {
         Iterator<String> nameList = names.iterator();
         String maxRepName = nameList.next();
-        int repMax = 0;
+        int repMax = 1;
         int currentRep = 1;
         String currentName = nameList.next();
         String previousName;
@@ -107,5 +107,7 @@ public class Finder {
         System.out.println("\n");
         List<String> names = new ArrayList<>(Arrays.asList("Fedor", "Masha", "Masha", "Petya", "Petya", "Masha", "Masha", "Masha", "Vasya", "Petya", "Masha", "Masha", "Masha", "Masha", "Vasya", "Vasya", "Vasya", "Vasya", "Petya"));
         System.out.println(findSimilar(names) + "\n");
+        List<String> names1 = new ArrayList<>(Arrays.asList("Fedor", "Masha", "Petya", "Masha",  "Vasya"));
+        System.out.println(findSimilar(names1) + "\n");
     }
 }

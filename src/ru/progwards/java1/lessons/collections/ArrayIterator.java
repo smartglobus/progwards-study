@@ -11,11 +11,9 @@ public class ArrayIterator<T> implements Iterator<T> {
         this.array = array;
     }
 
-
     @Override
     public boolean hasNext() {
 
-//        if (i >= array.length - 1) return false;
         return i < array.length - 1;
     }
 
@@ -57,6 +55,4 @@ public class ArrayIterator<T> implements Iterator<T> {
 			return null;
 		}
 	}
-
-
  */

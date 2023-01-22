@@ -8,29 +8,21 @@ import java.util.NoSuchElementException;
 public class MatrixIterator<T> implements Iterator<T> {
 
     private T[][] array;
-//    private T[] array1D;
     private List<T> arr1D = new ArrayList<>();
-
-
     private int i = -1;
 
     MatrixIterator(T[][] array) {
         this.array = array;
-if (array.length !=0) {
-//    for (int i = 0; i < array[0].length; i++) {
-//        for (int j = 0; j < array.length; j++) {
-//            arr1D.add(array[i][j]);
-//        }
-//
-//    }
-    for(T[] o: array){
-        ArrayIterator<T> it = new ArrayIterator<>(o);
-        while (it.hasNext()) {
-            arr1D.add(it.next());
-        }
-    }
+        if (array.length != 0) {
 
-}
+            for (T[] o : array) {
+                ArrayIterator<T> it = new ArrayIterator<>(o);
+                while (it.hasNext()) {
+                    arr1D.add(it.next());
+                }
+            }
+
+        }
     }
 
     @Override
@@ -41,18 +33,12 @@ if (array.length !=0) {
     @Override
     public T next() throws NoSuchElementException {
 
-try{
-    i++;
-    return arr1D.get(i);
-} catch (Exception e) {throw new NoSuchElementException();
-//    e.printStackTrace();
-}
-//        if (this.hasNext()) {
-//
-//}else {
-//
-//}
-
+        try {
+            i++;
+            return arr1D.get(i);
+        } catch (Exception e) {
+            throw new NoSuchElementException();
+        }
     }
 
     public static void main(String[] args) {
@@ -63,6 +49,9 @@ try{
         System.out.println(namesIterator.next());
         System.out.println(namesIterator.next());
         System.out.println(namesIterator.next());
+        MatrixIterator<String> namesIterator1 = new MatrixIterator<>(zero);
+//        if (namesIterator1.hasNext())
+            System.out.println(namesIterator1.next());
     }
 }
 /*
