@@ -17,11 +17,19 @@ public class MatrixIterator<T> implements Iterator<T> {
     MatrixIterator(T[][] array) {
         this.array = array;
 if (array.length !=0) {
-    for (int i = 0; i < array[0].length; i++) {
-        for (int j = 0; j < array.length; j++) {
-            arr1D.add(array[i][j]);
+//    for (int i = 0; i < array[0].length; i++) {
+//        for (int j = 0; j < array.length; j++) {
+//            arr1D.add(array[i][j]);
+//        }
+//
+//    }
+    for(T[] o: array){
+        ArrayIterator<T> it = new ArrayIterator<>(o);
+        while (it.hasNext()) {
+            arr1D.add(it.next());
         }
     }
+
 }
     }
 
