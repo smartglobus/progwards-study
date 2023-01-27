@@ -1,9 +1,6 @@
 package ru.progwards.java1.lessons.collections;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class MatrixIterator<T> implements Iterator<T> {
 
@@ -44,6 +41,8 @@ public class MatrixIterator<T> implements Iterator<T> {
         String[][] zero = new String[0][0];
         String[][] names = {{"Александр", "Александр", "Григорий"}, {"Дмитрий", "Дмитрий", "Григорий"}, {"Александр", "Григорий", "Дмитрий"}};
 
+
+        Collection<Integer> numbers = new ArrayList<>();
         MatrixIterator<String> namesIterator = new MatrixIterator<>(names);
         System.out.println(namesIterator.next());
         System.out.println(namesIterator.next());
