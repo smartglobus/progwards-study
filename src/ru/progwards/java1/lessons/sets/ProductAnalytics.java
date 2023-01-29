@@ -35,8 +35,8 @@ public class ProductAnalytics {
     List<Product> products;
 
     public ProductAnalytics(List<Shop> shops, List<Product> products) {
-        this.shops = shops;
-        this.products = products;
+        this.shops = new ArrayList<>(shops);
+        this.products = new ArrayList<>(products);
     }
 
     public Set<Product> existInAll() { //  OK!- товары из products, которые имеются во всех магазинах
