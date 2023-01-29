@@ -45,32 +45,30 @@ public class ProductAnalytics {
 
         return existOnlyInOne;
     }
+}
 
-    class Product {
-        private String code;
-
-
-        public Product(String code) {
-            this.code = code;
-        }
-
-        public String getCode() {
-            return code;
-        }
+class Product {
+    private String code;
+    
+    public Product(String code) {
+        this.code = code;
     }
 
-    class Shop {
-        private List<Product> products;
+    public String getCode() {
+        return code;
+    }
+}
 
-        public Shop(List<Product> products) {
-            this.products = products;
-        }
+class Shop {
+    private List<Product> products;
 
-        public List<Product> getProducts() {
-            return products;
-        }
+    public Shop(List<Product> products) {
+        this.products = products;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
 }
 /*
 2.1 Создать класс Product - товар,
