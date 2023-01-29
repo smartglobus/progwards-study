@@ -1,55 +1,13 @@
 package ru.progwards.java1.lessons.sets;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ProductAnalytics {
-
-    List<Shop> shops;
-    List<Product> products;
-
-    public ProductAnalytics(List<Shop> shops, List<Product> products) {
-        this.shops = shops;
-        this.products = products;
-    }
-
-    public Set<Product> existInAll() { //  - товары из products, которые имеются во всех магазинах
-        Set<Product> existInAll = new HashSet<>();
-        for (Shop s : shops) existInAll.addAll(s.getProducts());
-        existInAll.retainAll(products);
-        return existInAll;
-    }
-
-    public Set<Product> existAtListInOne() { //  - товары из products, которые имеются хотя бы в одном магазине
-        Set<Product> existAtListInOne = new HashSet<>();
-        for (Shop s : shops) {
-            Set<Product> oneShopAssortment = new HashSet<>(s.getProducts());
-            oneShopAssortment.retainAll(products);
-            existAtListInOne.addAll(oneShopAssortment);
-        }
-        return existAtListInOne;
-    }
-
-    public Set<Product> notExistInShops() { //  - товары из products, которых нет ни в одном магазине
-        Set<Product> notExistInShops = new HashSet<>(products);
-        for (Shop s : shops){
-            notExistInShops.removeAll(s.getProducts());
-        }
-        return notExistInShops;
-    }
-
-    public Set<Product> existOnlyInOne() { // - товары из products, которые есть только в одном магазине
-        Set<Product> existOnlyInOne = new HashSet<>();
-
-
-        return existOnlyInOne;
-    }
-}
-
 class Product {
     private String code;
-    
+
     public Product(String code) {
         this.code = code;
     }
@@ -70,6 +28,111 @@ class Shop {
         return products;
     }
 }
+
+public class ProductAnalytics {
+
+    List<Shop> shops;
+    List<Product> products;
+
+    public ProductAnalytics(List<Shop> shops, List<Product> products) {
+        this.shops = shops;
+        this.products = products;
+    }
+
+    public Set<Product> existInAll() { //  OK!- товары из products, которые имеются во всех магазинах
+        Set<Product> existInAll = new HashSet<>();
+        for (Shop s : shops) existInAll.addAll(s.getProducts()); // добавили все имеющиеся в магазинах продукты
+        for (Shop s : shops) existInAll.retainAll(s.getProducts()); // поочередно удалили все, кроме нужных
+        return existInAll;
+    }
+
+    public Set<Product> existAtListInOne() { // OK! - товары из products, которые имеются хотя бы в одном магазине
+        Set<Product> existAtListInOne = new HashSet<>();
+        for (Shop s : shops) {
+            Set<Product> oneShopAssortment = new HashSet<>(s.getProducts());
+            oneShopAssortment.retainAll(products);
+            existAtListInOne.addAll(oneShopAssortment);
+        }
+        return existAtListInOne;
+    }
+
+    public Set<Product> notExistInShops() { // OK! - товары из products, которых нет ни в одном магазине
+        Set<Product> notExistInShops = new HashSet<>(products);
+        for (Shop s : shops) notExistInShops.removeAll(s.getProducts());
+        return notExistInShops;
+    }
+
+    public Set<Product> existOnlyInOne() { // - товары из products, которые есть только в одном магазине
+        Set<Product> existOnlyInOne = new HashSet<>();
+
+
+        return existOnlyInOne;
+    }
+
+    public static void main(String[] args) {
+        List<Shop> shops = new ArrayList<>();
+        List<Product> products = new ArrayList<>(); // meet, fish, eggs, cheese
+
+        Product sugar = new Product("sugar");
+        Product oil = new Product("oil");
+        Product bread = new Product("bread");
+        Product meat = new Product("meat");
+        Product fish = new Product("fish");
+        Product candy = new Product("candy");
+        Product eggs = new Product("eggs");
+        Product pan = new Product("pan");
+        Product cup = new Product("cup");
+        Product cheese = new Product("cheese");
+
+        products.add(sugar);
+        products.add(meat);
+        products.add(fish);
+        products.add(eggs);
+        products.add(cheese);
+
+        List<Product> sh1 = new ArrayList<>();
+        List<Product> sh2 = new ArrayList<>();
+        List<Product> sh3 = new ArrayList<>();
+        List<Product> sh4 = new ArrayList<>();
+
+        Shop shop1 = new Shop(sh1);
+        Shop shop2 = new Shop(sh2);
+        Shop shop3 = new Shop(sh3);
+        Shop shop4 = new Shop(sh4);
+
+        sh1.add(sugar);
+        sh1.add(oil);
+        sh1.add(bread);
+        sh1.add(meat);
+
+        sh2.add(sugar);
+//        sh2.add(fish);
+        sh2.add(candy);
+        sh2.add(eggs);
+
+        sh3.add(sugar);
+        sh3.add(eggs);
+        sh3.add(pan);
+        sh3.add(cup);
+
+        sh4.add(sugar);
+        sh4.add(pan);
+        sh4.add(cup);
+        sh4.add(cheese);
+
+        shops.add(shop1);
+        shops.add(shop2);
+        shops.add(shop3);
+        shops.add(shop4);
+
+        ProductAnalytics testPA = new ProductAnalytics(shops, products);
+        Set<Product> inAll = testPA.notExistInShops();
+        for (Product p : inAll) System.out.println(p.getCode());
+
+    }
+}
+
+
 /*
 2.1 Создать класс Product - товар,
 2.2. Создать private String code - уникальный артикул товара
