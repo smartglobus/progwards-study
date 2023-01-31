@@ -1,9 +1,6 @@
 package ru.progwards.java1.lessons.sets;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 class Product {
     private String code;
@@ -21,7 +18,7 @@ class Shop {
     private List<Product> products;
 
     public Shop(List<Product> products) {
-        this.products = new ArrayList<>(products);
+        this.products = products;
     }
 
     public List<Product> getProducts() {
@@ -35,8 +32,8 @@ public class ProductAnalytics {
     List<Product> products;
 
     public ProductAnalytics(List<Shop> shops, List<Product> products) {
-        this.shops = new ArrayList<>(shops);
-        this.products = new ArrayList<>(products);
+        this.shops = shops;
+        this.products = products;
     }
 
     public Set<Product> existInAll() { //  OK!- товары из products, которые имеются во всех магазинах
@@ -64,14 +61,56 @@ public class ProductAnalytics {
 
     public Set<Product> existOnlyInOne() { // - товары из products, которые есть только в одном магазине
         Set<Product> existOnlyInOne = new HashSet<>();
+        Set<Product> currDiff = new HashSet<>();
+        Iterator<Shop> shopIterator = shops.iterator();
+        Set<Product> prevShop = new HashSet<>(shopIterator.next().getProducts());
+        Set<Product> commonProd = new HashSet<>(prevShop);
+        Set<Product> currShop = new HashSet<>();
 
+        while (shopIterator.hasNext()) {
+            currShop.clear();
+            currShop.addAll(new HashSet<>(shopIterator.next().getProducts()));
+            existOnlyInOne = symDiffProd(commonProd, currShop);
+            commonProd.addAll(currShop);
+            commonProd.removeAll(existOnlyInOne);
+            prevShop.clear();
+            prevShop.addAll(currShop);
+            existOnlyInOne = symDiffProd(currDiff, existOnlyInOne);
+            currDiff.clear();
+            currDiff.addAll(existOnlyInOne);
+        }
 
         return existOnlyInOne;
     }
 
+    /*
+    diff - разница (результат) == existOnlyInOne
+    currDiff  - текущая разница
+    prevShop = shops.next() // init.
+    commonProd = prevShop // init.   - продукты, имеющиеся в двух и более магазинах
+
+    Iterator(while shops.hasNext()):
+     currShop = shops.next() //b 2345 (new Set(shops.next()))
+     diff = symDifference(commonProd, currShop) // 15
+     commonProd.add(currShop)// 12345
+     commonProd.remove(diff) // 234
+     prevShop = currShop // 2345
+     diff = symDifference(currDiff,diff) // 15
+     currDiff = diff
+     */
+
+    public static Set<Product> symDiffProd(Set<Product> set1, Set<Product> set2) {
+        Set<Product> symDiffSet = new HashSet<>(set1);
+        symDiffSet.addAll(set2);
+        Set<Product> intersection = new HashSet<>(set1);
+        intersection.retainAll(set2);
+        symDiffSet.removeAll(intersection);
+        return symDiffSet;
+    }
+
     public static void main(String[] args) {
         List<Shop> shops = new ArrayList<>();
-        List<Product> products = new ArrayList<>(); // meet, fish, eggs, cheese
+        List<Product> products = new ArrayList<>(); // sugar, meet, fish, eggs, cheese
 
         Product sugar = new Product("sugar");
         Product oil = new Product("oil");
@@ -100,25 +139,26 @@ public class ProductAnalytics {
         Shop shop3 = new Shop(sh3);
         Shop shop4 = new Shop(sh4);
 
-        sh1.add(sugar);
+        sh1.add(sugar);//
         sh1.add(oil);
         sh1.add(bread);
-        sh1.add(meat);
+        sh1.add(meat);//
 
-        sh2.add(sugar);
-//        sh2.add(fish);
+        sh2.add(sugar);//
+        sh2.add(fish);
         sh2.add(candy);
-        sh2.add(eggs);
+        sh2.add(eggs);//
 
-        sh3.add(sugar);
-        sh3.add(eggs);
+        sh3.add(sugar);//
+        sh3.add(eggs);//
         sh3.add(pan);
         sh3.add(cup);
 
-        sh4.add(sugar);
+        sh4.add(sugar);//
         sh4.add(pan);
         sh4.add(cup);
-        sh4.add(cheese);
+        sh4.add(cheese);//
+
 
         shops.add(shop1);
         shops.add(shop2);
@@ -126,7 +166,7 @@ public class ProductAnalytics {
         shops.add(shop4);
 
         ProductAnalytics testPA = new ProductAnalytics(shops, products);
-        Set<Product> inAll = testPA.notExistInShops();
+        Set<Product> inAll = testPA.existOnlyInOne();
         for (Product p : inAll) System.out.println(p.getCode());
 
     }
