@@ -83,7 +83,7 @@ public class ProductAnalytics {
             currDiff.clear();
             currDiff.addAll(existOnlyInOne);
         }
-
+        existOnlyInOne.retainAll(products);
         return existOnlyInOne;
     }
 
