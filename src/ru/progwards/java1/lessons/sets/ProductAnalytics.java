@@ -70,12 +70,16 @@ public class ProductAnalytics {
         while (shopIterator.hasNext()) {
             currShop.clear();
             currShop.addAll(new HashSet<>(shopIterator.next().getProducts()));
+
             existOnlyInOne = symDiffProd(commonProd, currShop);
             commonProd.addAll(currShop);
             commonProd.removeAll(existOnlyInOne);
+
             prevShop.clear();
             prevShop.addAll(currShop);
+
             existOnlyInOne = symDiffProd(currDiff, existOnlyInOne);
+
             currDiff.clear();
             currDiff.addAll(existOnlyInOne);
         }
