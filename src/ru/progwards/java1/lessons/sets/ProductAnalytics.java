@@ -36,14 +36,14 @@ public class ProductAnalytics {
         this.products = products;
     }
 
-    public Set<Product> existInAll() { //  OK!- товары из products, которые имеются во всех магазинах
+    public Set<Product> existInAll() { //  - товары из products, которые имеются во всех магазинах
         Set<Product> existInAll = new HashSet<>();
         for (Shop s : shops) existInAll.addAll(s.getProducts()); // добавили все имеющиеся в магазинах продукты
         for (Shop s : shops) existInAll.retainAll(s.getProducts()); // поочередно удалили все, кроме нужных
         return existInAll;
     }
 
-    public Set<Product> existAtListInOne() { // OK! - товары из products, которые имеются хотя бы в одном магазине
+    public Set<Product> existAtListInOne() { //  - товары из products, которые имеются хотя бы в одном магазине
         Set<Product> existAtListInOne = new HashSet<>();
         for (Shop s : shops) {
             Set<Product> oneShopAssortment = new HashSet<>(s.getProducts());
@@ -53,7 +53,7 @@ public class ProductAnalytics {
         return existAtListInOne;
     }
 
-    public Set<Product> notExistInShops() { // OK! - товары из products, которых нет ни в одном магазине
+    public Set<Product> notExistInShops() { //  - товары из products, которых нет ни в одном магазине
         Set<Product> notExistInShops = new HashSet<>(products);
         for (Shop s : shops) notExistInShops.removeAll(s.getProducts());
         return notExistInShops;
@@ -61,11 +61,11 @@ public class ProductAnalytics {
 
     public Set<Product> existOnlyInOne() { // - товары из products, которые есть только в одном магазине
         Set<Product> existOnlyInOne = new HashSet<>();
-        Set<Product> currDiff = new HashSet<>();
+        Set<Product> currDiff = new HashSet<>(); // текущий результат
         Iterator<Shop> shopIterator = shops.iterator();
-        Set<Product> prevShop = new HashSet<>(shopIterator.next().getProducts());
-        Set<Product> commonProd = new HashSet<>(prevShop);
-        Set<Product> currShop = new HashSet<>();
+        Set<Product> prevShop = new HashSet<>(shopIterator.next().getProducts()); // ассортимент предыдущего магазина
+        Set<Product> commonProd = new HashSet<>(prevShop); // - продукты, имеющиеся в двух и более магазинах
+        Set<Product> currShop = new HashSet<>(); // ассортимент текущего магазина
 
         while (shopIterator.hasNext()) {
             currShop.clear();
