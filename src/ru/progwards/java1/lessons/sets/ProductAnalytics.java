@@ -87,22 +87,7 @@ public class ProductAnalytics {
         return existOnlyInOne;
     }
 
-    /*
-    diff - разница (результат) == existOnlyInOne
-    currDiff  - текущая разница
-    prevShop = shops.next() // init.
-    commonProd = prevShop // init.   - продукты, имеющиеся в двух и более магазинах
-
-    Iterator(while shops.hasNext()):
-     currShop = shops.next() //b 2345 (new Set(shops.next()))
-     diff = symDifference(commonProd, currShop) // 15
-     commonProd.add(currShop)// 12345
-     commonProd.remove(diff) // 234
-     prevShop = currShop // 2345
-     diff = symDifference(currDiff,diff) // 15
-     currDiff = diff
-     */
-
+    // вычисление симметричной разницы множеств Product
     public static Set<Product> symDiffProd(Set<Product> set1, Set<Product> set2) {
         Set<Product> symDiffSet = new HashSet<>(set1);
         symDiffSet.addAll(set2);
@@ -143,25 +128,25 @@ public class ProductAnalytics {
         Shop shop3 = new Shop(sh3);
         Shop shop4 = new Shop(sh4);
 
-        sh1.add(sugar);//
+        sh1.add(sugar);
         sh1.add(oil);
         sh1.add(bread);
-        sh1.add(meat);//
+        sh1.add(meat);
 
-        sh2.add(sugar);//
+        sh2.add(sugar);
         sh2.add(fish);
         sh2.add(candy);
-        sh2.add(eggs);//
+        sh2.add(eggs);
 
-        sh3.add(sugar);//
-        sh3.add(eggs);//
+        sh3.add(sugar);
+        sh3.add(eggs);
         sh3.add(pan);
         sh3.add(cup);
 
-        sh4.add(sugar);//
+        sh4.add(sugar);
         sh4.add(pan);
         sh4.add(cup);
-        sh4.add(cheese);//
+        sh4.add(cheese);
 
 
         shops.add(shop1);
@@ -170,8 +155,8 @@ public class ProductAnalytics {
         shops.add(shop4);
 
         ProductAnalytics testPA = new ProductAnalytics(shops, products);
-        Set<Product> inAll = testPA.existOnlyInOne();
-        for (Product p : inAll) System.out.println(p.getCode());
+        Set<Product> set = testPA.existOnlyInOne();
+        for (Product p : set) System.out.println(p.getCode());
 
     }
 }
