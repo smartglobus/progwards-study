@@ -18,11 +18,11 @@ class Shop {
     private List<Product> products;
 
     public Shop(List<Product> products) {
-        this.products = products;
+        this.products = new ArrayList<>(products);
     }
 
     public List<Product> getProducts() {
-        return new ArrayList<>(products);
+        return products;
     }
 }
 
