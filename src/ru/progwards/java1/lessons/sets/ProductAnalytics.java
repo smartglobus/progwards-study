@@ -50,13 +50,15 @@ public class ProductAnalytics {
             oneShopAssortment.retainAll(products);
             existAtListInOne.addAll(oneShopAssortment);
         }
-        return existAtListInOne;
+        return null;
+//        return existAtListInOne;
     }
 
     public Set<Product> notExistInShops() { //  - товары из products, которых нет ни в одном магазине
         Set<Product> notExistInShops = new HashSet<>(products);
         for (Shop s : shops) notExistInShops.removeAll(s.getProducts());
-        return notExistInShops;
+//        return notExistInShops;
+        return null;
     }
 
     public Set<Product> existOnlyInOne() { // - товары из products, которые есть только в одном магазине
@@ -84,7 +86,8 @@ public class ProductAnalytics {
             currDiff.addAll(existOnlyInOne);
         }
         existOnlyInOne.retainAll(products);
-        return existOnlyInOne;
+//        return existOnlyInOne;
+        return null;
     }
 
     // вычисление симметричной разницы множеств Product
