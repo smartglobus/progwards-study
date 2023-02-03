@@ -28,8 +28,8 @@ class Shop {
 
 public class ProductAnalytics {
 
-    List<Shop> shops;
-    List<Product> products;
+    private List<Shop> shops;
+    private List<Product> products;
 
     public ProductAnalytics(List<Shop> shops, List<Product> products) {
         this.shops = shops;
