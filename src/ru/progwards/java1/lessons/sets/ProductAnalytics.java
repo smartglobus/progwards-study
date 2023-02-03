@@ -18,7 +18,8 @@ class Shop {
     private List<Product> products;
 
     public Shop(List<Product> products) {
-        this.products = new ArrayList<>(products);
+//        this.products = new ArrayList<>(products);
+        this.products = products;
     }
 
     public List<Product> getProducts() {
@@ -158,7 +159,7 @@ public class ProductAnalytics {
         shops.add(shop4);
 
         ProductAnalytics testPA = new ProductAnalytics(shops, products);
-        Set<Product> set = testPA.existOnlyInOne();
+        Set<Product> set = testPA.existInAll();
         for (Product p : set) System.out.println(p.getCode());
 
     }
