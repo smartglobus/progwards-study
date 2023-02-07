@@ -18,7 +18,6 @@ class Shop {
     private List<Product> products;
 
     public Shop(List<Product> products) {
-//        this.products = new ArrayList<>(products);
         this.products = products;
     }
 
@@ -29,8 +28,8 @@ class Shop {
 
 public class ProductAnalytics {
 
-    private List<Shop> shops;
-    private List<Product> products;
+    List<Shop> shops;
+    List<Product> products;
 
     public ProductAnalytics(List<Shop> shops, List<Product> products) {
         this.shops = shops;
@@ -51,15 +50,13 @@ public class ProductAnalytics {
             oneShopAssortment.retainAll(products);
             existAtListInOne.addAll(oneShopAssortment);
         }
-        return null;
-//        return existAtListInOne;
+        return existAtListInOne;
     }
 
     public Set<Product> notExistInShops() { //  - товары из products, которых нет ни в одном магазине
         Set<Product> notExistInShops = new HashSet<>(products);
         for (Shop s : shops) notExistInShops.removeAll(s.getProducts());
-//        return notExistInShops;
-        return null;
+        return notExistInShops;
     }
 
     public Set<Product> existOnlyInOne() { // - товары из products, которые есть только в одном магазине
@@ -87,8 +84,7 @@ public class ProductAnalytics {
             currDiff.addAll(existOnlyInOne);
         }
         existOnlyInOne.retainAll(products);
-//        return existOnlyInOne;
-        return null;
+        return existOnlyInOne;
     }
 
     // вычисление симметричной разницы множеств Product
@@ -159,7 +155,7 @@ public class ProductAnalytics {
         shops.add(shop4);
 
         ProductAnalytics testPA = new ProductAnalytics(shops, products);
-        Set<Product> set = testPA.existInAll();
+        Set<Product> set = testPA.existOnlyInOne();
         for (Product p : set) System.out.println(p.getCode());
 
     }
