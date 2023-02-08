@@ -6,7 +6,7 @@ public class CollectionsSort {
 
     // переделать алгоритм из класса ArraySort из ДЗ про массивы, на коллекции. Не использовать встроенные методы сортировок
     public static void mySort(Collection<Integer> data) {
-        ArrayList<Integer> mySort = new ArrayList<>(data);
+        List<Integer> mySort = new ArrayList<>(data);
 
         for (int i = 0; i < data.size(); i++) {
             ListIterator<Integer> iterator = mySort.listIterator(i);
@@ -17,19 +17,27 @@ public class CollectionsSort {
                 prev = curr;
             }
         }
-        Collections.copy((ArrayList<Integer>) data, mySort);
+        Collections.copy((List<Integer>) data, mySort);
     }
 
     public static void minSort(Collection<Integer> data) {
-        ArrayList<Integer> dataList = new ArrayList<>(data);
-        ArrayList<Integer> minSort = new ArrayList<>();
+        List<Integer> dataList = new ArrayList<>(data);
+        List<Integer> minSort = new ArrayList<>();
        while (!dataList.isEmpty()){
             minSort.add(Collections.min(dataList));
             dataList.remove(Collections.min(dataList));
         }
-        Collections.copy((ArrayList<Integer>)data, minSort);
+        Collections.copy((List<Integer>)data, minSort);
     }
 
+    public static void collSort(Collection<Integer> data){
+        Collections.sort((List<Integer>)data);
+    }
+
+    public static Collection<String> compareSort(){
+
+        return null;
+    }
 
     public static void main(String[] args) {
         List<Integer> test = new ArrayList<>(Arrays.asList(11, 2, 3, 48, 5));

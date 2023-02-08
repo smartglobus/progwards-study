@@ -28,10 +28,10 @@ class Shop {
 
 public class ProductAnalytics {
 
-    List<Shop> shops;
-    List<Product> products;
+    private List<Shop> shops;
+    private List<Product> products;
 
-    public ProductAnalytics(List<Shop> shops, List<Product> products) {
+    public ProductAnalytics(List<Product> products, List<Shop> shops) {
         this.shops = shops;
         this.products = products;
     }
@@ -154,7 +154,7 @@ public class ProductAnalytics {
         shops.add(shop3);
         shops.add(shop4);
 
-        ProductAnalytics testPA = new ProductAnalytics(shops, products);
+        ProductAnalytics testPA = new ProductAnalytics(products, shops);
         Set<Product> set = testPA.existOnlyInOne();
         for (Product p : set) System.out.println(p.getCode());
 
