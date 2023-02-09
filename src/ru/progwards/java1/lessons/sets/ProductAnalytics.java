@@ -60,28 +60,24 @@ public class ProductAnalytics {
     }
 
     public Set<Product> existOnlyInOne() { // - товары из products, которые есть только в одном магазине
-        Set<Product> existOnlyInOne = new HashSet<>();
-        Set<Product> currDiff = new HashSet<>(); // текущий результат
+
         Iterator<Shop> shopIterator = shops.iterator();
-        Set<Product> prevShop = new HashSet<>(shopIterator.next().getProducts()); // ассортимент предыдущего магазина
-        Set<Product> commonProd = new HashSet<>(prevShop); // - продукты, имеющиеся в двух и более магазинах
-        Set<Product> currShop = new HashSet<>(); // ассортимент текущего магазина
+        Set<Product> currShop = new HashSet<>(shopIterator.next().getProducts()); // ассортимент текущего магазина
+        Set<Product> existOnlyInOne = new HashSet<>(currShop); //  результат
+        Set<Product> currResult = new HashSet<>(currShop); //  текущий результат, а также буфер для обновления commonProd
+        Set<Product> commonProd = new HashSet<>(); //  продукты, имеющиеся в двух и более магазинах
 
         while (shopIterator.hasNext()) {
-            currShop.clear();
-            currShop.addAll(new HashSet<>(shopIterator.next().getProducts()));
+            currShop = new HashSet<>(shopIterator.next().getProducts());
 
-            existOnlyInOne = symDiffProd(commonProd, currShop);
-            commonProd.addAll(currShop);
-            commonProd.removeAll(existOnlyInOne);
+            currResult.retainAll(currShop); // !!! временно становится здесь списком текущих совпадений при обновлении commonProd
+            commonProd.addAll(currResult);
 
-            prevShop.clear();
-            prevShop.addAll(currShop);
+            existOnlyInOne = symDiffProd(existOnlyInOne, currShop);
+            existOnlyInOne.removeAll(commonProd);
 
-            existOnlyInOne = symDiffProd(currDiff, existOnlyInOne);
-
-            currDiff.clear();
-            currDiff.addAll(existOnlyInOne);
+            currResult.clear();
+            currResult.addAll(existOnlyInOne);
         }
         existOnlyInOne.retainAll(products);
         return existOnlyInOne;
@@ -99,7 +95,7 @@ public class ProductAnalytics {
 
     public static void main(String[] args) {
         List<Shop> shops = new ArrayList<>();
-        List<Product> products = new ArrayList<>(); // sugar, meet, fish, eggs, cheese
+        List<Product> products = new ArrayList<>(); // sugar, meat, fish, eggs, cheese
 
         Product sugar = new Product("sugar");
         Product oil = new Product("oil");
@@ -137,6 +133,7 @@ public class ProductAnalytics {
         sh2.add(fish);
         sh2.add(candy);
         sh2.add(eggs);
+        sh2.add(meat);
 
         sh3.add(sugar);
         sh3.add(eggs);
