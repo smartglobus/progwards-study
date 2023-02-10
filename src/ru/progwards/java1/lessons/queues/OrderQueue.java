@@ -17,23 +17,12 @@ public class OrderQueue {
         }
     });
 
-
     public void add(Order order) {
         queue.offer(order);
     }
 
-    public Order get(){
-
+    public Order get() {
         return queue.poll();
-    }
-
-    public static void main(String[] args) {
-        Order first = new Order(25);
-        Order second = new Order(17);
-        Order third = new Order(77);
-        System.out.println(first.getNum());
-        System.out.println(second.getNum());
-        System.out.println(third.getNum());
     }
 }
 
@@ -54,8 +43,6 @@ class Order {
         } else {
             this.orderClass = 2;
         }
-
-
     }
 
     public double getSum() {

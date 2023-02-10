@@ -20,7 +20,7 @@ public class CollectionsSort {
             }
         }
         Collections.copy((List<Integer>) data, mySort);
-    }//           85,73,43,60,73,66,7
+    }
 
     public static void minSort(Collection<Integer> data) {
         List<Integer> dataList = new ArrayList<>(data);
@@ -64,26 +64,20 @@ public class CollectionsSort {
         long mySortTime = new Date().getTime() - startTime;
         SortTime mySort = new SortTime("mySort", mySortTime);
         compareResult.add(mySort);
-//        System.out.println("\n" + mySort.getName() + "  " + mySort.getSortTime());
 
         startTime = new Date().getTime();
         minSort(randColl);
         long minSortTime = new Date().getTime() - startTime;
         SortTime minSort = new SortTime("minSort", minSortTime);
         compareResult.add(minSort);
-//        System.out.println("\n" + minSort.getName() + "  " + minSort.getSortTime());
 
         startTime = new Date().getTime();
         collSort(randColl);
         long collSortTime = new Date().getTime() - startTime;
         SortTime collSort = new SortTime("collSort", collSortTime);
         compareResult.add(collSort);
-//        System.out.println("\n" + collSort.getName() + "  " + collSort.getSortTime());
 
-        for (SortTime st : compareResult) {
-            output.offer(st.getName());
-        }
-
+        for (SortTime st : compareResult) output.offer(st.getName());
         return output;
     }
 
@@ -108,10 +102,6 @@ public class CollectionsSort {
         public String getName() {
             return name;
         }
-
-//        public long getSortTime() {
-//            return sortTime;
-//        }
     }
 
     public static void main(String[] args) {
