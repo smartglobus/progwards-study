@@ -10,15 +10,17 @@ public class CollectionsSort {
 
         for (int i = 0; i < data.size(); i++) {
             ListIterator<Integer> iterator = mySort.listIterator(i);
-            Integer prev = iterator.next();
+            Integer currMin = iterator.next();
             while (iterator.hasNext()) {
                 Integer curr = iterator.next();
-                if (prev > curr) Collections.swap(mySort, mySort.indexOf(prev), mySort.indexOf(curr));
-                prev = curr;
+                if (currMin > curr) {
+                    Collections.swap(mySort, mySort.indexOf(currMin), mySort.indexOf(curr));
+                    currMin = curr;
+                }
             }
         }
         Collections.copy((List<Integer>) data, mySort);
-    }
+    }//           17,39,46,97,9,85
 
     public static void minSort(Collection<Integer> data) {
         List<Integer> dataList = new ArrayList<>(data);
@@ -107,16 +109,22 @@ public class CollectionsSort {
             return name;
         }
 
-        public long getSortTime() {
-            return sortTime;
-        }
+//        public long getSortTime() {
+//            return sortTime;
+//        }
     }
 
     public static void main(String[] args) {
-//        List<Integer> test = new ArrayList<>(Arrays.asList(11, 2, 3, 48, 5));
-//        minSort(test);
-//        for (Integer t : test) System.out.print(t + " ");
+        List<Integer> test = new ArrayList<>(Arrays.asList(17, 39, 46, 97, 9, 85));
+        mySort(test);
+        for (Integer t : test) System.out.print(t + " ");
 
         for (String s : compareSort()) System.out.println(s);
     }
 }
+/*
+Вопросы:
+1. Какой лучше тип коллекции String выбрать здесь для output
+2. Где правильнее писать компаратор, метод compareTo в классе, при объявлении TreeSet или вообще отдельным методом?
+3.
+ */
