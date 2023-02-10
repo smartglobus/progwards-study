@@ -22,6 +22,11 @@ public class OrderQueue {
         queue.offer(order);
     }
 
+    public Order get(){
+
+        return queue.poll();
+    }
+
     public static void main(String[] args) {
         Order first = new Order(25);
         Order second = new Order(17);
@@ -35,7 +40,7 @@ public class OrderQueue {
 class Order {
     private double sum;
     private int num;
-    private static int orderNum;
+    private static int orderNum; // счётчик заказов
     private int orderClass;
 
     public Order(double sum) {
