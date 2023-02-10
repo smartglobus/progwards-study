@@ -14,13 +14,13 @@ public class CollectionsSort {
             while (iterator.hasNext()) {
                 Integer curr = iterator.next();
                 if (currMin > curr) {
-                    Collections.swap(mySort, mySort.indexOf(currMin), mySort.indexOf(curr));
+                    Collections.swap(mySort, mySort.indexOf(currMin), mySort.lastIndexOf(curr));
                     currMin = curr;
                 }
             }
         }
         Collections.copy((List<Integer>) data, mySort);
-    }//           17,39,46,97,9,85
+    }//           85,73,43,60,73,66,7
 
     public static void minSort(Collection<Integer> data) {
         List<Integer> dataList = new ArrayList<>(data);
@@ -115,10 +115,10 @@ public class CollectionsSort {
     }
 
     public static void main(String[] args) {
-        List<Integer> test = new ArrayList<>(Arrays.asList(17, 39, 46, 97, 9, 85));
+        List<Integer> test = new ArrayList<>(Arrays.asList(85,73,43,60,73,66,7));
         mySort(test);
         for (Integer t : test) System.out.print(t + " ");
-
+        System.out.println();
         for (String s : compareSort()) System.out.println(s);
     }
 }

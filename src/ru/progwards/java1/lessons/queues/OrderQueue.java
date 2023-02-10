@@ -48,9 +48,9 @@ class Order {
         this.num = ++orderNum;
 
         if (sum <= 10000) {
-            this.orderClass = 1;
-        } else if (sum > 20000) {
             this.orderClass = 3;
+        } else if (sum > 20000) {
+            this.orderClass = 1;
         } else {
             this.orderClass = 2;
         }
