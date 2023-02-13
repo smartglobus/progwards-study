@@ -4,18 +4,19 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class StackCalc {
-    Deque<Double> stack = new ArrayDeque<>();
+    public static Deque<Double> stack = new ArrayDeque<>();
 
-    public void push(double value) {
+    public static void push(double value) {
         stack.push(value);
+//        System.out.println(stack);
     }
 
-    public double pop() {
+    public static double pop() {
         return stack.pop();
     }
 
     // сложить 2 верхних значения на стеке, результат положить на стек. В итогу в стеке должно быть на один элемент меньше
-    public void add() {
+    public static void add() {
         stack.push(stack.pop() + stack.pop());
     }
 
@@ -25,7 +26,7 @@ public class StackCalc {
     }
 
     // умножить 2 верхних значения на стеке, результат положить на стек. В итогу в стеке должно быть на один элемент меньше
-    public void mul() {
+    public static void mul() {
         stack.push(stack.pop() * stack.pop());
     }
 
@@ -41,11 +42,24 @@ class Calculate {
 
     public static double calculation1() {
 
-        return 0;
+StackCalc.push(2.2);
+        StackCalc.push(2.2);
+        StackCalc.push(3d);
+        StackCalc.push(12.1);
+
+        StackCalc.add();
+        StackCalc.mul();
+
+        return StackCalc.pop();
     }
 
     public static double calculation2() {
 
         return 0;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(calculation1());
+//        for (double d: StackCalc.stack) System.out.println(d);
     }
 }
