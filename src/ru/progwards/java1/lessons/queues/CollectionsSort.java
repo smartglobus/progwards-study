@@ -4,7 +4,7 @@ import java.util.*;
 
 public class CollectionsSort {
 
-    // переделать алгоритм из класса ArraySort из ДЗ про массивы, на коллекции. Не использовать встроенные методы сортировок
+// переделать алгоритм из класса ArraySort из ДЗ про массивы, на коллекции. Не использовать встроенные методы сортировок
     public static void mySort(Collection<Integer> data) {
         List<Integer> mySort = new ArrayList<>(data);
 
@@ -36,7 +36,7 @@ public class CollectionsSort {
         Collections.sort((List<Integer>) data);
     }
 
-    // сравнить производительность методов и вернуть их имена, отсортированные в порядке производительности, первый - самый быстрый.
+// сравнить производительность методов и вернуть их имена, отсортированные в порядке производительности, первый - самый быстрый.
 // В случае равенства производительности каких-то методов, возвращать их названия в алфавитном порядке.
     public static Collection<String> compareSort() {
 
@@ -112,9 +112,3 @@ public class CollectionsSort {
         for (String s : compareSort()) System.out.println(s);
     }
 }
-/*
-Вопросы:
-1. Какой лучше тип коллекции String выбрать здесь для output
-2. Где правильнее писать компаратор, метод compareTo в классе, при объявлении TreeSet или вообще отдельным методом?
-3.
- */
