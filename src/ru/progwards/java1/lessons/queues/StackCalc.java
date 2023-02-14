@@ -15,10 +15,8 @@ public class StackCalc {
         return value;
     }
 
-
     public void push(double value) {
         stack.push(value);
-//        System.out.println(stack);
     }
 
     public double pop() {
@@ -45,11 +43,9 @@ public class StackCalc {
         double d = stack.pop();
         stack.push(stack.pop() / d);
     }
-
 }
 
 class Calculate {
-
 
     public static double calculation1() {
         StackCalc calc1 = new StackCalc();
