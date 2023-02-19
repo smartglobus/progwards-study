@@ -50,7 +50,7 @@ public class FiboMapCache {
             fmcTest.fiboNumber(i);
         }
         System.out.println("fiboNumber cacheOn=" + fmcTest.cacheOn + " время выполнения " + (System.currentTimeMillis() - startTime));
-
+        fmcTest.clearCahe();
         fmcTest.cacheOn = true;
 
         startTime = System.currentTimeMillis();
