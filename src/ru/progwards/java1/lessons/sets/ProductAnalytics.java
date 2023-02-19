@@ -42,6 +42,11 @@ public class ProductAnalytics {
         for (Shop s : shops) existInAll.retainAll(s.getProducts()); // поочередно удалили все, кроме нужных
         return existInAll;
     }
+    //Комментарий Серёги:
+    // Этот проход по всем магазинам необязателен, только время работы программы увеличивает. У нас же есть список всех продуктов products, от него можно было и отталкиваться.
+    //  !!! То есть, надо было из списка products последовательно удалить все несовпадения
+    //  Set<Product> existInAll = new HashSet<>(products);
+    // for (Shop s : shops) existInAll.retainAll(s.getProducts());
 
     public Set<Product> existAtListInOne() { //  - товары из products, которые имеются хотя бы в одном магазине
         Set<Product> existAtListInOne = new HashSet<>();
