@@ -7,11 +7,12 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class FiboMapCache {
-    private Map<Integer, BigDecimal> fiboCache = new HashMap<>();
+    private Map<Integer, BigDecimal> fiboCache;
     boolean cacheOn;
 
     public FiboMapCache(boolean cacheOn) {
         this.cacheOn = cacheOn;
+        this.fiboCache = new HashMap<>();
     }
 
     //в функции проверить, находится ли вычисленное значение для n в кэше, и если да - вернуть его из кэша, если нет - рассчитать и добавить в кэш.
@@ -43,7 +44,7 @@ public class FiboMapCache {
     //тест для расчета чисел Фибоначчи от n = 1 до 1000 включительно и замерить разницу во времени с on = true и on = false,
 // результат вывести на экран в формате "fiboNumber cacheOn=??? время выполнения ???" для cacheOn=true и cacheOn=false,
 // вместо ??? вывести реальные значения в мсек.
-    public  void test() {
+    public void test() {
 //        FiboMapCache fmcTest = new FiboMapCache(false);
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < 1000; i++) {
@@ -61,10 +62,11 @@ public class FiboMapCache {
     }
 
     public static void main(String[] args) {
-        FiboMapCache fmcTestFalse = new FiboMapCache(false);
-        fmcTestFalse.test();
-        fmcTestFalse.clearCahe();
+//        FiboMapCache fmcTestFalse = new FiboMapCache(false);
+//        fmcTestFalse.test();
+//        fmcTestFalse.clearCahe();
         FiboMapCache fmcTestTrue = new FiboMapCache(true);
         fmcTestTrue.test();
+        System.out.println(fmcTestTrue.fiboCache.get(8));
     }
 }
