@@ -43,24 +43,28 @@ public class FiboMapCache {
     //тест для расчета чисел Фибоначчи от n = 1 до 1000 включительно и замерить разницу во времени с on = true и on = false,
 // результат вывести на экран в формате "fiboNumber cacheOn=??? время выполнения ???" для cacheOn=true и cacheOn=false,
 // вместо ??? вывести реальные значения в мсек.
-    public static void test() {
-        FiboMapCache fmcTest = new FiboMapCache(false);
+    public  void test() {
+//        FiboMapCache fmcTest = new FiboMapCache(false);
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < 1000; i++) {
-            fmcTest.fiboNumber(i);
+            fiboNumber(i);
         }
-        System.out.println("fiboNumber cacheOn=" + fmcTest.cacheOn + " время выполнения " + (System.currentTimeMillis() - startTime));
-        fmcTest.clearCahe();
-        fmcTest.cacheOn = true;
-
-        startTime = System.currentTimeMillis();
-        for (int i = 0; i < 1000; i++) {
-            fmcTest.fiboNumber(i);
-        }
-        System.out.println("fiboNumber cacheOn=" + fmcTest.cacheOn + " время выполнения " + (System.currentTimeMillis() - startTime));
+        System.out.println("fiboNumber cacheOn=" + cacheOn + " время выполнения " + (System.currentTimeMillis() - startTime));
+//        fmcTest.clearCahe();
+//        fmcTest.cacheOn = true;
+//
+//        startTime = System.currentTimeMillis();
+//        for (int i = 0; i < 1000; i++) {
+//            fmcTest.fiboNumber(i);
+//        }
+//        System.out.println("fiboNumber cacheOn=" + fmcTest.cacheOn + " время выполнения " + (System.currentTimeMillis() - startTime));
     }
 
     public static void main(String[] args) {
-        FiboMapCache.test();
+        FiboMapCache fmcTestFalse = new FiboMapCache(false);
+        fmcTestFalse.test();
+        fmcTestFalse.clearCahe();
+        FiboMapCache fmcTestTrue = new FiboMapCache(true);
+        fmcTestTrue.test();
     }
 }
