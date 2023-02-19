@@ -18,7 +18,7 @@ public class FiboMapCache {
     //в функции проверить, находится ли вычисленное значение для n в кэше, и если да - вернуть его из кэша, если нет - рассчитать и добавить в кэш.
 // Учитывать значение переменной cacheOn
     public BigDecimal fiboNumber(int n) {
-        if (cacheOn && fiboCache.containsKey(n)) return fiboCache.putIfAbsent(n, fibonacci(n));
+        if (cacheOn && fiboCache.containsKey(n)) return fiboCache.put(n, fibonacci(n));
         return fiboCache.put(n, fibonacci(n));
     }
 
