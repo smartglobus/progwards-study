@@ -38,10 +38,13 @@ public class UsageFrequency {
         Map<String, Integer> getWrd = new HashMap<>();
 //        fileToString.replace(""," ");
         String[] words = fileToString.split("[\\W]+");
-        Collection<String> wordsSet = new ArrayList<>(Arrays.asList(words));
-        for (String s : wordsSet) {
-            if ("".equals(s) || s == null)wordsSet.remove(s);
-            getWrd.putIfAbsent(s, Collections.frequency(wordsSet, s));
+        List<String> wordsSet = new ArrayList<>(Arrays.asList(words));
+        for (int i = 0; i < wordsSet.size(); i++) {
+            if ("".equals(wordsSet.get(i)) || wordsSet.get(i) == null) {
+//                wordsSet.remove(i);
+                continue;
+            }
+            getWrd.putIfAbsent(wordsSet.get(i), Collections.frequency(wordsSet, wordsSet.get(i)));
         }
         return getWrd;
     }
