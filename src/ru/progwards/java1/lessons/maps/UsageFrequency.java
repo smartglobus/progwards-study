@@ -39,7 +39,10 @@ public class UsageFrequency {
         fileToString.replace(""," ");
         String[] words = fileToString.split("[\\W]+");
         Collection<String> wordsSet = new ArrayList<>(Arrays.asList(words));
-        for (String s : wordsSet) getWrd.putIfAbsent(s, Collections.frequency(wordsSet, s));
+        for (String s : wordsSet) {
+//            if ("".equals(s) || s == null)wordsSet.remove(s);
+            getWrd.putIfAbsent(s, Collections.frequency(wordsSet, s));
+        }
         return getWrd;
     }
 }
