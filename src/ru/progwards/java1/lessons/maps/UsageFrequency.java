@@ -36,11 +36,11 @@ public class UsageFrequency {
 // Знаки препинания, такие как “.,!? @” и др являются разделителями.
     public Map<String, Integer> getWords() {
         Map<String, Integer> getWrd = new HashMap<>();
-        fileToString.replace(""," ");
+//        fileToString.replace(""," ");
         String[] words = fileToString.split("[\\W]+");
         Collection<String> wordsSet = new ArrayList<>(Arrays.asList(words));
         for (String s : wordsSet) {
-//            if ("".equals(s) || s == null)wordsSet.remove(s);
+            if ("".equals(s) || s == null)wordsSet.remove(s);
             getWrd.putIfAbsent(s, Collections.frequency(wordsSet, s));
         }
         return getWrd;
