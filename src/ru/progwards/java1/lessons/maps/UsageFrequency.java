@@ -10,9 +10,10 @@ import java.util.*;
 public class UsageFrequency {
     private String fileToString;
 
-    public UsageFrequency(String fileName) {
-        processFile(fileName);
-    }
+//    public UsageFrequency(String fileName) {
+//
+//        processFile(fileName);
+//    }
 
     public void processFile(String fileName) {
 
@@ -59,14 +60,14 @@ public class UsageFrequency {
     }
 
     public static void main(String[] args) {
-        UsageFrequency test = new UsageFrequency("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\maps\\wiki.test.tokens");
+//        UsageFrequency test = new UsageFrequency("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\maps\\wiki.test.tokens");
 
-        for (var lt : test.getLetters().entrySet()) {
-            System.out.println(lt);
-        }
-        System.out.println("---------------------------");
-        for (var wd : test.getWords().entrySet()) {
-            System.out.println(wd);
-        }
+//        for (var lt : test.getLetters().entrySet()) {
+//            System.out.println(lt);
+//        }
+//        System.out.println("---------------------------");
+//        for (var wd : test.getWords().entrySet()) {
+//            System.out.println(wd);
+//        }
     }
 }
