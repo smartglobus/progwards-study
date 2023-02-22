@@ -44,4 +44,16 @@ public class UsageFrequency {
         }
         return getWrd;
     }
+
+    public static void main(String[] args) {
+        UsageFrequency test = new UsageFrequency();
+        test.processFile("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\maps\\wiki.test.tokens");
+        for (var lt : test.getLetters().entrySet()) {
+            System.out.println(lt);
+        }
+        System.out.println("---------------------------");
+        for (var wd : test.getWords().entrySet()) {
+            System.out.println(wd);
+        }
+    }
 }
