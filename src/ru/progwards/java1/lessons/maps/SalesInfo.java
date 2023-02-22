@@ -25,7 +25,13 @@ public class SalesInfo {
     private static boolean checkLine(String line) {
         String[] account = line.split(",");
         if (account.length != 4) return false;
-        return Integer.valueOf(account[2].trim()).getClass().equals(Integer.class) && Double.valueOf(account[3].trim()).getClass().equals(Double.class);
+        try {
+            if (Integer.valueOf(account[2].trim()).getClass().equals(Integer.class) && Double.valueOf(account[3].trim()).getClass().equals(Double.class))
+                return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return false;
     }
 
     class Buyer {
@@ -62,6 +68,10 @@ public class SalesInfo {
     }
 
     public static void main(String[] args) {
+//        String num = "спички";
+//        int i = Integer.valueOf(num.trim());
+//        System.out.println(i);
+
         SalesInfo test = new SalesInfo();
         test.loadOrders("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\maps\\Sales.csv");
         for (Map.Entry e : test.getGoods().entrySet()) {
