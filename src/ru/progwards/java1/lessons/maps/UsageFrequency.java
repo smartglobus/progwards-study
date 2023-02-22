@@ -1,23 +1,25 @@
 package ru.progwards.java1.lessons.maps;
 
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+
 import java.util.*;
+
 
 public class UsageFrequency {
     private String fileToString;
 
+    public UsageFrequency(String fileName) {
+        processFile(fileName);
+    }
+
     public void processFile(String fileName) {
 
-        try {//(FileReader reader = new FileReader(fileName); Scanner scanner = new Scanner(reader)) {
-            fileToString = FileUtils.readFileToString(new File(fileName), StandardCharsets.UTF_8);
-//            StringBuilder builder = new StringBuilder();
-//            while (scanner.hasNextLine()) builder.append(scanner.nextLine());
-//            fileToString = builder.toString();
+        try (FileReader reader = new FileReader(fileName); Scanner scanner = new Scanner(reader)) {
+            StringBuilder builder = new StringBuilder();
+            while (scanner.hasNextLine()) builder.append(scanner.nextLine());
+            fileToString = builder.toString();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -29,16 +31,21 @@ public class UsageFrequency {
     public Map<Character, Integer> getLetters() {
         Map<Character, Integer> getLtr = new HashMap<>();
         char[] fileToChar = fileToString.toCharArray();
-        Collection<Character> characterSet = new ArrayList<>();
-        for (char ch : fileToChar) characterSet.add(ch);
-        for (char ch : fileToChar)
+//        Collection<Character> characterSet = new ArrayList<>();
+//        for (char ch : fileToChar) characterSet.add(ch);
+//        for (char ch : fileToChar)
+//            if (Character.isAlphabetic(ch) || Character.isDigit(ch))
+//                getLtr.putIfAbsent(ch, Collections.frequency(characterSet, ch));
+
+        for (char ch : fileToChar) {
             if (Character.isAlphabetic(ch) || Character.isDigit(ch))
-                getLtr.putIfAbsent(ch, Collections.frequency(characterSet, ch));
+                if (getLtr.putIfAbsent(ch, 1) != null) getLtr.put(ch, getLtr.get(ch) + 1);
+        }
         return getLtr;
     }
 
 
-// вернуть Map, который содержит все найденные слова и количество раз, которое каждое слово встретилось.
+    // вернуть Map, который содержит все найденные слова и количество раз, которое каждое слово встретилось.
 // Знаки препинания, такие как “.,!? @” и др являются разделителями.
     public Map<String, Integer> getWords() {
         Map<String, Integer> getWrd = new HashMap<>();
@@ -49,5 +56,17 @@ public class UsageFrequency {
             getWrd.putIfAbsent(wordsSet.get(i), Collections.frequency(wordsSet, wordsSet.get(i)));
         }
         return getWrd;
+    }
+
+    public static void main(String[] args) {
+        UsageFrequency test = new UsageFrequency("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\maps\\wiki.test.tokens");
+
+        for (var lt : test.getLetters().entrySet()) {
+            System.out.println(lt);
+        }
+        System.out.println("---------------------------");
+        for (var wd : test.getWords().entrySet()) {
+            System.out.println(wd);
+        }
     }
 }
