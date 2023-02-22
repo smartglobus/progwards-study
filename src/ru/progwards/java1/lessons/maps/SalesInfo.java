@@ -11,15 +11,19 @@ public class SalesInfo {
     //  вернуть количество успешно загруженных строк.
 //  Если в строке более или менее 4-x полей, или количество и сумма не преобразуются в числа - эту строку не загружаем.
     public int loadOrders(String fileName) {
+        int count = 0;
         try (FileReader reader = new FileReader(fileName); Scanner scanner = new Scanner(reader)) {
             while (scanner.hasNextLine()) {
                 String currLine = scanner.nextLine();
-                if (checkLine(currLine)) buyersData.add(currLine);
+                if (checkLine(currLine)) {
+                    buyersData.add(currLine);
+                    count++;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return 0;
+        return count;
     }
 
     private static boolean checkLine(String line) {
