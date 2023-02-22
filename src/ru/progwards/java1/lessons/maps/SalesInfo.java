@@ -25,7 +25,7 @@ public class SalesInfo {
     private static boolean checkLine(String line) {
         String[] account = line.split(",");
         if (account.length != 4) return false;
-        return Integer.valueOf(account[2]).getClass().equals(Number.class) && Double.valueOf(account[3]).getClass().equals(Number.class);
+        return Integer.valueOf(account[2].trim()).getClass().equals(Number.class) && Double.valueOf(account[3].trim()).getClass().equals(Number.class);
     }
 
     class Buyer {
@@ -38,8 +38,8 @@ public class SalesInfo {
             String[] buyer = byr.split(",");
             this.name = buyer[0];
             this.good = buyer[1];
-            this.qty = Integer.valueOf(buyer[2]);
-            this.price = Double.valueOf(buyer[4]);
+            this.qty = Integer.valueOf(buyer[2].trim());
+            this.price = Double.valueOf(buyer[4].trim());
         }
     }
 
@@ -59,5 +59,11 @@ public class SalesInfo {
     public Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers(){
 
         return null;
+    }
+
+    public static void main(String[] args) {
+        String num = " 10";
+        int i = Integer.valueOf(num.trim());
+        System.out.println(i);
     }
 }
