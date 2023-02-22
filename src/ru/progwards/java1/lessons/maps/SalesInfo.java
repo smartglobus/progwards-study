@@ -55,4 +55,9 @@ public class SalesInfo {
         }
         return getGoods;
     }
+
+    public Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers(){
+
+        return null;
+    }
 }
