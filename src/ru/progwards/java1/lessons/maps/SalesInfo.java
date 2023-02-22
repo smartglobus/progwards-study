@@ -36,10 +36,10 @@ public class SalesInfo {
 
         Buyer(String byr) {
             String[] buyer = byr.split(",");
-            this.name = buyer[0];
-            this.good = buyer[1];
+            this.name = buyer[0].trim();
+            this.good = buyer[1].trim();
             this.qty = Integer.valueOf(buyer[2].trim());
-            this.price = Double.valueOf(buyer[4].trim());
+            this.price = Double.valueOf(buyer[3].trim());
         }
     }
 
