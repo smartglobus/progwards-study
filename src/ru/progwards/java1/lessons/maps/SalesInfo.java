@@ -8,7 +8,7 @@ public class SalesInfo {
     List<String> buyersData = new ArrayList<>();
 
 
-//  вернуть количество успешно загруженных строк.
+    //  вернуть количество успешно загруженных строк.
 //  Если в строке более или менее 4-x полей, или количество и сумма не преобразуются в числа - эту строку не загружаем.
     public int loadOrders(String fileName) {
         try (FileReader reader = new FileReader(fileName); Scanner scanner = new Scanner(reader)) {
@@ -25,7 +25,7 @@ public class SalesInfo {
     private static boolean checkLine(String line) {
         String[] account = line.split(",");
         if (account.length != 4) return false;
-        return Integer.valueOf(account[2].trim()).getClass().equals(Number.class) && Double.valueOf(account[3].trim()).getClass().equals(Number.class);
+        return Integer.valueOf(account[2].trim()).getClass().equals(Integer.class) && Double.valueOf(account[3].trim()).getClass().equals(Double.class);
     }
 
     class Buyer {
@@ -56,14 +56,16 @@ public class SalesInfo {
         return getGoods;
     }
 
-    public Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers(){
+    public Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers() {
 
         return null;
     }
 
     public static void main(String[] args) {
-        String num = " 10";
-        int i = Integer.valueOf(num.trim());
-        System.out.println(i);
+        SalesInfo test = new SalesInfo();
+        test.loadOrders("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\maps\\Sales.csv");
+        for (Map.Entry e : test.getGoods().entrySet()) {
+            System.out.println(e);
+        }
     }
 }
