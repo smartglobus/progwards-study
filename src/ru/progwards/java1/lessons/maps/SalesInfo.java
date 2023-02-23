@@ -38,18 +38,20 @@ public class SalesInfo {
         return false;
     }
 
-    class Buyer {
+    class Buy {
         String name;
         String good;
         int qty;
-        double price;
+        double sum;
+//    int sumQty = 0;
+//    double sumPrice = 0;
 
-        Buyer(String byr) {
+        Buy(String byr) {
             String[] buyer = byr.split(",");
             this.name = buyer[0].trim();
             this.good = buyer[1].trim();
             this.qty = Integer.valueOf(buyer[2].trim());
-            this.price = Double.valueOf(buyer[3].trim());
+            this.sum = Double.valueOf(buyer[3].trim());
         }
     }
 
@@ -59,16 +61,40 @@ public class SalesInfo {
         Map<String, Double> getGoods = new TreeMap<>();
 
         for (String b : buyersData) {
-            Buyer currByr = new Buyer(b);
-            if (getGoods.putIfAbsent(currByr.good, currByr.price) != null)
-                getGoods.replace(currByr.good, getGoods.get(currByr.good) + currByr.price);
+            Buy currByr = new Buy(b);
+            if (getGoods.putIfAbsent(currByr.good, currByr.sum) != null)
+                getGoods.replace(currByr.good, getGoods.get(currByr.good) + currByr.sum);
         }
         return getGoods;
     }
 
+    //вернуть список покупателей, отсортированный по алфавиту.
+    // В String  - ФИ, в Double - сумма всех покупок покупателя, в Integer - количество покупок
     public Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers() {
+        Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers = new TreeMap<>();
+        Map<String, Double> nameAndSum = new TreeMap<>();//  имя покупателя + общая сумма его покупок
+        Map<String, Integer> nameAndQty = new TreeMap<>();//  имя покупателя + общее количество его покупок
+//        Map<Double, Integer> sumAndQty = new HashMap<>();
 
-        return null;
+        for (String b : buyersData) {
+            Buy currByr = new Buy(b);
+            if (nameAndSum.putIfAbsent(currByr.name, currByr.sum) != null)
+                nameAndSum.replace(currByr.name, nameAndSum.get(currByr.name) + currByr.sum);
+            if (nameAndQty.putIfAbsent(currByr.name, currByr.qty) != null)
+                nameAndQty.replace(currByr.name, nameAndQty.get(currByr.name) + currByr.qty);
+        }
+
+        for (Map.Entry<String,Double> entry : nameAndSum.entrySet()){
+            String currName = entry.getKey();
+//            sumAndQty.put(nameAndSum.get(currName),nameAndQty.get(currName));
+            AbstractMap.SimpleEntry<Double,Integer> currEntry = new AbstractMap.SimpleEntry<>(nameAndSum.get(currName),nameAndQty.get(currName)) ;
+                    //Map.entry(nameAndSum.get(currName),nameAndQty.get(currName));
+            getCustomers.put(currName, currEntry);
+        }
+
+//        for (Map.Entry<String, AbstractMap.SimpleEntry<Double,Integer>> entry : getCustomers.entrySet())
+
+        return getCustomers;
     }
 
     public static void main(String[] args) {
@@ -83,3 +109,4 @@ public class SalesInfo {
         }
     }
 }
+
