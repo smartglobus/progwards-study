@@ -5,11 +5,10 @@ import java.io.IOException;
 import java.util.*;
 
 public class SalesInfo {
-    List<String> buyersData = new ArrayList<>();
-
+    private List<String> buyersData = new ArrayList<>();
 
     //  вернуть количество успешно загруженных строк.
-//  Если в строке более или менее 4-x полей, или количество и сумма не преобразуются в числа - эту строку не загружаем.
+    //  Если в строке более или менее 4-x полей, или количество и сумма не преобразуются в числа - эту строку не загружаем.
     public int loadOrders(String fileName) {
         int count = 0;
         try (FileReader reader = new FileReader(fileName); Scanner scanner = new Scanner(reader)) {
@@ -43,8 +42,6 @@ public class SalesInfo {
         String good;
         int qty;
         double sum;
-//    int sumQty = 0;
-//    double sumPrice = 0;
 
         Buy(String byr) {
             String[] buyer = byr.split(",");
@@ -74,7 +71,6 @@ public class SalesInfo {
         Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers = new TreeMap<>();
         Map<String, Double> nameAndSum = new TreeMap<>();//  имя покупателя + общая сумма его покупок
         Map<String, Integer> nameAndQty = new TreeMap<>();//  имя покупателя + общее количество его покупок
-//        Map<Double, Integer> sumAndQty = new HashMap<>();
 
         for (String b : buyersData) {
             Buy currByr = new Buy(b);
@@ -83,25 +79,15 @@ public class SalesInfo {
             if (nameAndQty.putIfAbsent(currByr.name, currByr.qty) != null)
                 nameAndQty.replace(currByr.name, nameAndQty.get(currByr.name) + currByr.qty);
         }
-
         for (Map.Entry<String,Double> entry : nameAndSum.entrySet()){
             String currName = entry.getKey();
-//            sumAndQty.put(nameAndSum.get(currName),nameAndQty.get(currName));
             AbstractMap.SimpleEntry<Double,Integer> currEntry = new AbstractMap.SimpleEntry<>(nameAndSum.get(currName),nameAndQty.get(currName)) ;
-                    //Map.entry(nameAndSum.get(currName),nameAndQty.get(currName));
             getCustomers.put(currName, currEntry);
         }
-
-//        for (Map.Entry<String, AbstractMap.SimpleEntry<Double,Integer>> entry : getCustomers.entrySet())
-
         return getCustomers;
     }
 
     public static void main(String[] args) {
-//        String num = "спички";
-//        int i = Integer.valueOf(num.trim());
-//        System.out.println(i);
-
         SalesInfo test = new SalesInfo();
         test.loadOrders("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\ru\\progwards\\java1\\lessons\\maps\\Sales.csv");
         for (Map.Entry e : test.getGoods().entrySet()) {
