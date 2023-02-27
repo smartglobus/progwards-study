@@ -17,7 +17,8 @@ public class SalesInfo {
                 try {
                     buys.add(new Buy(currLine));
                     count++;
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -31,7 +32,7 @@ public class SalesInfo {
         int qty;
         double sum;
 
-        Buy(String byr) throws Exception{
+        Buy(String byr) throws Exception {
             String[] buyer = byr.split(",");
             if (buyer.length != 4) throw new Exception();
             this.name = buyer[0].trim();
@@ -57,9 +58,9 @@ public class SalesInfo {
     public Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers() {
         Map<String, AbstractMap.SimpleEntry<Double, Integer>> getCustomers = new TreeMap<>();
         for (Buy currBuy : buys) {
-            if (getCustomers.putIfAbsent(currBuy.name, new AbstractMap.SimpleEntry<>(currBuy.sum, currBuy.qty)) != null){
-                AbstractMap.SimpleEntry<Double,Integer> currEntry = getCustomers.get(currBuy.name);
-                AbstractMap.SimpleEntry<Double,Integer> newEntry = new AbstractMap.SimpleEntry<>(currEntry.getKey() + currBuy.sum, currEntry.getValue() + currBuy.qty);
+            if (getCustomers.putIfAbsent(currBuy.name, new AbstractMap.SimpleEntry<>(currBuy.sum, currBuy.qty)) != null) {
+                AbstractMap.SimpleEntry<Double, Integer> currEntry = getCustomers.get(currBuy.name);
+                AbstractMap.SimpleEntry<Double, Integer> newEntry = new AbstractMap.SimpleEntry<>(currEntry.getKey() + currBuy.sum, currEntry.getValue() + currBuy.qty);
                 getCustomers.replace(currBuy.name, newEntry);
             }
         }
