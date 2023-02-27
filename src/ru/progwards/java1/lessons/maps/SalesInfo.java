@@ -59,7 +59,7 @@ public class SalesInfo {
         for (Buy currBuy : buys) {
             if (getCustomers.putIfAbsent(currBuy.name, new AbstractMap.SimpleEntry<>(currBuy.sum, currBuy.qty)) != null){
                 AbstractMap.SimpleEntry<Double,Integer> currEntry = getCustomers.get(currBuy.name);
-                AbstractMap.SimpleEntry<Double,Integer> newEntry = new AbstractMap.SimpleEntry<>((currEntry.getKey() + currBuy.sum), currEntry.getValue() + currBuy.qty);
+                AbstractMap.SimpleEntry<Double,Integer> newEntry = new AbstractMap.SimpleEntry<>(currEntry.getKey() + currBuy.sum, currEntry.getValue() + currBuy.qty);
                 getCustomers.replace(currBuy.name, newEntry);
             }
         }
