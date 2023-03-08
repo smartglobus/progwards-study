@@ -12,6 +12,7 @@ public class Insurance {
 
     public Insurance(ZonedDateTime start) {
         this.start = start;
+        this.duration = Duration.ZERO;
     }
 
     public Insurance(String strStart, FormatStyle style) {
@@ -31,6 +32,7 @@ public class Insurance {
         }
         TemporalAccessor ta = dtf.parse(strStart);
         this.start = ZonedDateTime.from(ta);
+        this.duration = Duration.ZERO;
     }
 
     public void setDuration(Duration duration) {
