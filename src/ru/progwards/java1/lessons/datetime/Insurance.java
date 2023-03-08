@@ -33,7 +33,7 @@ public class Insurance {
         TemporalAccessor ta = dtf.parse(strStart);
         this.start = ZonedDateTime.from(ta);
         setDuration(Duration.ZERO);
-//        this.duration = Duration.ZERO;
+
     }
 
     public void setDuration(Duration duration) {
@@ -59,23 +59,29 @@ public class Insurance {
             case LONG:
                 dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault());
                 LocalDateTime ldt = LocalDateTime.parse(strDuration, dtf);
-                LocalDateTime zero = LocalDateTime.of(0,0,0,0,0);
+                LocalDateTime zero = LocalDateTime.of(0, 0, 0, 0, 0);
                 this.duration = Duration.between(zero, ldt);
             case FULL:
                 this.duration = Duration.parse(strDuration);
         }
     }
 
-    public boolean checkValid(ZonedDateTime dateTime){
-
-        return false;
+    //проверить действительна ли страховка на указанную дату-время. Если продолжительность не задана считать страховку бессрочной.
+    public boolean checkValid(ZonedDateTime dateTime) {
+        if (duration.equals(Duration.ZERO)) return true;
+        ZonedDateTime endTime = start.plusHours(duration.toHours());
+        if (dateTime.isAfter(endTime)) return false;
+        return true;
     }
 
     // вернуть строку формата "Insurance issued on " + start + validStr, где validStr = " is valid",
     // если страховка действительна на данный момент и " is not valid", если она недействительна.
-    public String toString(){
-
-        return start + "  " + duration;
+    public String toString() {
+        String validStr = " is not valid";
+        if (checkValid(ZonedDateTime.now())) {
+            validStr = " is valid";
+        }
+        return "Insurance issued on " + start + validStr;
     }
 
     public static void main(String[] args) {
