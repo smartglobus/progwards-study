@@ -12,7 +12,7 @@ public class Insurance {
 
     public Insurance(ZonedDateTime start) {
         this.start = start;
-        this.duration = Duration.ZERO;
+        setDuration(Duration.ZERO);
     }
 
     public Insurance(String strStart, FormatStyle style) {
@@ -32,7 +32,8 @@ public class Insurance {
         }
         TemporalAccessor ta = dtf.parse(strStart);
         this.start = ZonedDateTime.from(ta);
-        this.duration = Duration.ZERO;
+        setDuration(Duration.ZERO);
+//        this.duration = Duration.ZERO;
     }
 
     public void setDuration(Duration duration) {
@@ -70,8 +71,17 @@ public class Insurance {
         return false;
     }
 
+    // вернуть строку формата "Insurance issued on " + start + validStr, где validStr = " is valid",
+    // если страховка действительна на данный момент и " is not valid", если она недействительна.
     public String toString(){
 
-        return null;
+        return start + "  " + duration;
+    }
+
+    public static void main(String[] args) {
+        ZonedDateTime test = ZonedDateTime.from(Instant.now().atZone(ZoneId.systemDefault()));
+        Insurance pu = new Insurance(test);
+        System.out.println(pu);
+
     }
 }
