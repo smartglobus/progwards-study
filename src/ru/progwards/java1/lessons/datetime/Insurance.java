@@ -9,6 +9,7 @@ public class Insurance {
 
     private ZonedDateTime start; // - дата-время начала действия страховки.
     private Duration duration;   // - продолжительность действия.
+    ZonedDateTime dateTime;
 
     public Insurance(ZonedDateTime start) {
         this.start = start;
@@ -31,7 +32,7 @@ public class Insurance {
 //                dtf = DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.systemDefault());
         }
 //        TemporalAccessor ta = dtf.parse(strStart);
-        this.start = ZonedDateTime.from(dtf.parse(strStart));
+        this.start = ZonedDateTime.from(dtf.parse(strStart)).withZoneSameLocal(ZoneId.systemDefault());
         setDuration(Duration.ZERO);
 
     }
