@@ -32,7 +32,7 @@ public class Insurance {
 //                dtf = DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.systemDefault());
         }
 //        TemporalAccessor ta = dtf.parse(strStart);
-        this.start = ZonedDateTime.from(dtf.parse(strStart)).withZoneSameLocal(ZoneId.systemDefault());
+        this.start = ZonedDateTime.parse(strStart, dtf);
         setDuration(Duration.ZERO);
 
     }
