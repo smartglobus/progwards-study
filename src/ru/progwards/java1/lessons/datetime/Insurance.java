@@ -24,14 +24,14 @@ public class Insurance {
             case LONG:
                 dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault());
                 break;
-            case FULL:
+            default:
                 dtf = DateTimeFormatter.ISO_ZONED_DATE_TIME;
                 break;
-            default:   // ????????????????
-                dtf = DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.systemDefault());
+//            default:   // ????????????????
+//                dtf = DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.systemDefault());
         }
-        TemporalAccessor ta = dtf.parse(strStart);
-        this.start = ZonedDateTime.from(ta);
+//        TemporalAccessor ta = dtf.parse(strStart);
+        this.start = ZonedDateTime.from(dtf.parse(strStart));
         setDuration(Duration.ZERO);
 
     }
@@ -61,7 +61,8 @@ public class Insurance {
                 LocalDateTime ldt = LocalDateTime.parse(strDuration, dtf);
                 LocalDateTime zero = LocalDateTime.of(0, 0, 0, 0, 0);
                 this.duration = Duration.between(zero, ldt);
-            case FULL:
+                break;
+            default:
                 this.duration = Duration.parse(strDuration);
         }
     }
@@ -85,6 +86,8 @@ public class Insurance {
     }
 
     public static void main(String[] args) {
+        //TemporalAccessor: {},ISO,Europe/Moscow resolved to 2023-03-08 of type java.time.format.Parsed
+//        TemporalAccessor ta = ZonedDateTime;
         ZonedDateTime test = ZonedDateTime.from(Instant.now().atZone(ZoneId.systemDefault()));
         Insurance pu = new Insurance(test);
         System.out.println(pu);
