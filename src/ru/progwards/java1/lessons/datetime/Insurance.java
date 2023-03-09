@@ -28,7 +28,7 @@ public class Insurance {
                 dtf = DateTimeFormatter.ISO_ZONED_DATE_TIME;
                 break;
             default:   // ????????????????
-                dtf = DateTimeFormatter.ISO_DATE.withZone(ZoneId.systemDefault());
+                dtf = DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.systemDefault());
         }
         TemporalAccessor ta = dtf.parse(strStart);
         this.start = ZonedDateTime.from(ta);
