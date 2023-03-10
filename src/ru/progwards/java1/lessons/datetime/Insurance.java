@@ -70,7 +70,7 @@ public class Insurance {
             case LONG:
                 dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault());
                 LocalDateTime ldt = LocalDateTime.parse(strDuration, dtf);
-                LocalDateTime zero = LocalDateTime.of(0, 1, 1, 0, 0);
+                LocalDateTime zero = LocalDateTime.of(0, 1, 1, 0, 0).minusMonths(1).minusDays(1);
                 this.duration = Duration.between(zero, ldt);
 //                ldt.getLong();
 //                        Duration.
