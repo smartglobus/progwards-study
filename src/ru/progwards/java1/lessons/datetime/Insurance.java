@@ -13,7 +13,7 @@ public class Insurance {
 
     private ZonedDateTime start; // - дата-время начала действия страховки.
     private Duration duration;   // - продолжительность действия.
-    ZonedDateTime dateTime;
+    ZonedDateTime dateTime = ZonedDateTime.now();
 
     public Insurance(ZonedDateTime start) {
         this.start = start;
@@ -91,7 +91,7 @@ public class Insurance {
     // если страховка действительна на данный момент и " is not valid", если она недействительна.
     public String toString() {
         String validStr = " is not valid";
-        if (checkValid(ZonedDateTime.now())) {
+        if (checkValid(dateTime)) {
             validStr = " is valid";
         }
         return "Insurance issued on " + start + validStr;
@@ -99,9 +99,9 @@ public class Insurance {
 
     public static void main(String[] args) {
         //TemporalAccessor: {},ISO,Europe/Moscow resolved to 2023-03-08 of type java.time.format.Parsed
-        TemporalAccessor ta = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault()).parse("2011-12-03T10:15:30");
-        ZonedDateTime test = ZonedDateTime.from(Instant.now().atZone(ZoneId.systemDefault()));
-        ZonedDateTime test2 = ZonedDateTime.of(2023, 3, 9, 1, 0, 0, 0, ZoneId.systemDefault());
+//        TemporalAccessor ta = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault()).parse("2011-12-03T10:15:30");
+//        ZonedDateTime test = ZonedDateTime.from(Instant.now().atZone(ZoneId.systemDefault()));
+//        ZonedDateTime test2 = ZonedDateTime.of(2023, 3, 9, 1, 0, 0, 0, ZoneId.systemDefault());
         Insurance pu = new Insurance("2011-12-03", FormatStyle.SHORT);
 //        Insurance fromTA = new Insurance(ZonedDateTime.from(ta));
         System.out.println(pu);
