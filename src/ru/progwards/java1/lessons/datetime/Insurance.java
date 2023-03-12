@@ -15,6 +15,7 @@ public class Insurance {
     private Duration duration;   // - продолжительность действия.
     ZonedDateTime dateTime = ZonedDateTime.now();
 
+
     public Insurance(ZonedDateTime start) {
         this.start = start;
         setDuration(Duration.ZERO);
@@ -82,7 +83,7 @@ public class Insurance {
 
     //проверить действительна ли страховка на указанную дату-время. Если продолжительность не задана считать страховку бессрочной.
     public boolean checkValid(ZonedDateTime dateTime) {
-        if (duration.equals(Duration.ZERO)) return true;
+        if (duration.equals(Duration.ZERO) && dateTime.isAfter(start)) return true;
         ZonedDateTime endTime = start.plusHours(duration.toHours());
         return dateTime.isAfter(start) && dateTime.isBefore(endTime);
     }
@@ -102,8 +103,9 @@ public class Insurance {
 //        TemporalAccessor ta = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault()).parse("2011-12-03T10:15:30");
 //        ZonedDateTime test = ZonedDateTime.from(Instant.now().atZone(ZoneId.systemDefault()));
 //        ZonedDateTime test2 = ZonedDateTime.of(2023, 3, 9, 1, 0, 0, 0, ZoneId.systemDefault());
-        Insurance pu = new Insurance("2011-12-03", FormatStyle.SHORT);
+        Insurance pu = new Insurance("2023-03-14T08:36:12.899241+03:00[Europe/Moscow]", FormatStyle.FULL);
 //        Insurance fromTA = new Insurance(ZonedDateTime.from(ta));
+        System.out.println(pu.dateTime);
         System.out.println(pu);
         System.out.println();
     }
