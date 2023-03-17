@@ -6,16 +6,19 @@ import java.util.*;
 public class Profiler {
 
     private static Map<String, StatisticInfo> allSections = new HashMap<>();// словарь (по сути, множество) из уникальных секций
-//    private static SortedMap<Long, StatisticInfo> insAndOuts = new TreeMap<>();// сортированный по времени таймлайн со всеми временами первого входа и последнего выхода
+    //    private static SortedMap<Long, StatisticInfo> insAndOuts = new TreeMap<>();// сортированный по времени таймлайн со всеми временами первого входа и последнего выхода
+    private static ArrayList<StatisticInfo> sectionsList = new ArrayList<>();// текущий список уникальных секций
 
     public static void enterSection(String name) {
         long enterTime = Instant.now().toEpochMilli();
         if (allSections.putIfAbsent(name, new StatisticInfo()) == null) {
             allSections.get(name).sectionName = name;
 //            allSections.get(name).firstEnterTime = enterTime;
+            sectionsList.add(allSections.get(name));
         }
-        allSections.get(name).lastEnterTime = enterTime;// нужно ли оно ЗДЕСЬ???
+        allSections.get(name).lastEnterTime = enterTime;     //                      нужно ли оно ЗДЕСЬ???
         allSections.get(name).selfTimeCorrection = 0;
+        System.out.println(allSections.get(name).sectionName +" open");
     }
 
     public static void exitSection(String name) {
@@ -23,48 +26,33 @@ public class Profiler {
 //        allSections.get(name).lastExitTime = exitTime;
         long lastDuration = exitTime - allSections.get(name).lastEnterTime;
         allSections.get(name).fullTime += (int) lastDuration;
-        allSections.get(name).selfTime += (int) (lastDuration + allSections.get(name).selfTimeCorrection);// нужно ли оно ЗДЕСЬ???
-        allSections.get(name).lastExitTime = exitTime;// нужно ли оно???
+        allSections.get(name).selfTime += (int) (lastDuration + allSections.get(name).selfTimeCorrection);
+        allSections.get(name).selfTimeCorrection = 0;
+        System.out.println(allSections.get(name).sectionName +" close   lastDuration = "+lastDuration+",  corr = " +allSections.get(name).selfTimeCorrection);
+
+        allSections.get(name).lastExitTime = exitTime;                                                                       // нужно ли оно???
         allSections.get(name).count++;
 
-        ArrayList<StatisticInfo> currSectionsList = new ArrayList<>(allSections.values());// текущий список уникальных секций
-        for (StatisticInfo s : currSectionsList) {
-            if (s.lastEnterTime > s.lastExitTime) { // если секция s ещё не завершилась
-                s.selfTimeCorrection -= lastDuration;
+        // !!! надо не создавать новый список, а дополнять существующий при создании новой секции!!!
+
+        for (StatisticInfo s : sectionsList) {
+            if (s.lastEnterTime >= s.lastExitTime) { // если секция s ещё не завершилась
+                s.selfTimeCorrection -= allSections.get(name).selfTime;
             }
         }
-
+        System.out.println(allSections.get("pr1").sectionName+"  corr = " +allSections.get("pr1").selfTimeCorrection);
     }
 
     public static List<StatisticInfo> getStatisticInfo() {
-//        for (Map.Entry<String, StatisticInfo> entry : allSections.entrySet()) {
-//            insAndOuts.put(entry.getValue().firstEnterTime, entry.getValue());// добавляются все времена входа
-//            insAndOuts.put(entry.getValue().firstEnterTime + entry.getValue().fullTime, entry.getValue());// добавляются все времена выхода
-//        }
-//
-//        for (long l = insAndOuts.firstKey(); l <= insAndOuts.lastKey(); ) {
-//            for (var entry : insAndOuts.keySet()) {
-//
-//            }
-//        }
 
-        ArrayList<StatisticInfo> sectionsList = new ArrayList<>(allSections.values());// список уникальных секций
+
+//        ArrayList<StatisticInfo> sectionsList = new ArrayList<>(allSections.values());// список уникальных секций
         sectionsList.sort(new Comparator<StatisticInfo>() {
             @Override
             public int compare(StatisticInfo o1, StatisticInfo o2) {
                 return o1.sectionName.compareTo(o2.sectionName);
             }
         });
-//        for (StatisticInfo s : sectionsList) s.selfTime = s.fullTime;// предварительная инициализация selfTime
-
-//        for (StatisticInfo sectionOfInterest : sectionsList) {
-//            for (StatisticInfo s : sectionsList) {
-//                //если секция s началась позже sectionOfInterest но закончилась раньше её окончания, значит секция s вложенная
-//                if (s.firstEnterTime > sectionOfInterest.firstEnterTime && s.firstEnterTime < sectionOfInterest.lastExitTime) {
-//                    sectionOfInterest.selfTime -= s.fullTime;
-//                }
-//            }
-//        }
 
         return sectionsList;
     }
@@ -77,7 +65,7 @@ public class Profiler {
                 enterSection("pr1");
                 Thread.sleep(100);
                 if (i == 2) {
-                    for (int j = 0; j < 3; j++) {
+                    for (int j = 0; j < 2; j++) {
                         enterSection("pr2");
                         Thread.sleep(200);
                         enterSection("pr3");
