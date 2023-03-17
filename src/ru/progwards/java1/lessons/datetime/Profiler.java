@@ -27,7 +27,7 @@ public class Profiler {
         long lastDuration = exitTime - allSections.get(name).lastEnterTime;
         allSections.get(name).fullTime += (int) lastDuration;
         allSections.get(name).selfTime += (int) (lastDuration + allSections.get(name).selfTimeCorrection);
-        allSections.get(name).selfTimeCorrection = 0;
+//        allSections.get(name).selfTimeCorrection = 0;
         System.out.println(allSections.get(name).sectionName +" close   lastDuration = "+lastDuration+",  corr = " +allSections.get(name).selfTimeCorrection);
 
         allSections.get(name).lastExitTime = exitTime;                                                                       // нужно ли оно???
@@ -37,10 +37,10 @@ public class Profiler {
 
         for (StatisticInfo s : sectionsList) {
             if (s.lastEnterTime >= s.lastExitTime) { // если секция s ещё не завершилась
-                s.selfTimeCorrection -= allSections.get(name).selfTime;
+                s.selfTimeCorrection -= lastDuration + allSections.get(name).selfTimeCorrection;
             }
         }
-        System.out.println(allSections.get("pr1").sectionName+"  corr = " +allSections.get("pr1").selfTimeCorrection);
+//        System.out.println(allSections.get("pr1").sectionName+"  corr = " +allSections.get("pr1").selfTimeCorrection);
     }
 
     public static List<StatisticInfo> getStatisticInfo() {
