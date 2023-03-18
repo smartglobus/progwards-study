@@ -22,11 +22,11 @@ public class Profiler {
         long exitTime = Instant.now().toEpochMilli();
         long lastDuration = exitTime - allSections.get(name).lastEnterTime;
         allSections.get(name).fullTime += (int) lastDuration;
-        allSections.get(name).selfTime += (int) (lastDuration + allSections.get(name).selfTimeCorrection);
+        allSections.get(name).selfTime += (int) (lastDuration + allSections.get(name).selfTimeCorrection);// накопленная поправка на длину ранее закрытых внутренних секций
         allSections.get(name).lastExitTime = exitTime;
         allSections.get(name).count++;
 
-        // внесение поправок в текущую коррекцию для будущего вычисления selfTime для текущих секций (то есть, для которых закрывающаяся "name" является вложенной)
+        // накопление в текущих секциях поправок в коррекцию для будущего вычисления их selfTime (т.е. для тех секций, для которых закрывающаяся "name" является вложенной)
         for (StatisticInfo s : sectionsList) {
             if (s.lastEnterTime >= s.lastExitTime) { // если секция "s" ещё не завершилась
                 s.selfTimeCorrection -= lastDuration + allSections.get(name).selfTimeCorrection;

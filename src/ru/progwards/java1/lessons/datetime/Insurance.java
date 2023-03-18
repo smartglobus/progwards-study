@@ -43,6 +43,7 @@ public class Insurance {
     }
 
     public void setDuration(int months, int days, int hours) {
+        // !!! т.к. объекты пакета time immutable, методы типа .plus...(...) возвращают измененную копию объекта start, не изменяя его самого
         ZonedDateTime expiration = start.plusMonths(months).plusDays(days).plusHours(hours);
         this.duration = Duration.between(start, expiration);
     }
@@ -56,7 +57,7 @@ public class Insurance {
             case LONG:
                 dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault());
                 LocalDateTime ldt = LocalDateTime.parse(strDuration, dtf);
-                LocalDateTime zero = LocalDateTime.of(0, 1, 1, 0, 0).minusMonths(1).minusDays(1);
+                LocalDateTime zero = LocalDateTime.of(0, 1, 1, 0, 0).minusMonths(1).minusDays(1);// есть ли другие варианты?..
                 this.duration = Duration.between(zero, ldt);
                 break;
             default:
