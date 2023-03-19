@@ -36,7 +36,7 @@ public class SessionManager {
     public UserSession get(int sessionHandle) {
 
         UserSession session = sessionMap.get(sessionHandle);
-        if (session == null || Duration.between(session.getLastAccess(), LocalDateTime.now()).toSeconds() > sessionValid) {
+        if (session == null || Duration.between(session.getLastAccess(), LocalDateTime.now()).toSeconds() >= sessionValid) {
             return null;
         }
         session.updateLastAccess();
