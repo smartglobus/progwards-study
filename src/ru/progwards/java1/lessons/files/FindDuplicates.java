@@ -13,9 +13,10 @@ import java.util.List;
 // Сигнатура метода public List<List<String>> findDuplicates(String startPath), результат - список, содержащий списки строк с именами и полными путями совпадающих файлов.
 public class FindDuplicates {
     public List<List<String>> findDuplicates(String startPath) {
+
         List<List<String>> findDuplicates = new ArrayList<>();
         List<FileData> fileDataList = new ArrayList<>();
-//        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.*");
+
         try {
             Files.walkFileTree(Paths.get(startPath), new SimpleFileVisitor<Path>() {
                 @Override
@@ -31,7 +32,6 @@ public class FindDuplicates {
                         fileData.pathList.add(file.toAbsolutePath().toString());
                         fileDataList.add(fileData);
                     }
-
                     return FileVisitResult.CONTINUE;
                 }
 
