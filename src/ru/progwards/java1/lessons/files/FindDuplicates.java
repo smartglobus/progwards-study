@@ -75,6 +75,12 @@ public class FindDuplicates {
         return false;
     }
 
+    public static void main(String[] args) {
+        FindDuplicates fdtest = new FindDuplicates();
+        List<List<String>> fdresult = fdtest.findDuplicates("C:\\Users\\User\\Documents\\Progwards\\test folder");
+        for (var f:fdresult)
+        System.out.println(f);
+    }
 }
 
 class FileData {
@@ -83,7 +89,7 @@ class FileData {
     long length;
     File file;
     Path path;
-    List<String> pathList;
+    List<String> pathList = new ArrayList<>();
 
 // сделать конструктор,
 }
