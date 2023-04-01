@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilesSelect {
@@ -16,20 +17,20 @@ public class FilesSelect {
         PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.txt");
         try {
 
-            Files.createDirectory(pathOut);
+//            Files.createDirectory(pathOut);
             Files.walkFileTree(Paths.get(inFolder), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     if (pathMatcher.matches(file)) {
                         String fileToString = Files.readString(file);
                         for (String k : keys) {
-                            if (fileToString.contains(k)) {
+                            if (fileToString.contains(k)) {// окружить слово key пробелами - ???
                                 Path kPath = pathOut.resolve(Paths.get(k));
                                 if (Files.notExists(kPath)) {
                                     Files.createDirectory(kPath);
                                 }
                                 File f = new File(file.toString());
-                                Files.copy(file, kPath.resolve(Paths.get(f.getName())));
+                                Files.copy(file, kPath.resolve(Paths.get(f.getName())), StandardCopyOption.REPLACE_EXISTING);
                             }
                         }
 
@@ -50,5 +51,13 @@ public class FilesSelect {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        List<String> keys = new ArrayList<>();
+        keys.add("private");
+        keys.add("объект");
+        FilesSelect filesSelect = new FilesSelect();
+        filesSelect.selectFiles("C:\\Users\\User\\Documents\\Progwards\\test folder", "C:\\Users\\User\\Documents\\Progwards\\test out folder", keys);
     }
 }
