@@ -20,7 +20,7 @@ public class OrderProcessor {
 
     public int loadOrders(LocalDate start, LocalDate finish, String shopId) {
         int faultCount = 0;
-        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:*/*/???-??????-????.csv");
+        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:**/???-??????-????.csv");
         try {
             Files.walkFileTree(allOrdersFolder, new SimpleFileVisitor<>() {
                 @Override
@@ -133,6 +133,10 @@ public class OrderProcessor {
         return null;
     }
 
+    public static void main(String[] args) {
+        OrderProcessor orderProcessor = new OrderProcessor("C:\\Users\\User\\Documents\\Progwards\\test folder");
+        orderProcessor.loadOrders(null,null,null);
+    }
 }
 
 class Order {
