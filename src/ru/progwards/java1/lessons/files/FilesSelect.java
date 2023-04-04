@@ -16,15 +16,13 @@ public class FilesSelect {
         Path pathOut = Paths.get(outFolder);
         PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.txt");
         try {
-
-//            Files.createDirectory(pathOut);
             Files.walkFileTree(Paths.get(inFolder), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     if (pathMatcher.matches(file)) {
                         String fileToString = Files.readString(file);
                         for (String k : keys) {
-                            if (fileToString.contains(k)) {// окружить слово key пробелами - ???
+                            if (fileToString.contains(k)) {  // окружить слово key пробелами - ???
                                 Path kPath = pathOut.resolve(Paths.get(k));
                                 if (Files.notExists(kPath)) {
                                     Files.createDirectory(kPath);
@@ -33,11 +31,7 @@ public class FilesSelect {
                                 Files.copy(file, kPath.resolve(Paths.get(f.getName())), StandardCopyOption.REPLACE_EXISTING);
                             }
                         }
-
-
                     }
-
-
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -46,8 +40,6 @@ public class FilesSelect {
                     return FileVisitResult.CONTINUE;
                 }
             });
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

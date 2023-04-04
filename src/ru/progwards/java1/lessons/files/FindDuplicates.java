@@ -91,5 +91,5 @@ class FileData {
     Path path;
     List<String> pathList = new ArrayList<>();
 
-// сделать конструктор,
+// сделать конструктор, getters & setters ?????
 }
