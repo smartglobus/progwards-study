@@ -11,17 +11,16 @@ import java.util.*;
 public class OrderProcessor {
     private Path allOrdersFolder;
     private List<Order> ordersList = new ArrayList<>(); // все заказы, загруженные через метод loadOrders
-    int err = 0;
+    private int faultCount = 0;
 
     public OrderProcessor(String startPath) {
         allOrdersFolder = Paths.get(startPath);
     }
 
     public int loadOrders(LocalDate start, LocalDate finish, String shopId) {
-        int faultCount = 0;
         PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:**/???-??????-????.csv");
         try {
-            Files.walkFileTree(allOrdersFolder, new SimpleFileVisitor<>() {
+            Files.walkFileTree(allOrdersFolder, Collections.emptySet(), 2, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     LocalDateTime fileLastMdf = LocalDateTime.ofInstant(Files.getLastModifiedTime(file).toInstant(), ZoneId.systemDefault());
@@ -41,7 +40,7 @@ public class OrderProcessor {
                                 try {
                                     for (String s : itemsList) {
                                         String[] itemLine = s.split(",");
-                                        // проверка правильности формата строки с товаром. При ошибке обработка исключения
+                                        // проверка правильности формата строки с товаром. При ошибке извлечения данных - обработка исключения
                                         if (itemLine.length != 3) throw new NumberFormatException();
                                         OrderItem orderItem = new OrderItem();
                                         orderItem.googsName = itemLine[0].trim();
@@ -57,17 +56,9 @@ public class OrderProcessor {
                                         });
                                         order.sum += orderItem.price * orderItem.count;
                                     }
-                                } catch (NumberFormatException e) {
-                                    // очистить order и проигнорировать весь файл
-                                    order.error = true; // ?????????????????????????????????????????????
+                                } catch (NumberFormatException e) { // удаление order, соответствующего файлу с ошибочным содержимым
                                     ordersList.remove(order);
-                                    err++;
-//                                    order.shopId = null;
-//                                    order.orderId = null;
-//                                    order.customerId = null;
-//                                    order.datetime = null;
-//                                    order.sum = 0;
-//                                    order.items.clear();
+                                    faultCount++;
                                     return FileVisitResult.CONTINUE;
                                 }
                             }
@@ -84,11 +75,7 @@ public class OrderProcessor {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for (Order o : ordersList) {
-            if (o.error) faultCount++;
-        }
-//        return faultCount;
-        return err;
+        return faultCount;
     }
 
     private boolean folderMatchesTimePeriod(LocalDate start, LocalDate finish, LocalDateTime folderLastModified) {
@@ -165,7 +152,7 @@ public class OrderProcessor {
         return statisticsByGoods;
     }
 
-// - выдать информацию по объему продаж по дням (отсортированную по ключам): LocalDate - конкретный день, double - сумма стоимости всех проданных товаров в этот день
+    // - выдать информацию по объему продаж по дням (отсортированную по ключам): LocalDate - конкретный день, double - сумма стоимости всех проданных товаров в этот день
     public Map<LocalDate, Double> statisticsByDay() {
         Map<LocalDate, Double> statisticsByDay = new TreeMap<>();
         for (Order order : ordersList) {
@@ -182,20 +169,20 @@ public class OrderProcessor {
         System.out.println(orderProcessor.loadOrders(null, null, null));
         for (Order o : orderProcessor.process(null)) System.out.println(o.datetime);
     }
-}
 
-class Order {
-    public String shopId;// - идентификатор магазина
-    public String orderId;// - идентификатор заказа
-    public String customerId;// - идентификатор покупателя
-    public LocalDateTime datetime;// - дата-время заказа (из атрибутов файла - дата последнего изменения)
-    public List<OrderItem> items = new ArrayList<>();// - список позиций в заказе, отсортированный по наименованию товара
-    public double sum;// - сумма стоимости всех позиций в заказе
-    boolean error;
-}
 
-class OrderItem {
-    public String googsName; // - наименование товара
-    public int count; // - количество
-    public double price; // - цена за единицу
+    class Order {
+        public String shopId;// - идентификатор магазина
+        public String orderId;// - идентификатор заказа
+        public String customerId;// - идентификатор покупателя
+        public LocalDateTime datetime;// - дата-время заказа (из атрибутов файла - дата последнего изменения)
+        public List<OrderItem> items = new ArrayList<>();// - список позиций в заказе, отсортированный по наименованию товара
+        public double sum;// - сумма стоимости всех позиций в заказе
+    }
+
+    class OrderItem {
+        public String googsName; // - наименование товара
+        public int count; // - количество
+        public double price; // - цена за единицу
+    }
 }

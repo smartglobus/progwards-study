@@ -13,7 +13,6 @@ import java.util.List;
 // Сигнатура метода public List<List<String>> findDuplicates(String startPath), результат - список, содержащий списки строк с именами и полными путями совпадающих файлов.
 public class FindDuplicates {
     public List<List<String>> findDuplicates(String startPath) {
-
         List<List<String>> findDuplicates = new ArrayList<>();
         List<FileData> fileDataList = new ArrayList<>();
 
@@ -84,12 +83,10 @@ public class FindDuplicates {
 }
 
 class FileData {
-    String name;// имя и расширение
+    String name;    // имя + расширение
     long lastModified;
     long length;
     File file;
     Path path;
     List<String> pathList = new ArrayList<>();
-
-// сделать конструктор, getters & setters ?????
 }

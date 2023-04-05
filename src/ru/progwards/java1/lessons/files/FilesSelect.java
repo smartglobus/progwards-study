@@ -22,7 +22,7 @@ public class FilesSelect {
                     if (pathMatcher.matches(file)) {
                         String fileToString = Files.readString(file);
                         for (String k : keys) {
-                            if (fileToString.contains(k)) {  // окружить слово key пробелами - ???
+                            if (fileToString.contains(k)) {
                                 Path kPath = pathOut.resolve(Paths.get(k));
                                 if (Files.notExists(kPath)) {
                                     Files.createDirectory(kPath);
