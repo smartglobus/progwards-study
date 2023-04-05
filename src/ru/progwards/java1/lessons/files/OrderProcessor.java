@@ -170,19 +170,19 @@ public class OrderProcessor {
         for (Order o : orderProcessor.process(null)) System.out.println(o.datetime);
     }
 
+}
 
-    class Order {
-        public String shopId;// - идентификатор магазина
-        public String orderId;// - идентификатор заказа
-        public String customerId;// - идентификатор покупателя
-        public LocalDateTime datetime;// - дата-время заказа (из атрибутов файла - дата последнего изменения)
-        public List<OrderItem> items = new ArrayList<>();// - список позиций в заказе, отсортированный по наименованию товара
-        public double sum;// - сумма стоимости всех позиций в заказе
-    }
+class Order {
+    public String shopId;// - идентификатор магазина
+    public String orderId;// - идентификатор заказа
+    public String customerId;// - идентификатор покупателя
+    public LocalDateTime datetime;// - дата-время заказа (из атрибутов файла - дата последнего изменения)
+    public List<OrderItem> items = new ArrayList<>();// - список позиций в заказе, отсортированный по наименованию товара
+    public double sum;// - сумма стоимости всех позиций в заказе
+}
 
-    class OrderItem {
-        public String googsName; // - наименование товара
-        public int count; // - количество
-        public double price; // - цена за единицу
-    }
+class OrderItem {
+    public String googsName; // - наименование товара
+    public int count; // - количество
+    public double price; // - цена за единицу
 }
