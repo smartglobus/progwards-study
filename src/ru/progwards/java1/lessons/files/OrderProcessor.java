@@ -11,7 +11,8 @@ import java.util.*;
 public class OrderProcessor {
     private Path allOrdersFolder;
     private List<Order> ordersList = new ArrayList<>(); // все заказы, загруженные через метод loadOrders
-int err = 0;
+    int err = 0;
+
     public OrderProcessor(String startPath) {
         allOrdersFolder = Paths.get(startPath);
     }
@@ -138,14 +139,30 @@ int err = 0;
         return result;
     }
 
+    // выдать информацию по объему продаж по магазинам (отсортированную по ключам): String - shopId, double - сумма стоимости всех проданных товаров в этом магазине
     public Map<String, Double> statisticsByShop() {
-
-        return null;
+        Map<String, Double> statisticsByShop = new TreeMap<>();
+        for (Order order : ordersList) {
+            if (statisticsByShop.putIfAbsent(order.shopId, order.sum) != null) {
+                Double newSum = statisticsByShop.get(order.shopId) + order.sum;
+                statisticsByShop.replace(order.shopId, newSum);
+            }
+        }
+        return statisticsByShop;
     }
 
+    //выдать информацию по объему продаж по товарам (отсортированную по ключам): String - goodsName, double - сумма стоимости всех проданных товаров этого наименования
     public Map<String, Double> statisticsByGoods() {
-
-        return null;
+        Map<String, Double> statisticsByGoods = new TreeMap<>();
+        for (Order order : ordersList) {
+            for (OrderItem orderItem : order.items) {
+                if (statisticsByGoods.putIfAbsent(orderItem.googsName, orderItem.price * orderItem.count) != null) {
+                    Double newSum = statisticsByGoods.get(orderItem.googsName) + orderItem.price * orderItem.count;
+                    statisticsByGoods.replace(orderItem.googsName, newSum);
+                }
+            }
+        }
+        return statisticsByGoods;
     }
 
     public Map<LocalDate, Double> statisticsByDay() {
