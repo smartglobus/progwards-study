@@ -165,15 +165,21 @@ public class OrderProcessor {
         return statisticsByGoods;
     }
 
+// - выдать информацию по объему продаж по дням (отсортированную по ключам): LocalDate - конкретный день, double - сумма стоимости всех проданных товаров в этот день
     public Map<LocalDate, Double> statisticsByDay() {
-
-        return null;
+        Map<LocalDate, Double> statisticsByDay = new TreeMap<>();
+        for (Order order : ordersList) {
+            if (statisticsByDay.putIfAbsent(order.datetime.toLocalDate(), order.sum) != null) {
+                Double newSum = statisticsByDay.get(order.datetime.toLocalDate()) + order.sum;
+                statisticsByDay.replace(order.datetime.toLocalDate(), newSum);
+            }
+        }
+        return statisticsByDay;
     }
 
     public static void main(String[] args) {
         OrderProcessor orderProcessor = new OrderProcessor("C:\\Users\\User\\Documents\\Progwards\\test folder");
         System.out.println(orderProcessor.loadOrders(null, null, null));
-
         for (Order o : orderProcessor.process(null)) System.out.println(o.datetime);
     }
 }
