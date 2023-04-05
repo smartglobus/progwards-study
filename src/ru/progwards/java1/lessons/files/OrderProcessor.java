@@ -11,7 +11,7 @@ import java.util.*;
 public class OrderProcessor {
     private Path allOrdersFolder;
     private List<Order> ordersList = new ArrayList<>(); // все заказы, загруженные через метод loadOrders
-
+int err = 0;
     public OrderProcessor(String startPath) {
         allOrdersFolder = Paths.get(startPath);
     }
@@ -53,12 +53,14 @@ public class OrderProcessor {
                                 } catch (NumberFormatException e) {
                                     // очистить order и проигнорировать весь файл
                                     order.error = true; // ?????????????????????????????????????????????
-                                    order.shopId = null;
-                                    order.orderId = null;
-                                    order.customerId = null;
-                                    order.datetime = null;
-                                    order.sum = 0;
-                                    order.items.clear();
+                                    ordersList.remove(order);
+                                    err++;
+//                                    order.shopId = null;
+//                                    order.orderId = null;
+//                                    order.customerId = null;
+//                                    order.datetime = null;
+//                                    order.sum = 0;
+//                                    order.items.clear();
                                     return FileVisitResult.CONTINUE;
                                 }
                             }
@@ -78,7 +80,8 @@ public class OrderProcessor {
         for (Order o : ordersList) {
             if (o.error) faultCount++;
         }
-        return faultCount;
+//        return faultCount;
+        return err;
     }
 
     private boolean folderMatchesTimePeriod(LocalDate start, LocalDate finish, LocalDateTime folderLastModified) {
@@ -146,7 +149,9 @@ public class OrderProcessor {
 
     public static void main(String[] args) {
         OrderProcessor orderProcessor = new OrderProcessor("C:\\Users\\User\\Documents\\Progwards\\test folder");
-        orderProcessor.loadOrders(null, null, null);
+        System.out.println(orderProcessor.loadOrders(null, null, null));
+
+        for (Order o : orderProcessor.process(null)) System.out.println(o.datetime);
     }
 }
 
