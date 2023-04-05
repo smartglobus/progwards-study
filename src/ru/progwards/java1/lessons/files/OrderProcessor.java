@@ -6,9 +6,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OrderProcessor {
     private Path allOrdersFolder;
@@ -113,29 +111,42 @@ public class OrderProcessor {
         return false;
     }
 
-    public List<Order> process(String shopId){
+    //выдать список заказов в порядке обработки (отсортированные по дате-времени), для заданного магазина. Если shopId == null, то для всех
+    public List<Order> process(String shopId) {
+        List<Order> result = new ArrayList<>();
+        if (shopId != null) {
+            for (Order order : ordersList) if (order.shopId.equals(shopId)) result.add(order);
+        } else {
+            result.addAll(ordersList);
+        }
+        result.sort(new Comparator<Order>() {
+            public int compare(Order o1, Order o2) {
+                if (o1.datetime.isBefore(o2.datetime)) return -1;
+                if (o1.datetime.isAfter(o2.datetime)) return 1;
+                return 0;
+            }
+        });
+        return result;
+    }
+
+    public Map<String, Double> statisticsByShop() {
 
         return null;
     }
 
-    public Map<String, Double> statisticsByShop(){
+    public Map<String, Double> statisticsByGoods() {
 
         return null;
     }
 
-    public Map<String, Double> statisticsByGoods(){
-
-        return null;
-    }
-
-    public Map<LocalDate, Double> statisticsByDay(){
+    public Map<LocalDate, Double> statisticsByDay() {
 
         return null;
     }
 
     public static void main(String[] args) {
         OrderProcessor orderProcessor = new OrderProcessor("C:\\Users\\User\\Documents\\Progwards\\test folder");
-        orderProcessor.loadOrders(null,null,null);
+        orderProcessor.loadOrders(null, null, null);
     }
 }
 
