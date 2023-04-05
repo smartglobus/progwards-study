@@ -48,6 +48,12 @@ int err = 0;
                                         orderItem.price = Double.parseDouble(itemLine[2].trim());
 
                                         order.items.add(orderItem);
+                                        order.items.sort(new Comparator<OrderItem>() {
+                                            @Override
+                                            public int compare(OrderItem o1, OrderItem o2) {
+                                                return o1.googsName.compareTo(o2.googsName);
+                                            }
+                                        });
                                         order.sum += orderItem.price * orderItem.count;
                                     }
                                 } catch (NumberFormatException e) {
