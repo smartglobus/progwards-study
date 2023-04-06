@@ -3,9 +3,8 @@ package ru.progwards.java1.lessons.files;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.nio.file.attribute.FileTime;
+import java.time.*;
 import java.util.*;
 
 public class OrderProcessor {
@@ -83,10 +82,10 @@ public class OrderProcessor {
         if (start == null && finish == null) return true; // открытый временной диапазон
         if (start == null)
             if (folderLastModified.toLocalDate().isBefore(finish) || folderLastModified.toLocalDate().isEqual(finish))
-                return true; // если время создания папки не позже, чем finish
+                return true; // если дата создания папки не позже, чем finish
         if (finish == null)
             if (folderLastModified.toLocalDate().isAfter(start.minusWeeks(1)) || folderLastModified.toLocalDate().isEqual(start.minusWeeks(1)))
-                return true; // если время создания папки не раньше, чем на неделю от start
+                return true; // если дата создания папки не раньше, чем на неделю от start
         if (start != null && finish != null)
             return (folderLastModified.toLocalDate().isAfter(start.minusWeeks(1)) || folderLastModified.toLocalDate().isEqual(start.minusWeeks(1))) &&
                     (folderLastModified.toLocalDate().isBefore(finish) || folderLastModified.toLocalDate().isEqual(finish));
@@ -98,10 +97,10 @@ public class OrderProcessor {
         if (start == null && finish == null) return true; // открытый временной диапазон
         if (start == null)
             if (folderLastModified.toLocalDate().isBefore(finish) || folderLastModified.toLocalDate().isEqual(finish))
-                return true; // если время создания заказа не позже, чем finish
+                return true; // если дата создания заказа не позже, чем finish
         if (finish == null)
             if (folderLastModified.toLocalDate().isAfter(start) || folderLastModified.toLocalDate().isEqual(start))
-                return true; // если время создания заказа не раньше, чем start
+                return true; // если дата создания заказа не раньше, чем start
         if (start != null && finish != null)
             return (folderLastModified.toLocalDate().isAfter(start) || folderLastModified.toLocalDate().isEqual(start)) &&
                     (folderLastModified.toLocalDate().isBefore(finish) || folderLastModified.toLocalDate().isEqual(finish));
@@ -166,8 +165,15 @@ public class OrderProcessor {
 
     public static void main(String[] args) {
         OrderProcessor orderProcessor = new OrderProcessor("C:\\Users\\User\\Documents\\Progwards\\test folder");
-        System.out.println(orderProcessor.loadOrders(null, null, null));
+        LocalDate finish = LocalDate.of(2022,8,9);
+        System.out.println(orderProcessor.loadOrders(null, finish, null));
         for (Order o : orderProcessor.process(null)) System.out.println(o.datetime);
+        Path path = Paths.get("C:\\Users\\User\\Documents\\Progwards\\test folder\\folder 1\\S01-P01X02-0002.csv");
+        try {
+            System.out.println(Files.setLastModifiedTime(path, FileTime.from(Instant.ofEpochSecond(LocalDateTime.of(2020,2,2,0,0).toEpochSecond(ZoneOffset.UTC)))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
