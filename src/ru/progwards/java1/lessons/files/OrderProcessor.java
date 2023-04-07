@@ -17,7 +17,7 @@ public class OrderProcessor {
     }
 
     public int loadOrders(LocalDate start, LocalDate finish, String shopId) {
-        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:**/???-??????-????.csv");
+        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:*/???-??????-????.csv");
         try {
             Files.walkFileTree(allOrdersFolder, Collections.emptySet(), 2, new SimpleFileVisitor<>() {
                 @Override
@@ -25,7 +25,7 @@ public class OrderProcessor {
                     LocalDateTime fileLastMdf = LocalDateTime.ofInstant(Files.getLastModifiedTime(file).toInstant(), ZoneId.systemDefault());
                     if (Files.isDirectory(file) && !folderMatchesTimePeriod(start, finish, fileLastMdf))//отсев папок, не содержащих искомых по дате создания заказов
                         return FileVisitResult.SKIP_SUBTREE;
-                    if (pathMatcher.matches(file)) {
+                    if (pathMatcher.matches(allOrdersFolder.relativize(file))) {
                         if (fileMatchesTimePeriod(start, finish, fileLastMdf)) {  // отсев заказов с датой создания вне периода start-finish
                             String[] orderFile = file.getFileName().toString().split("[-.]"); // вычленение из названия файла shopId, orderId и customerId
                             if (shopId == null || orderFile[0].equals(shopId)) {
@@ -167,13 +167,15 @@ public class OrderProcessor {
         OrderProcessor orderProcessor = new OrderProcessor("C:\\Users\\User\\Documents\\Progwards\\test folder");
         LocalDate finish = LocalDate.of(2022,8,9);
         System.out.println(orderProcessor.loadOrders(null, finish, null));
-        for (Order o : orderProcessor.process(null)) System.out.println(o.datetime);
+        for (Order o : orderProcessor.process(null))
+            System.out.println(o.datetime);
         Path path = Paths.get("C:\\Users\\User\\Documents\\Progwards\\test folder\\folder 1\\S01-P01X02-0002.csv");
         try {
-            System.out.println(Files.setLastModifiedTime(path, FileTime.from(Instant.ofEpochSecond(LocalDateTime.of(2020,2,2,0,0).toEpochSecond(ZoneOffset.UTC)))));
+            System.out.println(Files.setLastModifiedTime(path, FileTime.from(Instant.ofEpochSecond(LocalDateTime.of(2020,2,2,0,2).toEpochSecond(ZoneOffset.UTC)))));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(Paths.get("C:\\Users\\User\\Documents\\Progwards\\test folder").relativize(Paths.get("C:\\Users\\User\\Documents\\Progwards\\test folder\\folder 1\\S01-P01X02-0002.csv")));
     }
 
 }
