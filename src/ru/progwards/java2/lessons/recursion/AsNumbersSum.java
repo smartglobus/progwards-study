@@ -28,14 +28,12 @@ public class AsNumbersSum {
             if (list.get(0) == 1) return str;
         }
 
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (list.get(i) > 1) {
-                list.set(i, list.get(i) - 1);
-                if (list.get(i) > 2 && i < list.size() - 1) list.set(i + 1, list.get(i + 1) + 1);
-                else list.add(1);
-                break;
-            }
-        }
+        int n = list.stream().sorted().dropWhile(el -> el < 2).min(Comparator.comparingInt(el -> el)).get();
+        int i = list.lastIndexOf(n);
+        list.set(i, list.get(i) - 1);
+        if (list.get(i) > 2 && i < list.size() - 1) list.set(i + 1, list.get(i + 1) + 1);
+        else list.add(1);
+
         str += String.join("+", list.stream().map(e -> String.valueOf(e)).collect(Collectors.toList())) + " = ";
         return func();
     }
@@ -51,6 +49,6 @@ public class AsNumbersSum {
     }
 
     public static void main(String[] args) {
-        System.out.println(asNumbersSum(18));
+        System.out.println(asNumbersSum(5));
     }
 }
