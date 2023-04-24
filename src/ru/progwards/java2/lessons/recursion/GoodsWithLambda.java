@@ -58,6 +58,9 @@ public class GoodsWithLambda {
         return listOfGoods.stream().filter(g -> g.available > count1 && g.available < count2).sorted(Comparator.comparing(g -> g.available)).collect(Collectors.toList());
     }
 
+
+
+
     public static void main(String[] args) {
         List<Goods> test = new ArrayList<>();
         Instant Ins1 = Instant.from(ZonedDateTime.of(2023, 4, 5, 0, 0, 0, 0, ZoneId.systemDefault()));
