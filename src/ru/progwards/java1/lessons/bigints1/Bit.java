@@ -1,4 +1,5 @@
 package ru.progwards.java1.lessons.bigints1;
+import static ru.progwards.java1.lessons.bigints1.Register.ByteRegister;
 
 public class Bit {
     boolean value;

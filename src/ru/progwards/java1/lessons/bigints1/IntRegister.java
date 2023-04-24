@@ -13,7 +13,7 @@ public class IntRegister extends Register {
         thirtyTwoBits = super.register;
     }
 
-
+    @Override
     public String toDecString() {
         int result = thirtyTwoBits[30].value ? 1 : 0;
 
@@ -29,13 +29,13 @@ public class IntRegister extends Register {
     }
 
 
-    public static void main(String[] args) {
-        IntRegister a = new IntRegister(0b11100000_00010000_00000000_00000000);
-
-        System.out.println(a);
-        System.out.println(a.toDecString());
-        IntShiftRegister.right(a);
-        System.out.println(a.toDecString());
-        System.out.println(a);
-    }
+//    public static void main(String[] args) {
+//        IntRegister a = new IntRegister(0b11100000_00010000_00000000_00000000);
+//
+//        System.out.println(a);
+//        System.out.println(a.toDecString());
+//        IntShiftRegister.right(a);
+//        System.out.println(a.toDecString());
+//        System.out.println(a);
+//    }
 }

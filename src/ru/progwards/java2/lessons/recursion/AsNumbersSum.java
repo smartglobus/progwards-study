@@ -18,12 +18,12 @@ public class AsNumbersSum {
         return str.substring(0, str.length() - 2);
     }
 
-    static String func() {
+    private static String func() {
         if (list.get(1) == 1) {
             int first = list.get(0) - 1;
             list.clear();
             fillList(first, num);
-            str += String.join("+", list.stream().map(e -> String.valueOf(e)).collect(Collectors.toList())) + " = ";
+            str += list.stream().map(String::valueOf).collect(Collectors.joining("+")) + " = ";
             if (list.get(0) == 1) return str;
         }
 
@@ -33,7 +33,7 @@ public class AsNumbersSum {
         if (list.get(i) > 2 && i < list.size() - 1) list.set(i + 1, list.get(i + 1) + 1);
         else list.add(1);
 
-        str += String.join("+", list.stream().map(e -> String.valueOf(e)).collect(Collectors.toList())) + " = ";
+        str += list.stream().map(String::valueOf).collect(Collectors.joining("+")) + " = ";
         return func();
     }
 
