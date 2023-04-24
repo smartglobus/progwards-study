@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HanoiTower {
-    int size;
-    int pos;
-    Map<Integer, ArrayDeque<Integer>> map = new HashMap<>();
-    ArrayDeque<Integer> one = new ArrayDeque<>();
-    ArrayDeque<Integer> two = new ArrayDeque<>();
-    ArrayDeque<Integer> three = new ArrayDeque<>();
-    boolean trace;
+    private int size;
+    private int pos;
+    private Map<Integer, ArrayDeque<Integer>> map = new HashMap<>();
+    private ArrayDeque<Integer> one = new ArrayDeque<>();
+    private ArrayDeque<Integer> two = new ArrayDeque<>();
+    private ArrayDeque<Integer> three = new ArrayDeque<>();
+    private boolean trace;
 
     public HanoiTower(int size, int pos) {
         this.size = size;
@@ -30,6 +30,8 @@ public class HanoiTower {
 
     }
 
+
+
     void print() {
         ArrayDeque<Integer> oneClone = one.clone();
         ArrayDeque<Integer> twoClone = two.clone();
@@ -41,7 +43,7 @@ public class HanoiTower {
         System.out.println("=================");
     }
 
-    String numFormat(Integer n) {
+    private String numFormat(Integer n) {
         if (n == null) return "  I  ";
         if (n > 0 && n < 10) return "<00" + n + ">";
         if (n >= 10 && n < 100) return "<0" + n + ">";

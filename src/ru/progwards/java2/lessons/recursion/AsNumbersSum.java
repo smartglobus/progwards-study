@@ -29,10 +29,11 @@ public class AsNumbersSum {
 
         int n = list.stream().sorted().dropWhile(el -> el < 2).min(Comparator.comparingInt(el -> el)).get();
         int i = list.lastIndexOf(n);
-        list.set(i, list.get(i) - 1);
-        if (list.get(i) > 2 && i < list.size() - 1) list.set(i + 1, list.get(i + 1) + 1);
-        else list.add(1);
 
+        if (list.get(i) > 2 && i < list.size() - 1) list.set(i + 1, list.get(i + 1) + 1);
+
+        else list.add(1);
+        list.set(i, list.get(i) - 1);
         str += list.stream().map(String::valueOf).collect(Collectors.joining("+")) + " = ";
         return func();
     }
@@ -48,6 +49,6 @@ public class AsNumbersSum {
     }
 
     public static void main(String[] args) {
-        System.out.println(asNumbersSum(5));
+        System.out.println(asNumbersSum(7));
     }
 }
