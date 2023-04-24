@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 public class AsNumbersSum {
     private static List<Integer> list = new ArrayList<>();
-    private static String result = "";
     private static int num;
     private static String str = "";
 
@@ -15,8 +14,8 @@ public class AsNumbersSum {
         num = number;
         list.add(0, number - 1);
         list.add(1, 1);
-        result += number + " = " + (number - 1) + "+" + 1 + " = " + func();
-        return result.substring(0, result.length() - 2);
+        str += number + " = " + (number - 1) + "+" + 1 + " = " + func();
+        return str.substring(0, str.length() - 2);
     }
 
     static String func() {
