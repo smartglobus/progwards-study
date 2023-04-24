@@ -31,7 +31,7 @@ public class AsNumbersSum {
         for (int i = list.size() - 1; i >= 0; i--) {
             if (list.get(i) > 1) {
                 list.set(i, list.get(i) - 1);
-                if (list.get(i) > 2) list.set(i + 1, list.get(i + 1) + 1);
+                if (list.get(i) > 2 && i < list.size() - 1) list.set(i + 1, list.get(i + 1) + 1);
                 else list.add(1);
                 break;
             }
@@ -51,6 +51,6 @@ public class AsNumbersSum {
     }
 
     public static void main(String[] args) {
-        System.out.println(asNumbersSum(2));
+        System.out.println(asNumbersSum(8));
     }
 }
