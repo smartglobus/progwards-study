@@ -31,9 +31,9 @@ public class AsNumbersSum {
         int i = list.lastIndexOf(n);
 
         if (list.get(i) > 2 && i < list.size() - 1) list.set(i + 1, list.get(i + 1) + 1);
-
         else list.add(1);
         list.set(i, list.get(i) - 1);
+
         str += list.stream().map(String::valueOf).collect(Collectors.joining("+")) + " = ";
         return func();
     }
