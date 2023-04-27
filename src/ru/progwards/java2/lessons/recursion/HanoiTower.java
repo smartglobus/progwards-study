@@ -78,7 +78,6 @@ public class HanoiTower {
 
     void setTrace(boolean on) {
         trace = on;
-//        if (on) print();//?????
     }
 
     public static void main(String[] args) {
