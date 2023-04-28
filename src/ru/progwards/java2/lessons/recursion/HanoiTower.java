@@ -1,8 +1,6 @@
 package ru.progwards.java2.lessons.recursion;
 
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class HanoiTower {
     private int size;
@@ -60,16 +58,26 @@ public class HanoiTower {
             ArrayDeque<Integer> Clone0 = peg0.clone();
             ArrayDeque<Integer> Clone1 = peg1.clone();
             ArrayDeque<Integer> Clone2 = peg2.clone();
+            int[] arr0 = new int[size];
+            int[] arr1 = new int[size];
+            int[] arr2 = new int[size];
 
-            for (int i = 1; i <= size; i++) {
-                System.out.println(numFormat(Clone0.pollFirst()) + " " + numFormat(Clone1.pollFirst()) + " " + numFormat(Clone2.pollFirst()));
+            Arrays.fill(arr0, 0);
+            for (int i = 0; i < size; i++) {
+                arr0[i] = Optional.ofNullable(Clone0.pollLast()).orElse(0);
+                arr1[i] = Optional.ofNullable(Clone1.pollLast()).orElse(0);
+                arr2[i] = Optional.ofNullable(Clone2.pollLast()).orElse(0);
+            }
+
+            for (int i = size-1; i >=0; i--) {
+                System.out.println(numFormat(arr0[i]) + " " + numFormat(arr1[i]) + " " + numFormat(arr2[i]));
             }
             System.out.println("=================");
         }
     }
 
     private String numFormat(Integer n) {
-        if (n == null) return "  I  ";
+        if (n == 0) return "  I  ";
         if (n > 0 && n < 10) return "<00" + n + ">";
         if (n >= 10 && n < 100) return "<0" + n + ">";
         if (n >= 100 && n < 1000) return "<" + n + ">";
@@ -84,7 +92,7 @@ public class HanoiTower {
         HanoiTower ht = new HanoiTower(3, 2);
         ht.setTrace(true);
         ht.print();
-        ht.hanoiTower(2);
+        ht.hanoiTower(0);
         ht.print();
     }
 }
