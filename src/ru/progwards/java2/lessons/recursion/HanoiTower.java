@@ -69,7 +69,7 @@ public class HanoiTower {
                 arr2[i] = Optional.ofNullable(Clone2.pollLast()).orElse(0);
             }
 
-            for (int i = size-1; i >=0; i--) {
+            for (int i = size - 1; i >= 0; i--) {
                 System.out.println(numFormat(arr0[i]) + " " + numFormat(arr1[i]) + " " + numFormat(arr2[i]));
             }
             System.out.println("=================");
