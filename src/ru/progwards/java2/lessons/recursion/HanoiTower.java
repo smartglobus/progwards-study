@@ -62,7 +62,6 @@ public class HanoiTower {
             int[] arr1 = new int[size];
             int[] arr2 = new int[size];
 
-            Arrays.fill(arr0, 0);
             for (int i = 0; i < size; i++) {
                 arr0[i] = Optional.ofNullable(Clone0.pollLast()).orElse(0);
                 arr1[i] = Optional.ofNullable(Clone1.pollLast()).orElse(0);
@@ -89,7 +88,7 @@ public class HanoiTower {
     }
 
     public static void main(String[] args) {
-        HanoiTower ht = new HanoiTower(3, 2);
+        HanoiTower ht = new HanoiTower(4, 2);
         ht.setTrace(true);
         ht.print();
         ht.hanoiTower(0);
