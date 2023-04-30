@@ -66,16 +66,16 @@ public class DateDiff {
 
         long hrsMinsSecsMillis = dLast.getTimeInMillis() - dFirst.getTimeInMillis();
 
-        int hoursDiff = (int) hrsMinsSecsMillis/3600000;
-        if (hoursDiff==24){
-            hoursDiff=0;
+        int hoursDiff = (int) hrsMinsSecsMillis / 3600000;
+        if (hoursDiff == 24) {
+            hoursDiff = 0;
             daysDiff++;
         }
-        long minsSecsMillis = hrsMinsSecsMillis%3600000;
-        int minsDiff = (int) minsSecsMillis/60000;
-        long secsMillis = minsSecsMillis%60000;
-        int secsDiff = (int) secsMillis/1000;
-        int millisDiff = (int)(secsMillis-secsDiff*1000);
+        long minsSecsMillis = hrsMinsSecsMillis % 3600000;
+        int minsDiff = (int) minsSecsMillis / 60000;
+        long secsMillis = minsSecsMillis % 60000;
+        int secsDiff = (int) secsMillis / 1000;
+        int millisDiff = (int) (secsMillis - secsDiff * 1000);
 
         return String.format("%s месяцев, %s дней, %s часов, %s минут, %s секунд, %s миллисекунд",
                 monthsDiff, daysDiff, hoursDiff, minsDiff, secsDiff, millisDiff);

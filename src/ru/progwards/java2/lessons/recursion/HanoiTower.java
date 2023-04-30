@@ -55,17 +55,17 @@ public class HanoiTower {
 
     void print() {
         if (trace) {
-            ArrayDeque<Integer> Clone0 = peg0.clone();
-            ArrayDeque<Integer> Clone1 = peg1.clone();
-            ArrayDeque<Integer> Clone2 = peg2.clone();
+            ArrayDeque<Integer> clone0 = peg0.clone();
+            ArrayDeque<Integer> clone1 = peg1.clone();
+            ArrayDeque<Integer> clone2 = peg2.clone();
             int[] arr0 = new int[size];
             int[] arr1 = new int[size];
             int[] arr2 = new int[size];
 
             for (int i = 0; i < size; i++) {
-                arr0[i] = Optional.ofNullable(Clone0.pollLast()).orElse(0);
-                arr1[i] = Optional.ofNullable(Clone1.pollLast()).orElse(0);
-                arr2[i] = Optional.ofNullable(Clone2.pollLast()).orElse(0);
+                arr0[i] = Optional.ofNullable(clone0.pollLast()).orElse(0);
+                arr1[i] = Optional.ofNullable(clone1.pollLast()).orElse(0);
+                arr2[i] = Optional.ofNullable(clone2.pollLast()).orElse(0);
             }
 
             for (int i = size - 1; i >= 0; i--) {
