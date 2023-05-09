@@ -12,7 +12,7 @@ public class DynamicArray<T> {
 
     void add(T t) {
         if (entryCount >= array.length) {
-            T[] newArray = (T[]) new Object[array.length * 2];
+            T[] newArray = (T[]) new Object[array.length +1];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array=newArray;
         }
@@ -21,7 +21,7 @@ public class DynamicArray<T> {
 
     void insert(int pos, T t){
         if (entryCount > array.length - 1) {
-            T[] newArray = (T[]) new Object[array.length * 2];
+            T[] newArray = (T[]) new Object[array.length +1];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array=newArray;
         }
