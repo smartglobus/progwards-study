@@ -21,7 +21,7 @@ public class DynamicArray<T> {
 
     void insert(int pos, T t) {
         if (pos > array.length - 1) return;
-        if (entryCount > array.length - 1) {
+        if (entryCount >= array.length) {
             T[] newArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
@@ -49,13 +49,15 @@ public class DynamicArray<T> {
 
 
     public static void main(String[] args) {
-        DynamicArray da = new DynamicArray();
+        DynamicArray da = new DynamicArray<>();
         da.add(1);
         da.add(2);
-        da.add(3);
-        Arrays.stream(da.array).forEach(System.out::println);
+//        da.add(3);
+        System.out.println(da.array[0]);
+        for (var i : da.array) System.out.println(i);
+//        Arrays.stream(da.array).forEach(System.out::println);
 //        da.add(true);
-        da.insert(4, "insert");
+        da.insert(4, 5);
 
         Arrays.stream(da.array).forEach(System.out::println);
         System.out.println("\n" + "Dynarray size = " + da.size() + "\n");
