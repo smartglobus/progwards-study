@@ -31,8 +31,8 @@ public class DynamicArray<T> {
     }
 
     void remove(int pos){
-        for (int i = pos; i < entryCount; i++) array[i] = array[i + 1];
-        array[entryCount]=null;
+        for (int i = pos; i < entryCount-1; i++) array[i] = array[i + 1];
+        array[entryCount-1]=null;
         entryCount--;
     }
 
@@ -48,25 +48,27 @@ public class DynamicArray<T> {
 
     public static void main(String[] args) {
         DynamicArray da = new DynamicArray();
+        da.add(1);
         da.add(2);
-        da.add("test");
-        da.add(12.8);
-        da.add(true);
+        da.add(3);
+        Arrays.stream(da.array).forEach(System.out::println);
+//        da.add(true);
         da.insert(2,"insert");
 
         Arrays.stream(da.array).forEach(System.out::println);
         System.out.println("\n"+ "Dynarray size = "+ da.size()+ "\n");
         da.remove(0);
         Arrays.stream(da.array).forEach(System.out::println);
-        System.out.println("\n" + da.get(2)+ "\n");
+//        System.out.println("\n" + da.get(2)+ "\n");
 
-        da.add(222);
-        da.add("testing e");
-        da.add(125.25);
-        da.add(false);
-        da.add("testing exp");
-        da.add("testing expan");
-        da.add("testing expantion");
-        Arrays.stream(da.array).forEach(System.out::println);
+
+//        da.add(222);
+//        da.add("testing e");
+//        da.add(125.25);
+//        da.add(false);
+//        da.add("testing exp");
+//        da.add("testing expan");
+//        da.add("testing expantion");
+//        Arrays.stream(da.array).forEach(System.out::println);
     }
 }
