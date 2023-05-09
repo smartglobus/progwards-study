@@ -2,7 +2,7 @@ package ru.progwards.java1.lessons.generics;
 
 import java.util.ArrayList;
 
-public class FruitBox extends ArrayList<Fruit> implements Comparable<FruitBox> {
+public class FruitBox<Fruit> extends ArrayList<Fruit> implements Comparable<FruitBox> {
 
     @Override
     public boolean add(Fruit f) {
@@ -18,12 +18,12 @@ public class FruitBox extends ArrayList<Fruit> implements Comparable<FruitBox> {
         return size() > 0 ? size() * w : 0;
     }
 
-    void moveTo(FruitBox fb) throws UnsupportedOperationException {
+    void moveTo(FruitBox<Fruit> fb) throws UnsupportedOperationException {
         try {
             if (get(0).getClass().equals(fb.get(0).getClass())) {
                 fb.addAll(this);
                 clear();
-            } else {
+            }else {
                 throw new UnsupportedOperationException();
             }
         } catch (Exception e) {
@@ -39,11 +39,11 @@ public class FruitBox extends ArrayList<Fruit> implements Comparable<FruitBox> {
 
 
     public static void main(String[] args) {
-        FruitBox appleBox1 = new FruitBox();
-        FruitBox appleBox2 = new FruitBox();
-        FruitBox orangeBox1 = new FruitBox();
+        FruitBox appleBox1 = new FruitBox<>();
+        FruitBox appleBox2 = new FruitBox<>();
+        FruitBox orangeBox1 = new FruitBox<>();
 
-        System.out.println(appleBox1.add(new Apple()));
+        System.out.println( appleBox1.add(new Apple()));
         System.out.println(appleBox1.add(new Orange()));
         appleBox1.add(new Apple());
         appleBox2.add(new Apple());
@@ -53,7 +53,7 @@ public class FruitBox extends ArrayList<Fruit> implements Comparable<FruitBox> {
         orangeBox1.add(new Orange());
         orangeBox1.add(new Orange());
 
-//        orangeBox1.moveTo(appleBox1);
+        orangeBox1.moveTo(appleBox1);
 
         System.out.println("orangeBox1 " + orangeBox1.getWeight() + "; appleBox1 " + appleBox1.getWeight() + "; appleBox2 " + appleBox2.getWeight());
         System.out.println(appleBox1.compareTo(orangeBox1));
@@ -65,7 +65,7 @@ public class FruitBox extends ArrayList<Fruit> implements Comparable<FruitBox> {
     }
 }
 
-class Fruit {
+ class Fruit {
 }
 
 class Apple extends Fruit {
