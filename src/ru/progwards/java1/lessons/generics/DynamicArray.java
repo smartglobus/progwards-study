@@ -56,7 +56,7 @@ public class DynamicArray<T> {
         da.add(3);
         Arrays.stream(da.array).forEach(System.out::println);
 //        da.add(true);
-        da.insert(2,"insert");
+        da.insert(4,"insert");
 
         Arrays.stream(da.array).forEach(System.out::println);
         System.out.println("\n"+ "Dynarray size = "+ da.size()+ "\n");
