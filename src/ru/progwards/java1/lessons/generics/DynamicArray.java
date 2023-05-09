@@ -20,6 +20,7 @@ public class DynamicArray<T> {
     }
 
     void insert(int pos, T t){
+        if (pos> array.length - 1)return;
         if (entryCount > array.length - 1) {
             T[] newArray = (T[]) new Object[array.length +1];
             System.arraycopy(array, 0, newArray, 0, array.length);
@@ -31,12 +32,14 @@ public class DynamicArray<T> {
     }
 
     void remove(int pos){
+        if (pos> array.length - 1)return;
         for (int i = pos; i < entryCount-1; i++) array[i] = array[i + 1];
         array[entryCount-1]=null;
         entryCount--;
     }
 
     T get(int pos){
+//        if (pos> array.length - 1)return T;
         return array[pos];
     }
 
