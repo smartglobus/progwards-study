@@ -39,7 +39,7 @@ public class DynamicArray<T> {
     }
 
     T get(int pos) {
-//        if (pos> array.length - 1)return T;
+        if (pos> array.length - 1)return null;
         return array[pos];
     }
 
