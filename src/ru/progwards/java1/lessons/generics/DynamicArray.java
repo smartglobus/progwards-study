@@ -12,41 +12,40 @@ public class DynamicArray<T> {
 
     void add(T t) {
         if (entryCount >= array.length) {
-            T[] newArray = (T[]) new Object[array.length +1];
+            T[] newArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
-            array=newArray;
+            array = newArray;
         }
         array[entryCount++] = t;
     }
 
-    void insert(int pos, T t){
-        if (pos> array.length - 1)return;
+    void insert(int pos, T t) {
+        if (pos > array.length - 1) return;
         if (entryCount > array.length - 1) {
-            T[] newArray = (T[]) new Object[array.length +1];
+            T[] newArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
-            array=newArray;
+            array = newArray;
         }
-        for (int i = entryCount-1; i >= pos; i--) array[i + 1] = array[i];
-        array[pos]= t;
+        for (int i = entryCount - 1; i >= pos; i--) array[i + 1] = array[i];
+        array[pos] = t;
         entryCount++;
     }
 
-    void remove(int pos){
-        if (pos> array.length - 1)return;
-        for (int i = pos; i < entryCount-1; i++) array[i] = array[i + 1];
-        array[entryCount-1]=null;
+    void remove(int pos) {
+        if (pos > array.length - 1) return;
+        for (int i = pos; i < entryCount - 1; i++) array[i] = array[i + 1];
+        array[entryCount - 1] = null;
         entryCount--;
     }
 
-    T get(int pos){
+    T get(int pos) {
 //        if (pos> array.length - 1)return T;
         return array[pos];
     }
 
-    int size(){
+    int size() {
         return entryCount;
     }
-
 
 
     public static void main(String[] args) {
@@ -56,10 +55,10 @@ public class DynamicArray<T> {
         da.add(3);
         Arrays.stream(da.array).forEach(System.out::println);
 //        da.add(true);
-        da.insert(4,"insert");
+        da.insert(4, "insert");
 
         Arrays.stream(da.array).forEach(System.out::println);
-        System.out.println("\n"+ "Dynarray size = "+ da.size()+ "\n");
+        System.out.println("\n" + "Dynarray size = " + da.size() + "\n");
         da.remove(0);
         Arrays.stream(da.array).forEach(System.out::println);
 //        System.out.println("\n" + da.get(2)+ "\n");
