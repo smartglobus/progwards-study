@@ -7,11 +7,11 @@ public class DynamicArray<T> {
     private static int entryCount;
 
     DynamicArray() {
-        array = (T[]) new Object[10];
+        array = (T[]) new Object[1];
     }
 
     void add(T t) {
-        if (entryCount > array.length - 1) {
+        if (entryCount >= array.length) {
             T[] newArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array=newArray;
