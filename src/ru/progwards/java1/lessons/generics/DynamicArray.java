@@ -39,7 +39,7 @@ public class DynamicArray<T> {
     }
 
     T get(int pos) {
-        if (pos> array.length - 1)return null;
+        if (pos > array.length - 1) return null;
         return array[pos];
     }
 
@@ -52,27 +52,18 @@ public class DynamicArray<T> {
         DynamicArray da = new DynamicArray<>();
         da.add(1);
         da.add(2);
-//        da.add(3);
-        System.out.println(da.array[0]);
+        da.add(3);
+        da.add(222);
+
         for (var i : da.array) System.out.println(i);
-//        Arrays.stream(da.array).forEach(System.out::println);
-//        da.add(true);
-        da.insert(4, 5);
+        System.out.println();
+
+        da.insert(0, 5);
 
         Arrays.stream(da.array).forEach(System.out::println);
         System.out.println("\n" + "Dynarray size = " + da.size() + "\n");
         da.remove(0);
         Arrays.stream(da.array).forEach(System.out::println);
-//        System.out.println("\n" + da.get(2)+ "\n");
 
-
-//        da.add(222);
-//        da.add("testing e");
-//        da.add(125.25);
-//        da.add(false);
-//        da.add("testing exp");
-//        da.add("testing expan");
-//        da.add("testing expantion");
-//        Arrays.stream(da.array).forEach(System.out::println);
     }
 }
