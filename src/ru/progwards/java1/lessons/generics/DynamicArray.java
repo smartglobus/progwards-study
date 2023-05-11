@@ -1,10 +1,9 @@
 package ru.progwards.java1.lessons.generics;
 
-import java.util.Arrays;
 
 public class DynamicArray<T> {
     private T[] array;
-    private static int entryCount;
+    private int entryCount;
 
     DynamicArray() {
         array = (T[]) new Object[1];
@@ -17,6 +16,7 @@ public class DynamicArray<T> {
             array = newArray;
         }
         array[entryCount++] = t;
+        System.out.println(t.getClass());
     }
 
     void insert(int pos, T t) {
@@ -55,15 +55,16 @@ public class DynamicArray<T> {
         da.add(3);
         da.add(222);
 
-        for (var i : da.array) System.out.println(i);
-        System.out.println();
-
+//        for (Integer i : (Integer[]) da.array) System.out.println((Integer) i);
+//        System.out.println(da.array[1].getClass().equals(Object.class));
+        System.out.println(5 + da.array[0].toString() + "arr");
+        System.out.println(da.entryCount);
         da.insert(0, 5);
 
-        Arrays.stream(da.array).forEach(System.out::println);
+//        Arrays.stream(da.array).forEach(System.out::println);
         System.out.println("\n" + "Dynarray size = " + da.size() + "\n");
         da.remove(0);
-        Arrays.stream(da.array).forEach(System.out::println);
+//        Arrays.stream(da.array).forEach(System.out::println);
 
     }
 }
