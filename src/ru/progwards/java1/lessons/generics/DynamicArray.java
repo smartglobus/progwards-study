@@ -5,33 +5,34 @@ public class DynamicArray<T> {
     private T[] array;
     private int entryCount;
 
-    DynamicArray() {
+    @SuppressWarnings("unchecked")
+    private DynamicArray() {
         array = (T[]) new Object[1];
     }
-
-    void add(T t) {
+@SuppressWarnings("unchecked")
+private void add(T t) {
         if (entryCount >= array.length) {
             T[] newArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
         }
         array[entryCount++] = t;
-        System.out.println(t.getClass());
     }
 
-    void insert(int pos, T t) {
+    @SuppressWarnings("unchecked")
+    private void insert(int pos, T t) {
         if (pos > array.length - 1) return;
         if (entryCount >= array.length) {
             T[] newArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
         }
-        for (int i = entryCount - 1; i >= pos; i--) array[i + 1] = array[i];
+        if (entryCount - pos >= 0) System.arraycopy(array, pos, array, pos + 1, entryCount - pos);
         array[pos] = t;
         entryCount++;
     }
 
-    void remove(int pos) {
+    private void remove(int pos) {
         if (pos > array.length - 1) return;
         for (int i = pos; i < entryCount - 1; i++) array[i] = array[i + 1];
         array[entryCount - 1] = null;
@@ -43,7 +44,7 @@ public class DynamicArray<T> {
         return array[pos];
     }
 
-    int size() {
+    private int size() {
         return entryCount;
     }
 
