@@ -8,12 +8,12 @@ public class DynamicArray<T extends Object> {
     private int entryCount;
 
     //    @SuppressWarnings("unchecked")
-    private DynamicArray() {
+     DynamicArray() {
         array = (T[]) new Object[1];
     }
 
     //    @SuppressWarnings("unchecked")
-    private void add(T t) {
+     void add(T t) {
         if (entryCount >= array.length) {
             T[] newArray = (T[]) new Object[array.length * 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
@@ -23,7 +23,7 @@ public class DynamicArray<T extends Object> {
     }
 
     //    @SuppressWarnings("unchecked")
-    private void insert(int pos, T t) {
+     void insert(int pos, T t) {
         if (pos > array.length - 1) return;
         if (entryCount >= array.length) {
             T[] newArray = (T[]) new Object[array.length * 2];
@@ -35,7 +35,7 @@ public class DynamicArray<T extends Object> {
         entryCount++;
     }
 
-    private void remove(int pos) {
+     void remove(int pos) {
         if (pos >= entryCount) return;
         System.arraycopy(array, pos + 1, array, pos, entryCount - 1 - pos);
         array[entryCount - 1] = null;
@@ -47,7 +47,7 @@ public class DynamicArray<T extends Object> {
         return array[pos];
     }
 
-    private int size() {
+     int size() {
         return entryCount;
     }
 
