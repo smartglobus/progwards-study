@@ -3,16 +3,16 @@ package ru.progwards.java1.lessons.generics;
 
 import java.util.Arrays;
 
-public class DynamicArray<T> {
+public class DynamicArray<T extends Object> {
     private T[] array;
     private int entryCount;
 
-    @SuppressWarnings("unchecked")
+    //    @SuppressWarnings("unchecked")
     private DynamicArray() {
         array = (T[]) new Object[1];
     }
 
-    @SuppressWarnings("unchecked")
+    //    @SuppressWarnings("unchecked")
     private void add(T t) {
         if (entryCount >= array.length) {
             T[] newArray = (T[]) new Object[array.length * 2];
@@ -22,7 +22,7 @@ public class DynamicArray<T> {
         array[entryCount++] = t;
     }
 
-    @SuppressWarnings("unchecked")
+    //    @SuppressWarnings("unchecked")
     private void insert(int pos, T t) {
         if (pos > array.length - 1) return;
         if (entryCount >= array.length) {
@@ -36,8 +36,8 @@ public class DynamicArray<T> {
     }
 
     private void remove(int pos) {
-        if (pos > array.length - 1) return;
-        if (entryCount - 1 - pos >= 0) System.arraycopy(array, pos + 1, array, pos, entryCount - 1 - pos);
+        if (pos >= entryCount) return;
+        System.arraycopy(array, pos + 1, array, pos, entryCount - 1 - pos);
         array[entryCount - 1] = null;
         entryCount--;
     }
@@ -61,11 +61,13 @@ public class DynamicArray<T> {
         Arrays.stream(da.array).forEach(System.out::println);
 
         System.out.println("\nentryCount = " + da.entryCount + "\n");
-        da.insert(0, 5);
+//        da.insert(0, 5);
+//        da.insert(2, 4);
 
         Arrays.stream(da.array).forEach(System.out::println);
         System.out.println("\nDynarray size = " + da.size() + "\n");
-        da.remove(2);
+//        da.remove(2);
+        da.remove(3);
         Arrays.stream(da.array).forEach(System.out::println);
 
     }
