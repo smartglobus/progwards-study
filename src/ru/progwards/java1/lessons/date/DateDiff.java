@@ -151,12 +151,12 @@ public class DateDiff {
 
         Calendar birthDayExpectancy = Calendar.getInstance();
         birthDayExpectancy.clear();
-        birthDayExpectancy.set(2022, Calendar.NOVEMBER, 2, 13, 38, 15);
+        birthDayExpectancy.set(2023, Calendar.MAY, 19, 0, 0, 0);
         Date currentTime = new Date(birthDayExpectancy.getTimeInMillis());
 
         Calendar myBirthday = Calendar.getInstance();
         myBirthday.clear();
-        myBirthday.set(1983, Calendar.JULY, 12, 10, 33, 10);
+        myBirthday.set(1995, Calendar.APRIL, 2, 0, 0, 0);
         Date myBirthdayDate = new Date(myBirthday.getTimeInMillis());
 
         Calendar test1 = Calendar.getInstance();
