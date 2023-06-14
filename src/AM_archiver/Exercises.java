@@ -13,6 +13,8 @@ public class Exercises {
     private int windowStartPosition;
     private ArrayList<Byte> outBytes;
     private ArrayList<Byte> codedBlock;// блок из служебного байта-указателя и 8 некодированных байтов или ссылок
+    int codedBlockCount;// счётчик добавлений в codedBlock (не равен количеству добавленных бит!)
+    private boolean[] linkDescript = new boolean[8];
     private int length;
     private int distance;
 
@@ -35,6 +37,12 @@ public class Exercises {
             // bufStart - позиция указателя начала буфера, т.е. начала кодируемого участка
             for (int bufStart = MIN_CODE; bufStart < bytes.length - BUF_LIM; bufStart++) { // последниЙ кусок размера BUF_LIM не кодируем
 // записываем первые биты (от 0 до MIN_CODE-1)без кодировки
+//                for (int i = 0; i < MIN_CODE; i++) {
+//                    codedBlock.add(bytes[i]);
+//                    codedBlockCount = codedBlockCount < 8 ? codedBlockCount + 1 : 0;
+//                }
+
+
                 windowStartPosition = (bufStart - WINDOW) >= 0 ? bufStart - WINDOW : 0; // вычислить начало окна windowStartPosition
                 Link link = new Link(MIN_CODE); // надо ли каждый шаг содавать новый объект? Нужен ли вообще объект???
 
@@ -74,6 +82,7 @@ public class Exercises {
 
                     } else {
                         // записываем бит без кодирования
+
                     }
                 }
                 if (link.distance > 0) {
@@ -105,10 +114,40 @@ public class Exercises {
 
     }
 
-    // возвращает 16 бит, из которых первые 12 кодируют distance, а остальные 4 length
-    private short linkShort(int distance, int length) {
+    // записывает в результат в виде двух byte последовательность из 16 бит, из которых первые 12 кодируют distance, а остальные 4 length
+    private void writeLink(int distance, int length) {
 // длина последовательности от 3 до 18 (length-3 помещается в 4 бита, от 0 до 15)
-        return (short) ((distance<<3) + length);
+        short s = (short) ((distance << 3) + length);
+        linkDescript[codedBlockCount] = true; //
+        codedBlockCount++;
+    }
+
+    private void addBytes(byte b) {
+
+        if (codedBlockCount < 8) {
+            codedBlock.add(b);
+
+        } else {
+            // сформировать служеный байт
+//            codedBlock.add(0,служебный байт);
+            outBytes.addAll(codedBlock);
+            codedBlock.clear();
+            codedBlock.add(b);
+            codedBlockCount = 0;
+        }
+    }
+
+    private byte descriptorByte() {
+//        linkDescript[1]=true;
+//        linkDescript[3]=true;
+//        linkDescript[7]=true;
+        int result = 0;
+        for (boolean bl : linkDescript) {
+            result <<= 1;
+            result += bl ? 1 : 0;
+        }
+//        System.out.println(Integer.toBinaryString(result));
+        return (byte)result;
     }
 
 
@@ -122,5 +161,8 @@ public class Exercises {
         System.out.println("средняя дистанция " + exr.sumDistance / exr.tempLinks.size());
         System.out.println("средняя длина " + exr.sumLength / exr.tempLinks.size());
         System.out.println("minDistance " + exr.minDistance);
+
+        System.out.println(exr.descriptorByte());
+
     }
 }
