@@ -11,8 +11,8 @@ public class Exercises {
     private final static int MIN_CODE = 3; // минимальная длина кодируемой повторяющейся последовательности
     private final int BUF_LIM = 15 + MIN_CODE; // максимальный размер буфера сравнения, т.е. максимальная длина кодируемой повторяющейся последовательности
     private int windowStartPosition;
-    private ArrayList<Byte> outBytes;
-    private ArrayList<Byte> codedBlock;// блок из служебного байта-указателя и 8 некодированных байтов или ссылок
+    private ArrayList<Byte> outBytes = new ArrayList<>();
+    private ArrayList<Byte> codedBlock = new ArrayList<>();// блок из служебного байта-указателя и 8 некодированных байтов или ссылок
     int codedBlockCount;// счётчик добавлений в codedBlock (не равен количеству добавленных бит!)
     private boolean[] linkDescript = new boolean[8];
     private int length;
@@ -22,6 +22,7 @@ public class Exercises {
 
 
     // отладочные переменные
+    private int linkPosition; // отладка
     private int inpFileSize; // отладка
     private int sumLength; // отладка
     private int sumDistance; // отладка
@@ -33,18 +34,23 @@ public class Exercises {
 
             byte[] bytes = fileInputStream.readAllBytes();
             inpFileSize = bytes.length; // отладка
+            // записываем первые биты (от 0 до MIN_CODE-1)без кодировки
+            for (int i = 0; i < MIN_CODE; i++) {
+                addBytes(bytes[i]);
+                linkDescript[i] = false; // можно пропустить, они и так false изначально
+//                    codedBlockCount = codedBlockCount < 8 ? codedBlockCount + 1 : 0;
+            }
 //            for (byte b : bytes) System.out.print(b + "_");
             // bufStart - позиция указателя начала буфера, т.е. начала кодируемого участка
-            for (int bufStart = MIN_CODE; bufStart < bytes.length - BUF_LIM; bufStart++) { // последниЙ кусок размера BUF_LIM не кодируем
-// записываем первые биты (от 0 до MIN_CODE-1)без кодировки
-//                for (int i = 0; i < MIN_CODE; i++) {
-//                    codedBlock.add(bytes[i]);
-//                    codedBlockCount = codedBlockCount < 8 ? codedBlockCount + 1 : 0;
-//                }
+            for (int bufStart = MIN_CODE; bufStart < bytes.length - BUF_LIM; bufStart++) { // первый кусок до MIN_CODE и последниЙ размера BUF_LIM не кодируются
 
 
                 windowStartPosition = (bufStart - WINDOW) >= 0 ? bufStart - WINDOW : 0; // вычислить начало окна windowStartPosition
                 Link link = new Link(MIN_CODE); // надо ли каждый шаг содавать новый объект? Нужен ли вообще объект???
+                // обнуление параметров ссылки
+                distance = 0;
+                length = MIN_CODE;
+                linkPosition = bufStart; // отладка
 
                 // цикл поиска совпадения символа в окне с первым символом буфера
                 for (int wndPos = windowStartPosition; wndPos < bufStart; wndPos++) {
@@ -68,23 +74,24 @@ public class Exercises {
                                 }
 
 
-                                // блок создания ссылки
-                                if (lengthCount >= link.length) {
+                                // блок создания или обновления ссылки
+                                if (lengthCount >= length) {
                                     link.linkPosition = bufStart; // отладка
                                     link.distance = bufStart - wndPos; // wndPos здесь - первый бит повторяющейся последовательности
                                     link.length = lengthCount;
+
+                                    distance = bufStart - wndPos;
+                                    length = lengthCount;
+                                    linkPosition = bufStart; // отладка
                                 }
                             } else {
-
+// если совпадения с буфером в этом участке окна закончились, прервать накопление lengthCount и продолжить с wndPos++
                                 break;
                             }
                         }
-
-                    } else {
-                        // записываем бит без кодирования
-
                     }
                 }
+                // блок записи ссылки
                 if (link.distance > 0) {
                     tempLinks.add(link); // записать Link в результат
                     bufStart += link.length;
@@ -92,6 +99,11 @@ public class Exercises {
                     sumLength += link.length; // отладка
                     sumDistance += link.distance; // отладка
                     if (link.distance < minDistance) minDistance = link.distance; // отладка
+                }else {
+                    // записываем бит без кодирования
+                    addBytes(bytes[bufStart]);
+                    linkDescript[codedBlockCount++] = false;
+
                 }
             }
 
@@ -128,8 +140,8 @@ public class Exercises {
             codedBlock.add(b);
 
         } else {
-            // сформировать служеный байт
-//            codedBlock.add(0,служебный байт);
+
+            codedBlock.add(0, descriptorByte());// сформировать служеный байт и вписать его в начало блока
             outBytes.addAll(codedBlock);
             codedBlock.clear();
             codedBlock.add(b);
@@ -147,7 +159,7 @@ public class Exercises {
             result += bl ? 1 : 0;
         }
 //        System.out.println(Integer.toBinaryString(result));
-        return (byte)result;
+        return (byte) result;
     }
 
 
