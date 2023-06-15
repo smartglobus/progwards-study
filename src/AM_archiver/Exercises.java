@@ -93,6 +93,7 @@ public class Exercises {
                 }
                 // блок записи ссылки
                 if (link.distance > 0) {
+                    // здесь надо вызвать метод writeLink
                     tempLinks.add(link); // записать Link в результат
                     bufStart += link.length;
 
@@ -102,8 +103,9 @@ public class Exercises {
                 }else {
                     // записываем бит без кодирования
                     addBytes(bytes[bufStart]);
-                    linkDescript[codedBlockCount++] = false;
+                    linkDescript[codedBlockCount] = false;
 
+//                    codedBlockCount = codedBlockCount < 8 ? codedBlockCount + 1 : 0;
                 }
             }
 
