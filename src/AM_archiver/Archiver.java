@@ -7,28 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Archiver {
-    private String inFileName;
-    private String outFileName;
     private final static int WINDOW = 4096; // размер скользящего окна
     private final static int MIN_CODE = 3; // минимальная длина кодируемой повторяющейся последовательности
     private final int BUF_LIM = 15 + MIN_CODE; // максимальный размер буфера сравнения, т.е. максимальная длина кодируемой повторяющейся последовательности
+    private ArrayList<Byte> outBytes = new ArrayList<>();
     private ArrayList<Byte> codedBlock = new ArrayList<>();// блок из служебного байта-указателя и 8 некодированных байтов или ссылок
-    private List<Boolean> linkDescript = new ArrayList<>();
+    private List<Boolean> codedBlockDescript = new ArrayList<>();
     private boolean isEnOfFile;
 
-    public Archiver(String inFileName, String outFileName) {
-        this.inFileName = inFileName;
-        this.outFileName = outFileName;
-    }
-
-    void archive() {
-        try (FileInputStream fileInputStream = new FileInputStream(inFileName)) {
+    void archive(String fileName, String outName) {
+        try (FileInputStream fileInputStream = new FileInputStream(fileName);
+             FileOutputStream fileOutputStream = new FileOutputStream(outName)) {
 
             byte[] bytes = fileInputStream.readAllBytes();
 
-            // записываем первые биты (от 0 до MIN_CODE-1) без кодировки
+            // записываем первые биты (от 0 до MIN_CODE-1)без кодировки
             for (int i = 0; i < MIN_CODE; i++) {
-                addBytes(outFileName, false, bytes[i]);
+                addBytes(false, bytes[i]);
             }
 
             // bufStart - позиция указателя начала буфера, т.е. начала кодируемого участка
@@ -46,7 +41,6 @@ public class Archiver {
 
                     int lengthCount = 0; // длина текущей п-ти совпадений
                     if (bytes[wndPos] == bytes[bufStart]) {
-                        // цикл наращивания буфера, пока есть совпадения
                         int bS_wP = bufStart - wndPos; // ограничитель захода в буфер
                         int endOfFile = bytes.length - 1 - bufStart; // ограничитель выхода за конец bytes
                         for (int j = 0; j < BUF_LIM && j <= bS_wP && j <= endOfFile; j++) { // j меньше BUF_LIM, и (wndPos + j) не превышает bufStart, и (bufStart + j) не превышает bytes.length
@@ -88,48 +82,47 @@ public class Archiver {
                     int distAndLength = (distance << 4) + (length - 3);
                     byte linkByte1 = (byte) (distAndLength >> 8); // первые 8 битов distance
                     byte linkByte2 = (byte) distAndLength; // оставшиеся 4 бита distance и 4 бита length
-                    addBytes(outFileName, true, linkByte1, linkByte2);
+                    addBytes(true, linkByte1, linkByte2);
                 } else {
                     // запись бита без кодирования
-                    addBytes(outFileName, false, bytes[bufStart]);
+                    addBytes(false, bytes[bufStart]);
                 }
             }
+
+            for (Byte b : outBytes) fileOutputStream.write(b);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void addBytes(String outName, boolean isLink, byte... bts) {
+    private void addBytes(boolean isLink, byte... bts) {
 
         for (byte b : bts) codedBlock.add(b);
-        linkDescript.add(isLink);
+        codedBlockDescript.add(isLink);
 
-        if (isEnOfFile || linkDescript.size() == 8) {
-            codedBlock.add(0, descriptorByte()); // формирование служеного байта и запись его в начало блока
-
-            try (FileOutputStream fileOutputStream = new FileOutputStream(outName, true)) {
-                for (Byte b : codedBlock) fileOutputStream.write(b); // дописывание в выходной файл готового блока
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        // формирование служеного байта и запись его в начало блока
+        if (isEnOfFile || codedBlockDescript.size() == 8) {
+            codedBlock.add(0, descriptorByte());
+            outBytes.addAll(codedBlock);
             codedBlock.clear();
         }
     }
 
     private byte descriptorByte() {
         int result = 0;
-        for (boolean bl : linkDescript) {
+        for (boolean bl : codedBlockDescript) {
             result <<= 1;
             result += bl ? 1 : 0;
         }
-        result <<= (8 - linkDescript.size()); // сделано для последнего descriptorByte для п-ти < 8 байтов
-        linkDescript.clear();
+        result <<= (8 - codedBlockDescript.size()); // сделано для последнего descriptorByte для п-ти < 8 байтов
+        codedBlockDescript.clear();
         return (byte) result;
     }
 
 
     public static void main(String[] args) {
-        Archiver exr = new Archiver("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\AM_archiver\\file2.txt", "C:\\Users\\User\\Pictures\\BachMonogrm1_copy.txt");
-        exr.archive();
+        Archiver exr = new Archiver();
+        exr.archive("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\AM_archiver\\file2.txt", "C:\\Users\\User\\Pictures\\BachMonogrm1_copy.txt");
     }
 }
