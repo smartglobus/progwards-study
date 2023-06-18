@@ -28,7 +28,7 @@ public class Archiver {
 
             // записываем первые биты (от 0 до MIN_CODE-1) без кодировки
             for (int i = 0; i < MIN_CODE; i++) {
-                addBytes(outFileName,false, bytes[i]);
+                addBytes(outFileName, false, bytes[i]);
             }
 
             // bufStart - позиция указателя начала буфера, т.е. начала кодируемого участка
@@ -88,10 +88,10 @@ public class Archiver {
                     int distAndLength = (distance << 4) + (length - 3);
                     byte linkByte1 = (byte) (distAndLength >> 8); // первые 8 битов distance
                     byte linkByte2 = (byte) distAndLength; // оставшиеся 4 бита distance и 4 бита length
-                    addBytes(outFileName,true, linkByte1, linkByte2);
+                    addBytes(outFileName, true, linkByte1, linkByte2);
                 } else {
                     // запись бита без кодирования
-                    addBytes(outFileName,false, bytes[bufStart]);
+                    addBytes(outFileName, false, bytes[bufStart]);
                 }
             }
         } catch (IOException e) {
@@ -101,19 +101,18 @@ public class Archiver {
 
     private void addBytes(String outName, boolean isLink, byte... bts) {
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(outName,true)) {
-
         for (byte b : bts) codedBlock.add(b);
         linkDescript.add(isLink);
 
         if (isEnOfFile || linkDescript.size() == 8) {
             codedBlock.add(0, descriptorByte()); // формирование служеного байта и запись его в начало блока
-            for (Byte b : codedBlock) fileOutputStream.write(b); // дописывание в выходной файл готового блока
-            codedBlock.clear();
-        }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            try (FileOutputStream fileOutputStream = new FileOutputStream(outName, true)) {
+                for (Byte b : codedBlock) fileOutputStream.write(b); // дописывание в выходной файл готового блока
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            codedBlock.clear();
         }
     }
 
