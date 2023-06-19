@@ -115,7 +115,7 @@ public class Archiver {
             result <<= 1;
             result += bl ? 1 : 0;
         }
-        result <<= (8 - codedBlockDescript.size()); // сделано для последнего descriptorByte для п-ти < 8 байтов
+        result <<= (8 - codedBlockDescript.size()); // стандартизует последний descriptorByte для п-ти < 8 байтов
         codedBlockDescript.clear();
         return (byte) result;
     }
