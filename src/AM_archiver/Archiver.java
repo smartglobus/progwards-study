@@ -3,6 +3,8 @@ package AM_archiver;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +17,15 @@ public class Archiver {
     private List<Boolean> codedBlockDescript = new ArrayList<>();
     private boolean isEnOfFile;
 
-    void archive(String fileName, String outName) {
+    void archive(String fileName) {
+
+        Path path = Paths.get(fileName);
+        Path parent = path.getParent();
+        String newName = path.getFileName().toString() + ".arch";
+        String outFile = parent.resolve(newName).toString();
+
         try (FileInputStream fileInputStream = new FileInputStream(fileName);
-             FileOutputStream fileOutputStream = new FileOutputStream(outName)) {
+             FileOutputStream fileOutputStream = new FileOutputStream(outFile)) {
 
             byte[] bytes = fileInputStream.readAllBytes();
 
@@ -123,6 +131,6 @@ public class Archiver {
 
     public static void main(String[] args) {
         Archiver exr = new Archiver();
-        exr.archive("C:\\Users\\User\\IdeaProjects\\Progwards first project\\src\\AM_archiver\\file2.txt", "C:\\Users\\User\\Pictures\\BachMonogrm1_copy.txt");
+        exr.archive("C:\\Users\\User\\Pictures\\testingArc.bmp");
     }
 }

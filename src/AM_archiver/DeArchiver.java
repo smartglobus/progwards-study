@@ -3,6 +3,8 @@ package AM_archiver;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +13,20 @@ public class DeArchiver {
     private List<Byte> outBytes = new ArrayList<>();
 
     void deArchive(String fileName, String outName) {
+
+        Path path = Paths.get(fileName);
+        Path parent = path.getParent();
+        String inputFileName = path.getFileName().toString();
+        String[] fileStr = inputFileName.split("\\.arch");
+//        for (String s:fileStr) System.out.println(s);
+        String[] initialFileName = fileStr[0].split("\\.");
+        initialFileName[initialFileName.length - 2] += "(unpacked).";
+        String newName = "";
+        for (String s : initialFileName) newName += s;
+        String outFile = parent.resolve(newName).toString();
+
         try (FileInputStream fileInputStream = new FileInputStream(fileName);
-             FileOutputStream fileOutputStream = new FileOutputStream(outName)) {
+             FileOutputStream fileOutputStream = new FileOutputStream(outFile)) {
 
             bytes = fileInputStream.readAllBytes();
 
@@ -52,7 +66,7 @@ public class DeArchiver {
 
     public static void main(String[] args) {
         DeArchiver deArchiver = new DeArchiver();
-        deArchiver.deArchive("C:\\Users\\User\\Pictures\\BachMonogrm1_copy.txt", "C:\\Users\\User\\Pictures\\BachMonogrm1_copy2.txt");
+        deArchiver.deArchive("C:\\Users\\User\\Pictures\\testingArc.bmp.arch", "C:\\Users\\User\\Pictures\\BachMonogrm1_copy2.txt");
 
     }
 }
