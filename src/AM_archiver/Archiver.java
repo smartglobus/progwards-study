@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Archiver {
-    private final static int WINDOW = 4096; // размер скользящего окна
+    private final static int WINDOW = 4095; // размер скользящего окна
     private final static int MIN_CODE = 3; // минимальная длина кодируемой повторяющейся последовательности
     private final int BUF_LIM = 15 + MIN_CODE; // максимальный размер буфера сравнения, т.е. максимальная длина кодируемой повторяющейся последовательности
     private ArrayList<Byte> outBytes = new ArrayList<>();
@@ -131,6 +131,6 @@ public class Archiver {
 
     public static void main(String[] args) {
         Archiver exr = new Archiver();
-        exr.archive("C:\\Users\\User\\Pictures\\testingArc 3_33Mb.bmp");
+        exr.archive("C:\\Users\\User\\Pictures\\testingArc 3_98Mb.bmp");
     }
 }

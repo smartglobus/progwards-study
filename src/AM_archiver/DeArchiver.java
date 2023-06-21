@@ -69,6 +69,6 @@ public class DeArchiver {
 
     public static void main(String[] args) {
         DeArchiver deArchiver = new DeArchiver();
-        deArchiver.deArchive("C:\\Users\\User\\Pictures\\testingArc 3_33Mb.bmp.arch");
+        deArchiver.deArchive("C:\\Users\\User\\Pictures\\testingArc 3_98Mb.bmp.arch");
     }
 }
