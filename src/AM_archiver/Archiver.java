@@ -80,13 +80,13 @@ public class Archiver {
                     }
                 }
 
-                // блок записи ссылки из 16 бит. Первые 12 кодируют distance, а остальные 4 length - MIN_CODE (MIN_CODE = 3)
-                // т.к. длина последовательности не меньше 3, то в 4 бита (0...15) помещаются значения (length-3) диапазона 3...18
                 if (distance > 0) {
                     bufStart += length - 1;
                     if (bufStart >= bytes.length - 1)
                         isEnOfFile = true; // сигнал для формирования последнего descriptorByte для п-ти <= 8 байтов
 
+                    // блок записи ссылки из 16 бит. Первые 12 кодируют distance, а остальные 4 length - MIN_CODE (MIN_CODE = 3)
+                    // т.к. длина последовательности не меньше 3, то в 4 бита (0...15) помещаются значения (length-3) диапазона 3...18
                     int distAndLength = (distance << 4) + (length - 3);
                     byte linkByte1 = (byte) (distAndLength >> 8); // первые 8 битов distance
                     byte linkByte2 = (byte) distAndLength; // оставшиеся 4 бита distance и 4 бита length
@@ -131,6 +131,6 @@ public class Archiver {
 
     public static void main(String[] args) {
         Archiver exr = new Archiver();
-        exr.archive("C:\\Users\\User\\Pictures\\testingArc.bmp");
+        exr.archive("C:\\Users\\User\\Pictures\\testingArc 3_33Mb.bmp");
     }
 }
