@@ -17,7 +17,7 @@ public class DynamicArray<T> {
 
     @SuppressWarnings("unchecked")
     void insert(int pos, T t) throws Exception{
-        if (pos > array.length - 1) throw new Exception();
+        if (pos > array.length - 1) return;// throw new Exception();
         if (entryCount >= array.length) arrayExpand();
         if (entryCount - pos >= 0) System.arraycopy(array, pos, array, pos + 1, entryCount - pos);
         array[pos] = t;
@@ -25,7 +25,7 @@ public class DynamicArray<T> {
     }
 
     void remove(int pos) throws Exception{
-        if (pos >= entryCount) throw new Exception();
+        if (pos >= entryCount) return; //throw new Exception();
         System.arraycopy(array, pos + 1, array, pos, entryCount - 1 - pos);
         array[entryCount - 1] = null;
         entryCount--;
