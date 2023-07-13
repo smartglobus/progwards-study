@@ -11,36 +11,28 @@ public class DynamicArray<T> {
 
     @SuppressWarnings("unchecked")
     void add(T t) {
-        if (entryCount >= array.length) {
-            T[] newArray = (T[]) new Object[array.length * 2];
-            System.arraycopy(array, 0, newArray, 0, array.length);
-            array = newArray;
-        }
+        if (entryCount >= array.length) arrayExpand();
         array[entryCount++] = t;
     }
 
     @SuppressWarnings("unchecked")
-    void insert(int pos, T t) {
-        if (pos > array.length - 1) return;
-        if (entryCount >= array.length) {
-            T[] newArray = (T[]) new Object[array.length * 2];
-            System.arraycopy(array, 0, newArray, 0, array.length);
-            array = newArray;
-        }
+    void insert(int pos, T t) throws Exception{
+        if (pos > array.length - 1) throw new Exception();
+        if (entryCount >= array.length) arrayExpand();
         if (entryCount - pos >= 0) System.arraycopy(array, pos, array, pos + 1, entryCount - pos);
         array[pos] = t;
         entryCount++;
     }
 
-    void remove(int pos) {
-        if (pos >= entryCount) return;
+    void remove(int pos) throws Exception{
+        if (pos >= entryCount) throw new Exception();
         System.arraycopy(array, pos + 1, array, pos, entryCount - 1 - pos);
         array[entryCount - 1] = null;
         entryCount--;
     }
 
-    T get(int pos) {
-        if (pos > array.length - 1) return null;
+    T get(int pos) throws Exception{
+        if (pos > array.length - 1) throw new Exception();
         return array[pos];
     }
 
@@ -48,8 +40,15 @@ public class DynamicArray<T> {
         return entryCount;
     }
 
+@SuppressWarnings("unchecked")
+    void arrayExpand (){
+        T[] newArray = (T[]) new Object[array.length * 2];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        array = newArray;
+    }
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
         DynamicArray<Integer> da = new DynamicArray<>();
         da.add(1);
         da.add(2);
