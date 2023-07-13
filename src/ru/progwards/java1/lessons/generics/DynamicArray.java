@@ -31,8 +31,8 @@ public class DynamicArray<T> {
         entryCount--;
     }
 
-    T get(int pos) {
-//        if (pos > array.length - 1) return null;
+    T get(int pos) throws Exception{
+        if (pos > array.length - 1) throw new Exception();
         return array[pos];
     }
 
@@ -54,16 +54,16 @@ public class DynamicArray<T> {
         da.add(2);
         da.add(3);
         da.add(222);
-        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
+//        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
 
         System.out.println("\nentryCount = " + da.entryCount + "\n");
         da.insert(0, 5);
         da.insert(2, 4);
 
-        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
+//        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
         System.out.println("\nDynarray size = " + da.size() + "\n");
 //        da.get(25);
         da.remove(3);
-        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
+//        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
     }
 }
