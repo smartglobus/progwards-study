@@ -16,23 +16,23 @@ public class DynamicArray<T> {
     }
 
     @SuppressWarnings("unchecked")
-    void insert(int pos, T t) throws Exception{
-        if (pos > array.length - 1) return;// throw new Exception();
+    void insert(int pos, T t) {
+//        if (pos > array.length - 1) return;
         if (entryCount >= array.length) arrayExpand();
         if (entryCount - pos >= 0) System.arraycopy(array, pos, array, pos + 1, entryCount - pos);
         array[pos] = t;
         entryCount++;
     }
 
-    void remove(int pos) throws Exception{
-        if (pos >= entryCount) return; //throw new Exception();
+    void remove(int pos) {
+//        if (pos >= entryCount) return;
         System.arraycopy(array, pos + 1, array, pos, entryCount - 1 - pos);
         array[entryCount - 1] = null;
         entryCount--;
     }
 
-    T get(int pos) throws Exception{
-        if (pos > array.length - 1) throw new Exception();
+    T get(int pos) {
+//        if (pos > array.length - 1) return null;
         return array[pos];
     }
 
@@ -48,7 +48,7 @@ public class DynamicArray<T> {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         DynamicArray<Integer> da = new DynamicArray<>();
         da.add(1);
         da.add(2);
@@ -57,12 +57,12 @@ public class DynamicArray<T> {
         for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
 
         System.out.println("\nentryCount = " + da.entryCount + "\n");
-//        da.insert(0, 5);
-//        da.insert(2, 4);
+        da.insert(0, 5);
+        da.insert(2, 4);
 
         for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
         System.out.println("\nDynarray size = " + da.size() + "\n");
-//        da.remove(2);
+//        da.get(25);
         da.remove(3);
         for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
     }
