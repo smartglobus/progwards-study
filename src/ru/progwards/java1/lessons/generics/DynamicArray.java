@@ -17,7 +17,7 @@ public class DynamicArray<T> {
 
     @SuppressWarnings("unchecked")
     void insert(int pos, T t) {
-        if (pos>array.length)throw new RuntimeException(">");
+        if (pos>entryCount)throw new RuntimeException(">");
         if (pos<0) throw new RuntimeException("<");
 //        if (pos > array.length - 1) return;
 
@@ -46,13 +46,13 @@ public class DynamicArray<T> {
     }
 
     private void checkPos(int pos){
-        if (pos>=array.length)throw new RuntimeException(">=");
+        if (pos>=entryCount)throw new RuntimeException(">=");
         if (pos<0) throw new RuntimeException("<");
     }
 
 @SuppressWarnings("unchecked")
     void arrayExpand (){
-        T[] newArray = (T[]) new Object[array.length +1];
+        T[] newArray = (T[]) new Object[array.length * 2];//????????????????????????????
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
