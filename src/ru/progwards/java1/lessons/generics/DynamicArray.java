@@ -17,9 +17,8 @@ public class DynamicArray<T> {
 
     @SuppressWarnings("unchecked")
     void insert(int pos, T t) {
-        if (pos>entryCount)throw new RuntimeException(">");
-        if (pos<0) throw new RuntimeException("<");
-//        if (pos > array.length - 1) return;
+        if (pos > entryCount) throw new RuntimeException(">");
+        if (pos < 0) throw new RuntimeException("<");
 
         if (entryCount >= array.length) arrayExpand();
         if (entryCount - pos >= 0) System.arraycopy(array, pos, array, pos + 1, entryCount - pos);
@@ -28,15 +27,13 @@ public class DynamicArray<T> {
     }
 
     void remove(int pos) {
-//        if (pos >= entryCount) return;
         checkPos(pos);
         System.arraycopy(array, pos + 1, array, pos, entryCount - 1 - pos);
         array[entryCount - 1] = null;
         entryCount--;
     }
 
-    T get(int pos){
-//        if (pos > array.length - 1) throw new RuntimeException();
+    T get(int pos) {
         checkPos(pos);
         return array[pos];
     }
@@ -45,20 +42,20 @@ public class DynamicArray<T> {
         return entryCount;
     }
 
-    private void checkPos(int pos){
-        if (pos>=entryCount)throw new RuntimeException(">=");
-        if (pos<0) throw new RuntimeException("<");
+    private void checkPos(int pos) {
+        if (pos >= entryCount) throw new RuntimeException(">=");
+        if (pos < 0) throw new RuntimeException("<");
     }
 
-@SuppressWarnings("unchecked")
-    void arrayExpand (){
-        T[] newArray = (T[]) new Object[array.length * 2];//????????????????????????????
+    @SuppressWarnings("unchecked")
+    void arrayExpand() {
+        T[] newArray = (T[]) new Object[array.length * 2];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         DynamicArray<Integer> da = new DynamicArray<>();
         da.add(1);
         da.add(2);
