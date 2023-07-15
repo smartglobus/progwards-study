@@ -31,8 +31,8 @@ public class DynamicArray<T> {
         entryCount--;
     }
 
-    T get(int pos) throws Exception{
-        if (pos > array.length - 1) throw new Exception();
+    T get(int pos) throws RuntimeException{
+        if (pos > array.length - 1) throw new RuntimeException();
         return array[pos];
     }
 
