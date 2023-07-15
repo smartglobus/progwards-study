@@ -52,7 +52,7 @@ public class DynamicArray<T> {
 
 @SuppressWarnings("unchecked")
     void arrayExpand (){
-        T[] newArray = (T[]) new Object[array.length * 2];
+        T[] newArray = (T[]) new Object[array.length +1];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
@@ -64,16 +64,16 @@ public class DynamicArray<T> {
         da.add(2);
         da.add(3);
         da.add(222);
-//        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
+        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
 
         System.out.println("\nentryCount = " + da.entryCount + "\n");
         da.insert(0, 5);
         da.insert(2, 4);
 
-//        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
+        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
         System.out.println("\nDynarray size = " + da.size() + "\n");
-//        da.get(25);
+        da.get(25);
         da.remove(3);
-//        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
+        for (int i = 0; i < da.size(); i++) System.out.println(da.get(i));
     }
 }
