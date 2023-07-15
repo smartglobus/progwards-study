@@ -17,7 +17,10 @@ public class DynamicArray<T> {
 
     @SuppressWarnings("unchecked")
     void insert(int pos, T t) {
+        if (pos>array.length)throw new RuntimeException(">");
+        if (pos<0) throw new RuntimeException("<");
 //        if (pos > array.length - 1) return;
+
         if (entryCount >= array.length) arrayExpand();
         if (entryCount - pos >= 0) System.arraycopy(array, pos, array, pos + 1, entryCount - pos);
         array[pos] = t;
@@ -26,18 +29,25 @@ public class DynamicArray<T> {
 
     void remove(int pos) {
 //        if (pos >= entryCount) return;
+        checkPos(pos);
         System.arraycopy(array, pos + 1, array, pos, entryCount - 1 - pos);
         array[entryCount - 1] = null;
         entryCount--;
     }
 
-    T get(int pos) throws RuntimeException{
-        if (pos > array.length - 1) throw new RuntimeException();
+    T get(int pos){
+//        if (pos > array.length - 1) throw new RuntimeException();
+        checkPos(pos);
         return array[pos];
     }
 
     int size() {
         return entryCount;
+    }
+
+    private void checkPos(int pos){
+        if (pos>=array.length)throw new RuntimeException(">=");
+        if (pos<0) throw new RuntimeException("<");
     }
 
 @SuppressWarnings("unchecked")
