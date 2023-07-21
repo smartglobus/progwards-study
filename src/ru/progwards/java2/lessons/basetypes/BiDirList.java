@@ -12,8 +12,7 @@ public class BiDirList<T> implements Iterable<T> {
 
             @Override
             public boolean hasNext() {
-                if (curr == null) return false;
-                return true;
+                return curr != null;
             }
 
             @Override
