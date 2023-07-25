@@ -1,6 +1,5 @@
 package ru.progwards.java2.lessons.basetypes;
 
-import javax.validation.constraints.NotNull;
 import java.util.*;
 
 public class BiDirList<T> implements Iterable<T> {
@@ -55,9 +54,11 @@ public class BiDirList<T> implements Iterable<T> {
         }
     }
 
+
     private listItem<T> head;
     private listItem<T> tail;
-    private static int size;
+    private int size;
+
 
     public listItem<T> getHead() {
         return head;
@@ -66,6 +67,7 @@ public class BiDirList<T> implements Iterable<T> {
     public listItem<T> getTail() {
         return tail;
     }
+
 
     public void addLast(T item) {
         listItem<T> newEntry = new listItem<>(item);
@@ -91,6 +93,7 @@ public class BiDirList<T> implements Iterable<T> {
         }
     }
 
+    // удаляет один, первый из подходящих, элемент из списка
     public void remove(T item) {
         listItem<T> current = head;
         while (current != null) {
@@ -117,6 +120,7 @@ public class BiDirList<T> implements Iterable<T> {
         }
     }
 
+    // удаляет все подходящие элементы из списка
     public void removeAll(T item) {
         listItem<T> current = head;
         while (current != null) {
@@ -143,14 +147,38 @@ public class BiDirList<T> implements Iterable<T> {
     }
 
     public T at(int i) {
-
-
+        listItem<T> current = head;
+        for (int j = 0; j < size; j++) {
+            if (j == i) return current.item;
+            current = current.next;
+        }
         return null;
+    }
+
+    public static <T> BiDirList<T> from(T[] array) {
+        BiDirList<T> result = new BiDirList<>();
+        for (T t : array) result.addLast(t);
+        return result;
+    }
+
+    public static <T> BiDirList<T> of(T... array) {
+        return from(array);
+    }
+
+    public void toArray(T[] array) {
+        if (array.length != size)
+            System.out.println("Размер массива не совпадает с размером списка!\nРазмер списка = " + size());
+        listItem<T> current = head;
+        for (int i = 0; i < size && i < array.length; i++) {
+            array[i] = current.item;
+            current = current.next;
+        }
     }
 
     public int size() {
         return size;
     }
+
 
     public static void main(String[] args) {
         BiDirList<Integer> testBDL = new BiDirList<>();
@@ -166,12 +194,28 @@ public class BiDirList<T> implements Iterable<T> {
         System.out.println("head = " + testBDL.getHead().getItem() + "; tail = " + testBDL.getTail().getItem() + "; size = " + testBDL.size());
         for (Integer i : testBDL) System.out.println(i);
         System.out.println();
-        testBDL.remove(3);
-        testBDL.remove(3);
-        testBDL.remove(3);
+        System.out.println("at(i) = " + testBDL.at(10));
+//        testBDL.remove(3);
+//        testBDL.remove(3);
+//        testBDL.remove(3);
 //        testBDL.removeAll(3);
         for (Integer i : testBDL) System.out.println(i);
         System.out.println("head = " + testBDL.getHead().getItem() + "; tail = " + testBDL.getTail().getItem() + "; size = " + testBDL.size());
+        String[] strings = {"one", "two", "three", "four", "five"};
+        BiDirList<String> stringBDL = from(strings);
+        System.out.println();
+        for (String i : stringBDL) System.out.println(i);
+        System.out.println("head = " + stringBDL.getHead().getItem() + "; tail = " + stringBDL.getTail().getItem() + "; size = " + stringBDL.size());
 
+        stringBDL.toArray(strings);
+
+
+        BiDirList<String> ofVarargBDL = of("var", "one", "two", "three", "four", "five", "args");
+        System.out.println();
+        for (String i : ofVarargBDL) System.out.println(i);
+        System.out.println("head = " + ofVarargBDL.getHead().getItem() + "; tail = " + ofVarargBDL.getTail().getItem() + "; size = " + ofVarargBDL.size());
+        String[] sa = new String[5];
+        ofVarargBDL.toArray(sa);
+        System.out.println(Arrays.toString(sa));
     }
 }
