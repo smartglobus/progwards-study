@@ -13,15 +13,14 @@ public class DoubleHashTable<K, V> {
             this.trueIndex = getFirstHash(basicKey, table.length);
         }
 
-//        public void setNext(TableEntry<K, V> next) {
-//            this.next = next;
-//        }
+        public V getItem() {
+            return item;
+        }
 
         private int basicKey;
         private int trueIndex;
         private K key;
         private V item;
-        // private TableEntry<K, V> next;// оно нужно?????
         private boolean deleted;
     }
 
@@ -32,14 +31,8 @@ public class DoubleHashTable<K, V> {
 
 
     private DoubleHashTable() {
-//        this(101);
         table = new TableEntry[101];
     }
-
-//    private DoubleHashTable(int n) {
-//        table = new TableEntry[n];
-//    }
-
 
     public void add(K key, V value) {
         TableEntry<K, V> tableEntry = new TableEntry<>(key, value);
@@ -48,6 +41,37 @@ public class DoubleHashTable<K, V> {
         if (collisionCount * 10 > table.length) {
             expandTable();
         }
+    }
+
+    public V get(K key) {
+        TableEntry<K, V> nullEntry = new TableEntry<>(key, null);
+        int guessIndex = nullEntry.trueIndex;
+        while (table[guessIndex] != null) {
+            if (table[guessIndex].key.equals(nullEntry.key)) {
+                return (V) table[guessIndex].getItem();
+            }
+            guessIndex = getSecondHash(guessIndex, table.length);
+        }
+        return null;
+    }
+
+    public void remove(K key) {
+        TableEntry<K, V> nullEntry = new TableEntry<>(key, null);
+        int guessIndex = nullEntry.trueIndex;
+        while (table[guessIndex] != null) {
+            if (table[guessIndex].key.equals(nullEntry.key)) {
+                table[guessIndex].item = null;
+                table[guessIndex].deleted = true;
+                size--;
+            }
+            guessIndex = getSecondHash(guessIndex, table.length);
+        }
+    }
+
+    public void change(K key1, K key2){
+        V item = get(key1);
+        remove(key1);
+        add(key2, item);
     }
 
     private void expandTable() {
@@ -66,6 +90,11 @@ public class DoubleHashTable<K, V> {
     private void putEntry(TableEntry tableEntry, TableEntry[] table) {
         int guessIndex = tableEntry.trueIndex;
         while (table[guessIndex] != null) {
+            if (table[guessIndex].key.equals(tableEntry.key)) {
+                System.out.println("Элемент E<key, value>: (" + table[guessIndex].key + ", " + table[guessIndex].item +
+                        ") заменён на новый, (" + tableEntry.key + ", " + tableEntry.item + ").");
+                break;
+            }
             guessIndex = getSecondHash(guessIndex, table.length);
             collisionCount++;
         }
@@ -97,11 +126,27 @@ public class DoubleHashTable<K, V> {
     }
 
     public static void main(String[] args) {
-        DoubleHashTable<String, Integer> testDel = new DoubleHashTable<>();
-//        System.out.println(nextSize(431));
-//        System.out.println(StringKey.BKDRHash("abc"));
-        testDel.add("hello", 25);
-        testDel.add("hello", 25);
+//        DoubleHashTable<String, Integer> testDel = new DoubleHashTable<>();
+////        System.out.println(nextSize(431));
+////        System.out.println(StringKey.BKDRHash("abc"));
+//        testDel.add("hello", 21);
+//        testDel.add("hello1", 22);
+//        testDel.add("hello2", 23);
+//        testDel.add("hello3", 24);
+//        testDel.remove("hello2");
+//        System.out.println(testDel.get("hello2"));
+
+        DoubleHashTable<Integer, Integer> test2 = new DoubleHashTable<>();
+        test2.add(10,1);
+        test2.add(111,2);
+        test2.add(212,3);
+        test2.add(313,4);
+        test2.add(414,5);
+        test2.add(515,6);
+        test2.add(616,7);
+        System.out.println(test2.get(212));
+        test2.change(212,717);
+        System.out.println(test2.get(717));
     }
 }
 
