@@ -1,6 +1,7 @@
 package ru.progwards.java2.lessons.basetypes;
 
 
+import javax.validation.constraints.NotNull;
 import java.util.Iterator;
 
 public class DoubleHashTable<K, V> implements Iterable<V> {
@@ -63,11 +64,15 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
     }
 
     public void add(K key, V value) {
-        TableEntry<K, V> tableEntry = new TableEntry<>(key, value);
-        putEntry(tableEntry, table);
-        size++;
-        if (collisionCount * 10 > table.length) {
-            expandTable();
+        if (value != null) {
+            TableEntry<K, V> tableEntry = new TableEntry<>(key, value);
+            putEntry(tableEntry, table);
+            size++;
+            if (collisionCount * 10 > table.length) {
+                expandTable();
+            }
+        } else {
+            System.out.println("Добавление значения null с ключом \"" + key + "\" проигнорованно.");
         }
     }
 
@@ -178,6 +183,7 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
         test2.add(414, 5);
         test2.add(515, 6);
         test2.add(616, 7);
+        test2.add(23, null);
         System.out.println(test2.get(212));
         test2.change(212, 717);
         test2.remove(313);
