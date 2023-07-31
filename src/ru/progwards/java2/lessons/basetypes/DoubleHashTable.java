@@ -1,7 +1,35 @@
 package ru.progwards.java2.lessons.basetypes;
 
 
-public class DoubleHashTable<K, V> {
+import java.util.Iterator;
+
+public class DoubleHashTable<K, V> implements Iterable<V> {
+
+    @Override
+    public Iterator<V> iterator() {
+        return new Iterator<>() {
+            TableEntry[] arr = table;
+            int i = 0;
+
+            @Override
+            public boolean hasNext() {
+                while (i < arr.length) {
+                    if (arr[i] != null && arr[i].item != null) {
+                        return true;
+                    }
+                    i++;
+                }
+                return false;
+            }
+
+            @Override
+            public V next() {
+                V item = (V) arr[i].item;
+                i++;
+                return item;
+            }
+        };
+    }
 
     private class TableEntry<K, V> {
 
@@ -68,10 +96,16 @@ public class DoubleHashTable<K, V> {
         }
     }
 
-    public void change(K key1, K key2){
+    public void change(K key1, K key2) {
         V item = get(key1);
-        remove(key1);
-        add(key2, item);
+        if (item != null) {
+            remove(key1);
+            add(key2, item);
+        }
+    }
+
+    public int size() {
+        return size;
     }
 
     private void expandTable() {
@@ -137,16 +171,24 @@ public class DoubleHashTable<K, V> {
 //        System.out.println(testDel.get("hello2"));
 
         DoubleHashTable<Integer, Integer> test2 = new DoubleHashTable<>();
-        test2.add(10,1);
-        test2.add(111,2);
-        test2.add(212,3);
-        test2.add(313,4);
-        test2.add(414,5);
-        test2.add(515,6);
-        test2.add(616,7);
+        test2.add(10, 1);
+        test2.add(111, 2);
+        test2.add(212, 3);
+        test2.add(313, 4);
+        test2.add(414, 5);
+        test2.add(515, 6);
+        test2.add(616, 7);
         System.out.println(test2.get(212));
-        test2.change(212,717);
+        test2.change(212, 717);
+        test2.remove(313);
         System.out.println(test2.get(717));
+        System.out.println("size = " + test2.size() + ";\n");
+        int sum = 0;
+        for (Integer t : test2) {
+            sum += t;
+            System.out.print(t + "  ");
+        }
+        System.out.println("\n" + sum);
     }
 }
 
