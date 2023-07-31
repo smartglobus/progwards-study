@@ -1,7 +1,5 @@
 package ru.progwards.java2.lessons.basetypes;
 
-
-import javax.validation.constraints.NotNull;
 import java.util.Iterator;
 
 public class DoubleHashTable<K, V> implements Iterable<V> {
@@ -52,7 +50,6 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
         private V item;
         private boolean deleted;
     }
-
 
     private TableEntry[] table;
     private int collisionCount;
@@ -119,7 +116,7 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
         collisionCount = 0;
         for (TableEntry tableEntry : table) {
             if (tableEntry != null) {
-                tableEntry.trueIndex = getFirstHash(tableEntry.basicKey, newTableSize);// изменение trueIndex под новый размер таблицы
+                tableEntry.trueIndex = getFirstHash(tableEntry.basicKey, newTableSize); // изменение trueIndex под новый размер таблицы
                 putEntry(tableEntry, newTable);
             }
         }
@@ -127,17 +124,19 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
     }
 
     private void putEntry(TableEntry tableEntry, TableEntry[] table) {
-        int guessIndex = tableEntry.trueIndex;
-        while (table[guessIndex] != null) {
-            if (table[guessIndex].key.equals(tableEntry.key)) {
-                System.out.println("Элемент E<key, value>: (" + table[guessIndex].key + ", " + table[guessIndex].item +
-                        ") заменён на новый, (" + tableEntry.key + ", " + tableEntry.item + ").");
-                break;
+        if (!tableEntry.deleted) { // удалённые элементы при расширении таблицы игнорируются
+            int guessIndex = tableEntry.trueIndex;
+            while (table[guessIndex] != null) {
+                if (table[guessIndex].key.equals(tableEntry.key)) {
+                    System.out.println("Элемент E<key, value>: (" + table[guessIndex].key + ", " + table[guessIndex].item +
+                            ") заменён на новый, (" + tableEntry.key + ", " + tableEntry.item + ").");
+                    break;
+                }
+                guessIndex = getSecondHash(guessIndex, table.length);
+                collisionCount++;
             }
-            guessIndex = getSecondHash(guessIndex, table.length);
-            collisionCount++;
+            table[guessIndex] = tableEntry;
         }
-        table[guessIndex] = tableEntry;
     }
 
     private int getFirstHash(int key, int tableSize) {
@@ -180,13 +179,14 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
         test2.add(111, 2);
         test2.add(212, 3);
         test2.add(313, 4);
+        test2.remove(313);
         test2.add(414, 5);
         test2.add(515, 6);
         test2.add(616, 7);
         test2.add(23, null);
         System.out.println(test2.get(212));
         test2.change(212, 717);
-        test2.remove(313);
+
         System.out.println(test2.get(717));
         System.out.println("size = " + test2.size() + ";\n");
         int sum = 0;
@@ -195,6 +195,9 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
             System.out.print(t + "  ");
         }
         System.out.println("\n" + sum);
+        for (int i = 0; i < test2.table.length; i++) {
+            if (test2.table[i] != null) System.out.println(test2.get((int) test2.table[i].key));
+        }
     }
 }
 
@@ -238,8 +241,6 @@ class StringKey implements HashValue {
     static long unsignedInt(long n) {
         return n % UINT_MAX;
     }
-
-
 }
 
 
