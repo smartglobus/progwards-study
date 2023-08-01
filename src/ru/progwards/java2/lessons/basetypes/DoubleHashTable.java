@@ -7,7 +7,7 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
     @Override
     public Iterator<V> iterator() {
         return new Iterator<>() {
-            TableEntry[] arr = table;
+            TableEntry<K, V>[] arr = table;
             int i = 0;
 
             @Override
@@ -23,14 +23,14 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
 
             @Override
             public V next() {
-                V item = (V) arr[i].item;
+                V item = arr[i].item;
                 i++;
                 return item;
             }
         };
     }
 
-    private class TableEntry<K, V> {
+    class TableEntry<K, V> {
 
         private TableEntry(K key, V item) {
             this.key = key;
@@ -51,7 +51,7 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
         private boolean deleted;
     }
 
-    private TableEntry[] table;
+    private TableEntry<K, V>[] table;
     private int collisionCount;
     private int size;
 
@@ -112,7 +112,7 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
 
     private void expandTable() {
         int newTableSize = nextSize(table.length);
-        TableEntry[] newTable = new TableEntry[newTableSize];
+        TableEntry<K, V>[] newTable = new TableEntry[newTableSize];
         collisionCount = 0;
         for (TableEntry tableEntry : table) {
             if (tableEntry != null) {
