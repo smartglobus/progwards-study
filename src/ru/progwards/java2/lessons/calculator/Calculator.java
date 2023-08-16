@@ -4,7 +4,6 @@ public class Calculator {
     String expr;
     int pos;
 
-
     Calculator(String expression) {
         expr = expression;
         pos = 0;
@@ -22,7 +21,7 @@ public class Calculator {
         return expr.substring(pos, pos + 1);
     }
 
-    public int sum() {
+    public int sum() throws Exception {
         int res = mult();
 
         while (hasNext()) {
@@ -38,7 +37,7 @@ public class Calculator {
     }
 
     // Для варианта без обработки скобок вместо метода par() вызывается Integer.parseInt(getSym())
-    int mult() {
+    int mult() throws Exception {
         int res = par();// = Integer.parseInt(getSym());
         while (hasNext()) {
             String nxtOp = chkSym();
@@ -52,24 +51,22 @@ public class Calculator {
         return res;
     }
 
-    int par() {
+    int par() throws Exception {
         int res;
         if ("(".equals(chkSym())) {
             pos++;
             res = sum();
-            if (")".equals(chkSym())) {
-                pos++;
-                return res;
-            }
+            if (")".equals(getSym()))
+            return res;
         }
         return Integer.parseInt(getSym());
     }
 
-    public static int calculate(String expression) {
+    public static int calculate(String expression) throws Exception {
         return new Calculator(expression).sum();
     }
 
-    public static void main(String[] args) {
-        System.out.println(calculate("2+8*((6-4)*2-1)-3/2"));
+    public static void main(String[] args) throws Exception {
+        System.out.println(calculate("2+8*((6-4)*2-1)-(3/2)"));
     }
 }
