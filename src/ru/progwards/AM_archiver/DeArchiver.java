@@ -1,4 +1,4 @@
-package AM_archiver;
+package ru.progwards.AM_archiver;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
