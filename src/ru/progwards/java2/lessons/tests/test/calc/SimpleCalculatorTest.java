@@ -1,17 +1,16 @@
 package ru.progwards.java2.lessons.tests.test.calc;
 
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
+import static org.junit.Assert.*;
+
 import ru.progwards.java2.lessons.tests.calc.SimpleCalculator;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
 public class SimpleCalculatorTest {
@@ -44,10 +43,12 @@ public class SimpleCalculatorTest {
         }
 
         @AfterClass
-        public static void destroy() { calc = null; }
+        public static void destroy() {
+            calc = null;
+        }
     }
 
-    @Ignore
+
     @RunWith(Parameterized.class)
     public static class DiffTest {
         private static SimpleCalculator calc = new SimpleCalculator();
@@ -61,12 +62,12 @@ public class SimpleCalculatorTest {
             this.result = result;
         }
 
-        @Parameterized.Parameters
+        @Parameterized.Parameters(name = "Тест {index}:  {0}-{1}={2}")
         public static Iterable<Object[]> dataSet() {
             return Arrays.asList(new Object[][]{
-                    {3, 2, 1},
-                    {2, 4, -2},
-                    {7, 7, 7}
+                    {0, 0, 0},
+                    {5, 2, 3},
+                    {Integer.MIN_VALUE + 1, 1, Integer.MIN_VALUE}
             });
         }
 
@@ -76,10 +77,12 @@ public class SimpleCalculatorTest {
         }
 
         @AfterClass
-        public static void destroy() { calc = null; }
+        public static void destroy() {
+            calc = null;
+        }
     }
 
-    @Ignore
+
     @RunWith(Parameterized.class)
     public static class MultTest {
         private static SimpleCalculator calc = new SimpleCalculator();
@@ -96,9 +99,8 @@ public class SimpleCalculatorTest {
         @Parameterized.Parameters
         public static Iterable<Object[]> dataSet() {
             return Arrays.asList(new Object[][]{
-                    {1, 2, 3},
-                    {2, 4, 6},
-                    {7, 7, 7}
+                    {10, 0, 0},
+                    {7, 7, 49}
             });
         }
 
@@ -108,10 +110,12 @@ public class SimpleCalculatorTest {
         }
 
         @AfterClass
-        public static void destroy() { calc = null; }
+        public static void destroy() {
+            calc = null;
+        }
     }
 
-    @Ignore
+
     @RunWith(Parameterized.class)
     public static class DivTest {
         private static SimpleCalculator calc = new SimpleCalculator();
@@ -128,9 +132,8 @@ public class SimpleCalculatorTest {
         @Parameterized.Parameters
         public static Iterable<Object[]> dataSet() {
             return Arrays.asList(new Object[][]{
-                    {1, 2, 3},
-                    {2, 4, 6},
-                    {7, 7, 7}
+                    {7, 2, 3},
+                    {7, 7, 1}
             });
         }
 
@@ -140,7 +143,8 @@ public class SimpleCalculatorTest {
         }
 
         @AfterClass
-        public static void destroy() { calc = null; }
+        public static void destroy() {
+            calc = null;
+        }
     }
-
 }

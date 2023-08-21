@@ -5,24 +5,25 @@ public class SimpleCalculator {
     public int sum(int a, int b) throws ArithmeticException {
         long res = (long) a + b;
         if (res > Integer.MAX_VALUE || res < Integer.MIN_VALUE)
-            throw new ArithmeticException("Переполнение диапазона int.");
+            throw new ArithmeticException("Переполнение диапазона int в методе sum.");
         return (int) res;
     }
 
 
     public int diff(int a, int b) throws ArithmeticException {
-        long res = (long) a - b;
-        if (res > Integer.MAX_VALUE || res < Integer.MIN_VALUE)
-            throw new ArithmeticException("Переполнение диапазона int.");
-//        return sum( a, - b);
-        return (int) res;
+        try {
+            return sum(a, -b);
+        } catch (ArithmeticException e) {
+            throw new ArithmeticException("Переполнение диапазона int в методе sum, вызванного из метода diff");
+        }
+
     }
 
 
     public int mult(int a, int b) throws ArithmeticException {
         long res = (long) a * b;
         if (res > Integer.MAX_VALUE || res < Integer.MIN_VALUE)
-            throw new ArithmeticException("Переполнение диапазона int.");
+            throw new ArithmeticException("Переполнение диапазона int в методе mult.");
         return (int) res;
     }
 
