@@ -8,26 +8,27 @@ public class Heap {
     private byte[] bytes;
     //    private Map<Integer, Integer> freeReg = new HashMap<>();
 //    private Map<Integer, Integer> ocupReg = new HashMap<>();
-    private SortedSet<memBlock> free = new TreeSet<>(Comparator.comparing(o -> o.pos));
-    private SortedSet<memBlock> ocup = new TreeSet<>(Comparator.comparing(o -> o.size));
+    private List<MemBlock> freeReg = new ArrayList<>();//Comparator.comparing(o -> o.pos));
+    private List<MemBlock> ocupReg = new ArrayList<>();//Comparator.comparing(o -> o.pos));
+    private byte label = 1;
 
     Heap(int maxHeapSize) {
         bytes = new byte[maxHeapSize];
 //        freeReg.put(0, maxHeapSize);
-        free.add(new memBlock(0, maxHeapSize));
+        freeReg.add(new MemBlock(0, maxHeapSize));
     }
 
-    private static class memBlock {//implements Comparable<memBlock> {
+    private static class MemBlock {//implements Comparable<MemBlock> {
         int pos;
         int size;
 
-        public memBlock(int pos, int size) {
+        public MemBlock(int pos, int size) {
             this.pos = pos;
             this.size = size;
         }
 
 //        @Override
-//        public int compareTo(memBlock o) {
+//        public int compareTo(MemBlock o) {
 //            return Integer.compare(pos, o.pos);
 //        }
     }
@@ -37,43 +38,52 @@ public class Heap {
     // Соответственно это должен быть непрерывный блок (последовательность ячеек), которые на момент выделения свободны.
     // Возвращает "указатель" - индекс первой ячейки в массиве, размещенного блока.
     private boolean tryAfterCompact;
-
+    private int bInd = 0;
     public int malloc(int size) throws OutOfMemoryException {
+        freeReg.sort(Comparator.comparing(o -> o.pos));
 
-        for (memBlock b : free) {
+        for (MemBlock b : freeReg) {
             if (b.size >= size) {
-                ocup.add(new memBlock(b.pos, size));
-                for (int i = b.pos; i < b.pos + size; i++) bytes[i] = 1;
+                tryAfterCompact = false;
+                ocupReg.add(new MemBlock(b.pos, size));
+                for (int i = b.pos; i < b.pos + size; i++)
+                    bytes[i] = (byte) (label % 127);// визуализация разницы блоков для наглядности в отладке
+                label++;
                 if (b.size == size) {
-                    free.remove(b);
+                    freeReg.remove(b);
+                    bInd = b.pos;
                     return b.pos;
                 }
-                int bInd = b.pos;
+                bInd = b.pos;
                 b.pos += size;
                 b.size -= size;
                 return bInd;
             }
         }
 
-        tryAfterCompact = !tryAfterCompact; // no free space: compact() & second try...
+        tryAfterCompact = !tryAfterCompact; // no freeReg space: compact() & second try...
 
         if (tryAfterCompact) {
             compact();
             malloc(size);
-        } else throw new OutOfMemoryException();
+        } else {
+            throw new OutOfMemoryException();
+        }
 
-        return 0;
+        return bInd;
     }
 
-    // Метод"удаляет", т.е. помечает как свободный блок памяти по "указателю".
+    // Метод "удаляет", т.е. помечает как свободный блок памяти по "указателю".
     // Проверять валидность указателя - т.е. то, что он соответствует началу ранее выделенного
     // блока, а не его середине, или вообще, уже свободному.
     public void free(int ptr) throws InvalidPointerException {
-        for (memBlock b : ocup) {
+        freeReg.sort(Comparator.comparing(o -> o.pos));
+
+        for (MemBlock b : ocupReg) {
             if (b.pos == ptr) {
-                free.add(new memBlock(ptr, b.size));
+                freeReg.add(new MemBlock(ptr, b.size));
                 for (int i = b.pos; i < b.pos + b.size; i++) bytes[i] = 0;
-                ocup.remove(b);
+                ocupReg.remove(b);
                 return;
             }
         }
@@ -83,14 +93,39 @@ public class Heap {
     //Метод осуществляет дефрагментацию кучи - ищет смежные свободные блоки,
     // границы которых соприкасаются и которые можно слить в один.
     public void defrag() {
-
+// ??? если использовать сортировку по размеру, а не по адресам (по индексам), то надо сначала создать копию freeReg с
+// сортировкой по размеру, а в конце заменить содержимое freeReg на полученный Set
+//        TreeSet<MemBlock> newSorted = new TreeSet<>((Comparator.comparing(o -> o.size)));
+//        newSorted.addAll(freeReg);
+//        newSorted.stream().forEach(o -> System.out.println("pos:"+o.pos + ", size:"+o.size));
+        freeReg.sort(Comparator.comparing(o -> o.pos));
+        for (int i = 1; i < freeReg.size(); i++) {
+            if (freeReg.get(i - 1).pos + freeReg.get(i - 1).size == freeReg.get(i).pos) {
+                freeReg.get(i - 1).size += freeReg.get(i).size;
+                freeReg.remove(i);
+                i--;
+            }
+        }
     }
 
     //Метод компактизация кучи - перенос всех занятых блоков в начало хипа, с копированием самих данных - элементов массива.
     // Для более точной имитации производительности копировать просто в цикле по одному элементу, не используя System.arraycopy.
     // Обязательно запускаем compact из malloc если не нашли блок подходящего размера
     public void compact() {
-
+        ocupReg.sort(Comparator.comparing(o -> o.pos));// Обязательно!!! Иначе можно затереть данные с меньшим индексом (pos), если они были вписаны в ocupReg позже!
+        Iterator<MemBlock> dataBlockIterator = ocupReg.listIterator();
+        int newPos = 0;
+        while (dataBlockIterator.hasNext()) {
+            MemBlock mb = dataBlockIterator.next();
+            for (int i = 0; i < mb.size; i++) bytes[newPos + i] = bytes[mb.pos + i];
+            mb.pos = newPos;
+            newPos += mb.size;
+        }
+        // Решил сделать здесь "радикальную" дефрагментацию freeReg, так как не увидел смысла переносить пустые блоки по
+        // отдельности. Тем более, это не спасёт при вынужденном вызове из malloc и приведёт к OutOfMemoryException
+        for (int i = newPos; i < bytes.length; i++) bytes[i] = 0;
+        freeReg.clear();
+        freeReg.add(new MemBlock(newPos, bytes.length - newPos));
     }
 
     public static class OutOfMemoryException extends RuntimeException {
@@ -109,18 +144,36 @@ public class Heap {
 
 
     public static void main(String[] args) {
-        Heap heap = new Heap(20);
+        Heap heap = new Heap(40);
         try {
             System.out.println(heap.malloc(5));
-            System.out.println(heap.malloc(4));
+            System.out.println(heap.malloc(2));
             System.out.println(heap.malloc(3));
-            heap.free(7);
             System.out.println(heap.malloc(6));
+            System.out.println(heap.malloc(5));
+            System.out.println(heap.malloc(7));
+            System.out.println(heap.malloc(3));
+            System.out.println(heap.malloc(4));
+
+            heap.free(7);
+            heap.free(10);
+            heap.free(16);
+            heap.free(28);
+            System.out.println(heap.malloc(22));
+
             heap.compact();
+            heap.defrag();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
+//0
+//5
+//7
+//10
+//16
+//21
+//28
+//31
 
     }
 }
