@@ -1,9 +1,7 @@
 package ru.progwards.java2.lessons.gc;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 // Имеется массив байт, который будет представлять из себя кучу - heap.
 // Нужно будет написать алгоритм, который выделяет и освобождает память (ячейки в массиве) и делает дефрагментацию.
@@ -43,11 +41,11 @@ public class Heap {
     // Соответственно это должен быть непрерывный блок (последовательность ячеек), которые на момент выделения свободны.
     // Возвращает "указатель" - индекс первой ячейки в массиве, размещенного блока.
     private boolean tryAfterCompact;
-    private int bInd = 0;
+    private int bIndex = 0; // переменная для корректного return после повторного, рекурсивного вызова malloc()
 
     public int malloc(int size) throws OutOfMemoryException {
 //        freeReg.sort(Comparator.comparing(o -> o.pos));
-        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 800);//(ocuReg.size() / 100 + 10));
+        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 25);//(ocuReg.size() / 100 + 10));
 //        int n = Math.abs(ThreadLocalRandom.current().nextInt()%100);
         if (n == 10) defrag();
 
@@ -63,17 +61,17 @@ public class Heap {
 
                 if (b.size == size) {
                     freeReg.remove(b);
-                    bInd = b.pos;
+                    bIndex = b.pos;
                     return b.pos;
                 }
-                bInd = b.pos;
+                bIndex = b.pos;
                 b.pos += size;
                 b.size -= size;
-                return bInd;
+                return bIndex;
             }
         }
 
-        tryAfterCompact = !tryAfterCompact; // no freeReg space: compact() & second try...
+        tryAfterCompact = !tryAfterCompact; // no freeReg space: compact() & вторая попытка malloc(size)...
 
         if (tryAfterCompact) {
             compact();
@@ -82,7 +80,7 @@ public class Heap {
             throw new OutOfMemoryException();
         }
 
-        return bInd;
+        return bIndex;
     }
 
     // Метод "удаляет", т.е. помечает как свободный блок памяти по "указателю".
@@ -152,6 +150,8 @@ public class Heap {
             MemBlock mb = ocuReg.get(pos);
             for (int i = 0; i < mb.size; i++) bytes[newPos + i] = bytes[mb.pos + i];
             mb.pos = newPos;
+            ocuReg.remove(pos);
+            ocuReg.put(newPos, mb);
             newPos += mb.size;
         }
 //        ocupReg.sort(Comparator.comparing(o -> o.pos));
@@ -190,7 +190,6 @@ public class Heap {
             System.out.println(heap.malloc(22));
 
             heap.compact();
-            heap.free(21);
             heap.defrag();
         } catch (Exception e) {
             System.out.println(e.getMessage());
