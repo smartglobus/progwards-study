@@ -1,15 +1,20 @@
 package ru.progwards.java2.lessons.gc;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 // Имеется массив байт, который будет представлять из себя кучу - heap.
 // Нужно будет написать алгоритм, который выделяет и освобождает память (ячейки в массиве) и делает дефрагментацию.
 public class Heap {
     private byte[] bytes;
     //    private Map<Integer, Integer> freeReg = new HashMap<>();
-//    private Map<Integer, Integer> ocupReg = new HashMap<>();
+    private Map<Integer, Integer> ocupReg = new HashMap<>();//
+    private Map<Integer, MemBlock> ocuReg = new HashMap<>();// ????????
     private List<MemBlock> freeReg = new ArrayList<>();//Comparator.comparing(o -> o.pos));
-    private List<MemBlock> ocupReg = new ArrayList<>();//Comparator.comparing(o -> o.pos));
+    //    private List<MemBlock> ocupReg = new ArrayList<>();//Comparator.comparing(o -> o.pos));
+//    private TreeSet<MemBlock> ocupReg = new TreeSet<>(Comparator.comparing(o -> o.pos));
     private byte label = 1;
 
     Heap(int maxHeapSize) {
@@ -39,16 +44,23 @@ public class Heap {
     // Возвращает "указатель" - индекс первой ячейки в массиве, размещенного блока.
     private boolean tryAfterCompact;
     private int bInd = 0;
+
     public int malloc(int size) throws OutOfMemoryException {
-        freeReg.sort(Comparator.comparing(o -> o.pos));
+//        freeReg.sort(Comparator.comparing(o -> o.pos));
+        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 800);//(ocuReg.size() / 100 + 10));
+//        int n = Math.abs(ThreadLocalRandom.current().nextInt()%100);
+        if (n == 10) defrag();
 
         for (MemBlock b : freeReg) {
             if (b.size >= size) {
                 tryAfterCompact = false;
-                ocupReg.add(new MemBlock(b.pos, size));
+                ocuReg.put(b.pos, new MemBlock(b.pos, size));
+//                ocupReg.put(b.pos, b.size);
+
                 for (int i = b.pos; i < b.pos + size; i++)
                     bytes[i] = (byte) (label % 127);// визуализация разницы блоков для наглядности в отладке
                 label++;
+
                 if (b.size == size) {
                     freeReg.remove(b);
                     bInd = b.pos;
@@ -77,17 +89,36 @@ public class Heap {
     // Проверять валидность указателя - т.е. то, что он соответствует началу ранее выделенного
     // блока, а не его середине, или вообще, уже свободному.
     public void free(int ptr) throws InvalidPointerException {
-        freeReg.sort(Comparator.comparing(o -> o.pos));
+//        freeReg.sort(Comparator.comparing(o -> o.pos));
 
-        for (MemBlock b : ocupReg) {
-            if (b.pos == ptr) {
-                freeReg.add(new MemBlock(ptr, b.size));
-                for (int i = b.pos; i < b.pos + b.size; i++) bytes[i] = 0;
-                ocupReg.remove(b);
-                return;
-            }
-        }
-        throw new InvalidPointerException();
+
+        if (ocuReg.containsKey(ptr)) {
+            MemBlock mb = ocuReg.remove(ptr);
+            freeReg.add(new MemBlock(ptr, mb.size));
+            for (int i = ptr; i < ptr + mb.size; i++) bytes[i] = 0;
+        } else throw new InvalidPointerException("Неверный указатель на блок ptr = " + ptr +
+                "\nРазмер bytes = " + bytes.length + ", freeReg = " + freeReg.size() + ", ocupReg = " + ocuReg.size());
+
+
+//        if (ocupReg.containsKey(ptr)) {
+//            int mbSize = ocupReg.get(ptr);
+//            freeReg.add(new MemBlock(ptr, mbSize));
+//            for (int i = ptr; i < ptr + mbSize; i++) bytes[i] = 0;
+//            ocupReg.remove(ptr);
+//        } else throw new InvalidPointerException("Неверный указатель на блок ptr = " + ptr +
+//                "\nРазмер bytes = " + bytes.length + ", freeReg = " + freeReg.size() + ", ocupReg = " + ocupReg.size());
+
+//        for (MemBlock b : ocupReg) {
+//            if (b.pos == ptr) {
+//                freeReg.add(new MemBlock(ptr, b.size));
+//                for (int i = b.pos; i < b.pos + b.size; i++) bytes[i] = 0;
+//                ocupReg.remove(b);
+//                return;
+//            }
+//
+//        }
+//        throw new InvalidPointerException("Неверный указатель на блок ptr = " + ptr +
+//                "\nРазмер bytes = " + bytes.length + ", freeReg = " + freeReg.size() + ", ocupReg = " + ocupReg.size());
     }
 
     //Метод осуществляет дефрагментацию кучи - ищет смежные свободные блоки,
@@ -112,34 +143,31 @@ public class Heap {
     // Для более точной имитации производительности копировать просто в цикле по одному элементу, не используя System.arraycopy.
     // Обязательно запускаем compact из malloc если не нашли блок подходящего размера
     public void compact() {
-        ocupReg.sort(Comparator.comparing(o -> o.pos));// Обязательно!!! Иначе можно затереть данные с меньшим индексом (pos), если они были вписаны в ocupReg позже!
-        Iterator<MemBlock> dataBlockIterator = ocupReg.listIterator();
+        System.out.println("Вызван compact()");
+// Обязательно идти по возрастанию pos!!! Иначе можно затереть данные с меньшим индексом (pos), если они были вписаны в ocupReg позже!
+
+        SortedSet<Integer> sortedPos = new TreeSet<>(ocuReg.keySet());
         int newPos = 0;
-        while (dataBlockIterator.hasNext()) {
-            MemBlock mb = dataBlockIterator.next();
+        for (Integer pos : sortedPos) {
+            MemBlock mb = ocuReg.get(pos);
             for (int i = 0; i < mb.size; i++) bytes[newPos + i] = bytes[mb.pos + i];
             mb.pos = newPos;
             newPos += mb.size;
         }
+//        ocupReg.sort(Comparator.comparing(o -> o.pos));
+//        Iterator<MemBlock> dataBlockIterator = ocupReg.iterator();
+//
+//        while (dataBlockIterator.hasNext()) {
+//            MemBlock mb = dataBlockIterator.next();
+//            for (int i = 0; i < mb.size; i++) bytes[newPos + i] = bytes[mb.pos + i];
+//            mb.pos = newPos;
+//            newPos += mb.size;
+//        }
         // Решил сделать здесь "радикальную" дефрагментацию freeReg, так как не увидел смысла переносить пустые блоки по
         // отдельности. Тем более, это не спасёт при вынужденном вызове из malloc и приведёт к OutOfMemoryException
         for (int i = newPos; i < bytes.length; i++) bytes[i] = 0;
         freeReg.clear();
         freeReg.add(new MemBlock(newPos, bytes.length - newPos));
-    }
-
-    public static class OutOfMemoryException extends RuntimeException {
-        @Override
-        public String getMessage() {
-            return "Произошло исключение: Переполнение кучи.";
-        }
-    }
-
-    public static class InvalidPointerException extends RuntimeException {
-        @Override
-        public String getMessage() {
-            return "Произошло исключение: Неверный указатель.";
-        }
     }
 
 
@@ -162,6 +190,7 @@ public class Heap {
             System.out.println(heap.malloc(22));
 
             heap.compact();
+            heap.free(21);
             heap.defrag();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -175,5 +204,25 @@ public class Heap {
 //28
 //31
 
+    }
+}
+
+class OutOfMemoryException extends RuntimeException {
+    @Override
+    public String getMessage() {
+        return "Переполнение кучи.";
+    }
+}
+
+class InvalidPointerException extends RuntimeException {
+    private String msg;
+
+    InvalidPointerException(String msg) {
+        this.msg = msg;
+    }
+
+    @Override
+    public String getMessage() {
+        return msg;//+"Произошло исключение: Неверный указатель.";
     }
 }
