@@ -45,9 +45,9 @@ public class Heap {
 
     public int malloc(int size) throws OutOfMemoryException {
 //        freeReg.sort(Comparator.comparing(o -> o.pos));
-        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 15);//(ocuReg.size() / 100000 + 10));
+        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 10);//(ocuReg.size() / 100000 + 10));
 //        int n = Math.abs(ThreadLocalRandom.current().nextInt()%100);
-        if (n == 10) defrag();
+        if (n == 0) defrag();
 
         for (MemBlock b : freeReg) {
             if (b.size >= size) {
@@ -162,8 +162,10 @@ public class Heap {
             int mbIndex = dataBlockIterator.next();
             int mbSize = ocupReg.get(mbIndex);
             for (int i = 0; i < mbSize; i++) bytes[newPos + i] = bytes[mbIndex + i];
-            ocupReg.remove(mbIndex);
-            ocupReg.put(newPos, mbSize);
+            if (mbIndex!=newPos){
+                ocupReg.remove(mbIndex);
+                ocupReg.put(newPos, mbSize);
+            }
             newPos += mbSize;
         }
         // Решил сделать здесь "радикальную" дефрагментацию freeReg, так как не увидел смысла переносить пустые блоки по
