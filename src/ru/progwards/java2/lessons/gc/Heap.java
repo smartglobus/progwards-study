@@ -7,9 +7,9 @@ import java.util.concurrent.ThreadLocalRandom;
 // Нужно будет написать алгоритм, который выделяет и освобождает память (ячейки в массиве) и делает дефрагментацию.
 public class Heap {
     private byte[] bytes;
-    //    private Map<Integer, Integer> freeReg = new HashMap<>();
-    private Map<Integer, Integer> ocupReg = new HashMap<>();//
-//    private Map<Integer, MemBlock> ocuReg = new HashMap<>();// ????????
+//    private SortedMap<Integer, Integer> freReg = new TreeMap<>();
+    private SortedMap<Integer, Integer> ocupReg = new TreeMap<>();//
+    //    private Map<Integer, MemBlock> ocuReg = new HashMap<>();// ????????
     private List<MemBlock> freeReg = new ArrayList<>();//Comparator.comparing(o -> o.pos));
     //    private List<MemBlock> ocupReg = new ArrayList<>();//Comparator.comparing(o -> o.pos));
 //    private TreeSet<MemBlock> ocupReg = new TreeSet<>(Comparator.comparing(o -> o.pos));
@@ -17,7 +17,7 @@ public class Heap {
 
     Heap(int maxHeapSize) {
         bytes = new byte[maxHeapSize];
-//        freeReg.put(0, maxHeapSize);
+//        freReg.put(0, maxHeapSize);
         freeReg.add(new MemBlock(0, maxHeapSize));
     }
 
@@ -44,9 +44,8 @@ public class Heap {
     private int bIndex = 0; // переменная для корректного return после повторного, рекурсивного вызова malloc()
 
     public int malloc(int size) throws OutOfMemoryException {
-//        freeReg.sort(Comparator.comparing(o -> o.pos));
-        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 10);//(ocuReg.size() / 100000 + 10));
-//        int n = Math.abs(ThreadLocalRandom.current().nextInt()%100);
+
+        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 15);//(ocuReg.size() / 100000 + 10));
         if (n == 0) defrag();
 
         for (MemBlock b : freeReg) {
@@ -70,6 +69,15 @@ public class Heap {
                 return bIndex;
             }
         }
+//for(Integer i : freReg.values()){
+//
+//}
+//        TreeSet<Integer> sortedSize = new TreeSet<>(freReg.values());
+//        Integer sizeTo = sortedSize.ceiling(size);
+//        if (sizeTo != null){
+////            int pos = freReg.
+//        }
+
 
         tryAfterCompact = !tryAfterCompact; // no freeReg space: compact() & вторая попытка malloc(size)...
 
@@ -162,7 +170,7 @@ public class Heap {
             int mbIndex = dataBlockIterator.next();
             int mbSize = ocupReg.get(mbIndex);
             for (int i = 0; i < mbSize; i++) bytes[newPos + i] = bytes[mbIndex + i];
-            if (mbIndex!=newPos){
+            if (mbIndex != newPos) {
                 ocupReg.remove(mbIndex);
                 ocupReg.put(newPos, mbSize);
             }
