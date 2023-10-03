@@ -121,7 +121,6 @@ public class Heap {
         freeReg.add(new MemBlock(newPos, bytes.length - newPos));
     }
 
-
     // Не очень понял, как этими методами воспользоваться...
     public void getBytes(int ptr, byte[] bytes) {
 // создать массив длиной size, вызвыть этот метод с параметрами ptr в ocupReg  и именем этого массива ?????????
