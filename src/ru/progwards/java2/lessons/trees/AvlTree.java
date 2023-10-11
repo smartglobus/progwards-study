@@ -97,7 +97,17 @@ public class AvlTree<K extends Comparable<K>, V> {
 
         if (leaf.getBalance() == 2 && leaf.right.getBalance() >= 0) {
             // малое левое вращение
-
+            TreeLeaf<K, V> b = leaf.right;
+            TreeLeaf<K, V> c = b.left;
+            leaf.right = c;
+            leaf.setHeight();
+            b.left = leaf;
+            b.setHeight();
+            b.parent = leaf.parent;
+            leaf.parent = b;
+            c.parent = leaf;
+            if (leaf == root) root = b;
+            return b;
         }
 
         if (leaf.getBalance() == -2 && leaf.left.getBalance() > 0) {
