@@ -17,12 +17,13 @@ public class AvlTree<K extends Comparable<K>, V> {
         }
 
         int getBalance() {
-            return right.height - left.height;
+            return getHeight(right) - getHeight(left);
         }
 
         void setHeight() {
-            height = Math.max(left.height, right.height) + 1;
+            height = Math.max(getHeight(left), getHeight(right)) + 1;
         }
+
 
         // возвращает или узел с ключом key, или узел, к которому надо присоединить узел(key, V)(справа или слева!)
         private TreeLeaf<K, V> find(K key) {
@@ -63,6 +64,59 @@ public class AvlTree<K extends Comparable<K>, V> {
         TreeLeaf<K, V> leaf = new TreeLeaf<>(key, value);
         if (root == null) root = leaf;
         else root.find(key).add(leaf);
+
+        // коррекция высот узлов и, при необходимости, балансировка. Вверх по всем родителям нового узла, до корня.
+//        correctHeight(leaf);
+        TreeLeaf<K, V> prnt = leaf.parent;
+        while (prnt != null) {
+            prnt.setHeight();
+            balance(prnt);
+            prnt = prnt.parent;
+        }
+
+
+    }
+
+    TreeLeaf<K, V> balance(TreeLeaf<K, V> leaf) {
+// проверка наличия и вида дисбаланса
+// возврат - новая (локальная) вершина дерева
+        if (leaf.getBalance() == -2 && leaf.left.getBalance() <= 0) {
+            // малое правое вращение
+            TreeLeaf<K, V> b = leaf.left;
+            TreeLeaf<K, V> c = b.right;
+            leaf.left = c;
+            leaf.setHeight();
+            b.right = leaf;
+            b.setHeight();
+            b.parent = leaf.parent;
+            leaf.parent = b;
+            c.parent = leaf;
+            if (leaf == root) root = b;
+            return b;
+        }
+
+        if (leaf.getBalance() == 2 && leaf.right.getBalance() >= 0) {
+            // малое левое вращение
+
+        }
+
+        if (leaf.getBalance() == -2 && leaf.left.getBalance() > 0) {
+            // большое правое вращение
+        }
+
+        if (leaf.getBalance() == 2 && leaf.right.getBalance() > 0) {
+            // большое левое вращение
+        }
+        return leaf;
+    }
+
+
+    void correctHeight(TreeLeaf<K, V> leaf) {// ??? нужен ли этот отдельный метод?
+        TreeLeaf<K, V> prnt = leaf.parent;
+        while (prnt != null) {
+            prnt.setHeight();
+            prnt = prnt.parent;
+        }
     }
 
 
@@ -78,5 +132,17 @@ public class AvlTree<K extends Comparable<K>, V> {
 
     // прямой обход дерева
     public void process(Consumer<TreeLeaf<K, V>> consumer) {
+
+    }
+
+    public static void main(String[] args) {
+        AvlTree<Integer, Integer> myPunyTree = new AvlTree<>();
+        myPunyTree.put(10, 10);
+        myPunyTree.put(7, 7);
+        myPunyTree.put(12, 12);
+        myPunyTree.put(6, 6);
+        myPunyTree.put(8, 8);
+        myPunyTree.put(5, 5);
+        System.out.println();
     }
 }
