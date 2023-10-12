@@ -50,7 +50,6 @@ public class AvlTree<K extends Comparable<K>, V> {
                 leaf.parent = this;
             }
         }
-
     }
 
     private TreeLeaf<K, V> root;
@@ -73,53 +72,64 @@ public class AvlTree<K extends Comparable<K>, V> {
             balance(prnt);
             prnt = prnt.parent;
         }
-
-
     }
 
-    TreeLeaf<K, V> balance(TreeLeaf<K, V> leaf) {
+    private TreeLeaf<K, V> balance(TreeLeaf<K, V> leaf) {
 // проверка наличия и вида дисбаланса
 // возврат - новая (локальная) вершина дерева
-        if (leaf.getBalance() == -2 && leaf.left.getBalance() <= 0) {
-            // малое правое вращение
-            TreeLeaf<K, V> b = leaf.left;
-            TreeLeaf<K, V> c = b.right;
-            leaf.left = c;
-            leaf.setHeight();
-            b.right = leaf;
-            b.setHeight();
-            b.parent = leaf.parent;
-            leaf.parent = b;
-            c.parent = leaf;
-            if (leaf == root) root = b;
-            return b;
-        }
+        if (leaf.getBalance() == -2 && leaf.left.getBalance() <= 0) return rightRotation(leaf);
+        if (leaf.getBalance() == 2 && leaf.right.getBalance() >= 0) return leftRotation(leaf);
 
-        if (leaf.getBalance() == 2 && leaf.right.getBalance() >= 0) {
-            // малое левое вращение
-            TreeLeaf<K, V> b = leaf.right;
-            TreeLeaf<K, V> c = b.left;
-            leaf.right = c;
-            leaf.setHeight();
-            b.left = leaf;
-            b.setHeight();
-            b.parent = leaf.parent;
-            leaf.parent = b;
-            c.parent = leaf;
-            if (leaf == root) root = b;
-            return b;
-        }
+        // большое правое вращение - комбинация из МЛВ и МПВ соответствующих узлов
+        if (leaf.getBalance() == -2 && leaf.left.getBalance() > 0)
+            return rightRotation(leftRotation(leaf.left).parent);
 
-        if (leaf.getBalance() == -2 && leaf.left.getBalance() > 0) {
-            // большое правое вращение
-        }
+        // большое левое вращение- комбинация из МПВ и МЛВ соответствующих узлов
+        if (leaf.getBalance() == 2 && leaf.right.getBalance() > 0)
+            return leftRotation(rightRotation(leaf.right).parent);
 
-        if (leaf.getBalance() == 2 && leaf.right.getBalance() > 0) {
-            // большое левое вращение
-        }
         return leaf;
     }
 
+    // Малое левое вращение (МЛВ). Bозвращает новую (локальную) вершину дерева
+    private TreeLeaf<K, V> leftRotation(TreeLeaf<K, V> leaf) {
+        TreeLeaf<K, V> b = leaf.right;
+        TreeLeaf<K, V> c = b.left;
+        leaf.right = c;
+        leaf.setHeight();
+        b.left = leaf;
+        b.setHeight();
+        b.parent = leaf.parent;
+        if (b.parent != null) {
+            int com = b.key.compareTo(b.parent.key);
+            if (com > 0) b.parent.right = b;
+            if (com < 0) b.parent.left = b;
+        }
+        leaf.parent = b;
+        if (c != null) c.parent = leaf;
+        if (leaf == root) root = b;
+        return b;
+    }
+
+    // Малое правое вращение (МПВ). Bозвращает новую (локальную) вершину дерева
+    private TreeLeaf<K, V> rightRotation(TreeLeaf<K, V> leaf) {
+        TreeLeaf<K, V> b = leaf.left;
+        TreeLeaf<K, V> c = b.right;
+        leaf.left = c;
+        leaf.setHeight();
+        b.right = leaf;
+        b.setHeight();
+        b.parent = leaf.parent;
+        if (b.parent != null) {
+            int com = b.key.compareTo(b.parent.key);
+            if (com > 0) b.parent.right = b;
+            if (com < 0) b.parent.left = b;
+        }
+        leaf.parent = b;
+        if (c != null) c.parent = leaf;
+        if (leaf == root) root = b;
+        return b;
+    }
 
     void correctHeight(TreeLeaf<K, V> leaf) {// ??? нужен ли этот отдельный метод?
         TreeLeaf<K, V> prnt = leaf.parent;
@@ -148,11 +158,15 @@ public class AvlTree<K extends Comparable<K>, V> {
     public static void main(String[] args) {
         AvlTree<Integer, Integer> myPunyTree = new AvlTree<>();
         myPunyTree.put(10, 10);
-        myPunyTree.put(7, 7);
-        myPunyTree.put(12, 12);
         myPunyTree.put(6, 6);
-        myPunyTree.put(8, 8);
+        myPunyTree.put(12, 12);
         myPunyTree.put(5, 5);
+
+        myPunyTree.put(7, 7);
+        myPunyTree.put(8, 8);
+        myPunyTree.put(13, 13);
+
+
         System.out.println();
     }
 }
