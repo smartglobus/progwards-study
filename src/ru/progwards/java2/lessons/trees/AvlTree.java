@@ -90,7 +90,10 @@ public class AvlTree<K extends Comparable<K>, V> {
             else replaceParent.right = null;
             fixHeightAndBalance(replaceParent);
         } else { // узел не имеет потомков
-            if (leafToDel == root) root = null;
+            if (leafToDel == root) {
+                root = null;
+                return;
+            }
             TreeLeaf<K, V> parent = leafToDel.parent;
             if (parent.key.compareTo(leafToDel.key) > 0) parent.left = null;
             else parent.right = null;
@@ -175,7 +178,7 @@ public class AvlTree<K extends Comparable<K>, V> {
         TreeLeaf<K, V> leaf = root.find(key);
         if (leaf.key.compareTo(key) == 0)
             return leaf.value;
-        else throw new NoSuchElementException("Entry with the key " + key + " is not found.");
+        else return null;//throw new NoSuchElementException("Entry with the key " + key + " is not found.");
     }
 
     public void change(K oldKey, K newKey) throws NoSuchElementException {
