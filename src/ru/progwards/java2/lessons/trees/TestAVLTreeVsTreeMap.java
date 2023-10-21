@@ -13,13 +13,12 @@ public class TestAVLTreeVsTreeMap {
     long start;
 
     public TestAVLTreeVsTreeMap() {
-        for (int i = 0; i < 1000000; i++) data.add(i);
+        for (int i = 0; i < 2400000; i++) data.add(i);
         shuffledData = new ArrayList<>(data);
         Collections.shuffle(shuffledData);
     }
 
     void putSorted() {
-
         start = System.currentTimeMillis();
         for (int i : data) avlTree.put(i, i);
         System.out.println("AVL put time = " + (System.currentTimeMillis() - start));
@@ -37,7 +36,7 @@ public class TestAVLTreeVsTreeMap {
         System.out.println("TreeMap find time = " + (System.currentTimeMillis() - start));
     }
 
-    void deleteSorted(){
+    void deleteSorted() {
         start = System.currentTimeMillis();
         for (int i : data) avlTree.delete(i);
         System.out.println("AVL delete time = " + (System.currentTimeMillis() - start));
@@ -46,10 +45,43 @@ public class TestAVLTreeVsTreeMap {
         System.out.println("TreeMap delete time = " + (System.currentTimeMillis() - start));
     }
 
+
+    void putRandom() {
+        start = System.currentTimeMillis();
+        for (int i : shuffledData) avlTree.put(i, i);
+        System.out.println("AVL put time = " + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        for (int i : shuffledData) treeMap.put(i, i);
+        System.out.println("TreeMap put time = " + (System.currentTimeMillis() - start));
+    }
+
+    void findRandom() {
+        start = System.currentTimeMillis();
+        for (int i : shuffledData) avlTree.find(i);
+        System.out.println("AVL find time = " + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        for (int i : shuffledData) treeMap.get(i);
+        System.out.println("TreeMap find time = " + (System.currentTimeMillis() - start));
+    }
+
+    void deleteRandom() {
+        start = System.currentTimeMillis();
+        for (int i : shuffledData) avlTree.delete(i);
+        System.out.println("AVL delete time = " + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        for (int i : shuffledData) treeMap.remove(i);
+        System.out.println("TreeMap delete time = " + (System.currentTimeMillis() - start));
+    }
+
     public static void main(String[] args) {
         TestAVLTreeVsTreeMap test = new TestAVLTreeVsTreeMap();
+        System.out.println("Sorted data test:");
         test.putSorted();
         test.findSorted();
         test.deleteSorted();
+        System.out.println("\nRandom data test:");
+        test.putRandom();
+        test.findRandom();
+        test.deleteRandom();
     }
 }
