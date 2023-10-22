@@ -1,6 +1,5 @@
 package ru.progwards.java2.lessons.trees;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -28,6 +27,7 @@ public class TestAVLTreeVsTreeMap {
         start = System.currentTimeMillis();
         for (int i : data) avlTree.put(i, i);
         System.out.println("AVL put time = " + (System.currentTimeMillis() - start));
+
         start = System.currentTimeMillis();
         for (int i : data) treeMap.put(i, i);
         System.out.println("TreeMap put time = " + (System.currentTimeMillis() - start));
@@ -37,6 +37,7 @@ public class TestAVLTreeVsTreeMap {
         start = System.currentTimeMillis();
         for (int i : data) avlTree.find(i);
         System.out.println("AVL find time = " + (System.currentTimeMillis() - start));
+
         start = System.currentTimeMillis();
         for (int i : data) treeMap.get(i);
         System.out.println("TreeMap find time = " + (System.currentTimeMillis() - start));
@@ -46,6 +47,7 @@ public class TestAVLTreeVsTreeMap {
         start = System.currentTimeMillis();
         for (int i : data) avlTree.delete(i);
         System.out.println("AVL delete time = " + (System.currentTimeMillis() - start));
+
         start = System.currentTimeMillis();
         for (int i : data) treeMap.remove(i);
         System.out.println("TreeMap delete time = " + (System.currentTimeMillis() - start));
@@ -56,6 +58,7 @@ public class TestAVLTreeVsTreeMap {
         start = System.currentTimeMillis();
         for (int i : shuffledData) avlTree.put(i, i);
         System.out.println("AVL put time = " + (System.currentTimeMillis() - start));
+
         start = System.currentTimeMillis();
         for (int i : shuffledData) treeMap.put(i, i);
         System.out.println("TreeMap put time = " + (System.currentTimeMillis() - start));
@@ -65,6 +68,7 @@ public class TestAVLTreeVsTreeMap {
         start = System.currentTimeMillis();
         for (int i : shuffledData) avlTree.find(i);
         System.out.println("AVL find time = " + (System.currentTimeMillis() - start));
+
         start = System.currentTimeMillis();
         for (int i : shuffledData) treeMap.get(i);
         System.out.println("TreeMap find time = " + (System.currentTimeMillis() - start));
@@ -74,6 +78,7 @@ public class TestAVLTreeVsTreeMap {
         start = System.currentTimeMillis();
         for (int i : shuffledData) avlTree.delete(i);
         System.out.println("AVL delete time = " + (System.currentTimeMillis() - start));
+
         start = System.currentTimeMillis();
         for (int i : shuffledData) treeMap.remove(i);
         System.out.println("TreeMap delete time = " + (System.currentTimeMillis() - start));
@@ -84,16 +89,14 @@ public class TestAVLTreeVsTreeMap {
         try (FileReader reader = new FileReader(file); Scanner scanner = new Scanner(reader)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] tokens = line.split("[\\p{Punct} ]");//(" [,\\-.!\"?#()]@#%\\^&*\\(\\)=+");
+                String[] tokens = line.split("[\\p{Punct} ]");
                 for (int i = 0; i < tokens.length; i++) if (!"".equals(tokens[i])) stringSet.add(tokens[i]);
 
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         tokensList.addAll(stringSet);
-
     }
 
     void putTokens() {
@@ -132,10 +135,12 @@ public class TestAVLTreeVsTreeMap {
         test.putSorted();
         test.findSorted();
         test.deleteSorted();
+
         System.out.println("\nRandom data test:");
         test.putRandom();
         test.findRandom();
         test.deleteRandom();
+
         System.out.println("\nTokens test:");
         test.initTokens("C:\\Users\\User\\Documents\\Progwards\\Материалы курса\\Продвинутый курс\\F8 Дополнительные материалы к занятию-20230930\\wiki.train.tokens");
         test.putTokens();
