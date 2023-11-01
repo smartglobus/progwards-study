@@ -10,8 +10,7 @@ import java.lang.reflect.Modifier;
 public class ClassInspector {
     public static void inspect(String clazz) throws ClassNotFoundException {
         Class cls = Class.forName(clazz);
-        String[] clsName = cls.getName().split("\\.");
-        String clsSimpleName = clsName[clsName.length - 1];
+        String clsSimpleName = cls.getSimpleName();
         try (FileWriter writer = new FileWriter(clsSimpleName + ".java")) {
             writer.write(Modifier.toString(cls.getModifiers()) + " class ");
             writer.write(clsSimpleName + " {");
@@ -21,8 +20,7 @@ public class ClassInspector {
 
             for (Field f : fields) {
                 writer.write("\n\t" + Modifier.toString(f.getModifiers()) + " ");
-                String[] fType = f.getType().toString().split("\\.");
-                writer.write(fType[fType.length - 1] + " ");
+                writer.write(f.getType().getSimpleName() + " ");
                 writer.write(f.getName() + ";");
             }
             for (Constructor c : constructors) {

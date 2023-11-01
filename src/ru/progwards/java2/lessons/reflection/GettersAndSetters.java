@@ -1,7 +1,6 @@
 package ru.progwards.java2.lessons.reflection;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,23 +17,20 @@ public class GettersAndSetters {
             String modifiers = Modifier.toString(f.getModifiers());
             if (modifiers.contains("private")) {
                 String fName = f.getName();
-                String fNameFirstCapitalLetter = fName.substring(0, 1) + fName.substring(1);
-                if (!methodsNames.contains("set" + fNameFirstCapitalLetter)) {
-
-                }
-                if (!methodsNames.contains("get" + fNameFirstCapitalLetter)) {
-
-                }
+                String fType = f.getType().getSimpleName();
+                String fNameFirstCapitalLetter = fName.substring(0, 1).toUpperCase() + fName.substring(1);
+                if (!methodsNames.contains("set" + fNameFirstCapitalLetter))
+                    System.out.println("public void set" + fNameFirstCapitalLetter + "(" + fType + " " + fName + ")");
+                if (!methodsNames.contains("get" + fNameFirstCapitalLetter))
+                    System.out.println("public " + fType + " get" + fNameFirstCapitalLetter + "()");
             }
-
         }
-//        System.out.println(Arrays.toString(fields));
-
     }
 
     public static void main(String[] args) {
         try {
             check("ru.progwards.java2.lessons.reflection.Employee");
+            check("ru.progwards.java2.lessons.gc.Heap");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
