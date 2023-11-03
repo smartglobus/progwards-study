@@ -1,7 +1,6 @@
 package ru.progwards.java2.lessons.trees;
 
 import java.util.NoSuchElementException;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 public class AvlTree<K extends Comparable<K>, V> {
@@ -195,6 +194,16 @@ public class AvlTree<K extends Comparable<K>, V> {
         } else throw new NoSuchElementException("Entry with the key " + oldKey + " is not found.");
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        if (root != null) {
+            root.process(o -> builder.append(o.key + ", "));
+            String res = builder.toString();
+            return res.substring(0, res.length() - 2) + "}";
+        } else return "{}";
+    }
 
     public static void main(String[] args) {
         AvlTree<Integer, Integer> myPunyTree = new AvlTree<>();
@@ -207,11 +216,12 @@ public class AvlTree<K extends Comparable<K>, V> {
         for (int i = 0; i < array.length; i++) {
             myPunyTree.put(array[i], array[i]);
         }
-        for (int i = 0; i < array.length; i++) {
-            System.out.println(array[i]);
-            myPunyTree.delete(array[i]);
-
-        }
+        System.out.println(myPunyTree);
+//        for (int i = 0; i < array.length; i++) {
+//            System.out.println(array[i]);
+//            myPunyTree.delete(array[i]);
+//
+//        }
 //        myPunyTree.put(12, 12);
 //        myPunyTree.put(11, 11);
 //        myPunyTree.put(10, 10);
