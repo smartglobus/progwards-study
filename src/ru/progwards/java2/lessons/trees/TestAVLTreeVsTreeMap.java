@@ -1,8 +1,14 @@
 package ru.progwards.java2.lessons.trees;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+
+import static java.nio.file.Files.readString;
 
 public class TestAVLTreeVsTreeMap {
     private AvlTree<Integer, Integer> avlTree = new AvlTree<>();
@@ -12,13 +18,13 @@ public class TestAVLTreeVsTreeMap {
 
     private AvlTree<String, Integer> avlTokensTree = new AvlTree<>();
     private TreeMap<String, Integer> treeMapTokens = new TreeMap<>();
-    private Set<String> stringSet = new TreeSet<>();
+
     private ArrayList<String> tokensList = new ArrayList<>();
 
     private long start;
 
     public TestAVLTreeVsTreeMap() {
-        for (int i = 0; i < 500000; i++) data.add(i);
+        for (int i = 0; i < 50000; i++) data.add(i);
         shuffledData = new ArrayList<>(data);
         Collections.shuffle(shuffledData);
     }
@@ -86,13 +92,11 @@ public class TestAVLTreeVsTreeMap {
 
 
     void initTokens(String file) {
-        try (FileReader reader = new FileReader(file); Scanner scanner = new Scanner(reader)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] tokens = line.split("[\\p{Punct} ]");
-                for (int i = 0; i < tokens.length; i++) if (!"".equals(tokens[i])) stringSet.add(tokens[i]);
-
-            }
+        Set<String> stringSet = new TreeSet<>();
+        try {
+            String s = readString(Paths.get(file));
+            String[] tokens = s.split("[\\p{Punct} ]");
+            for (int i = 0; i < tokens.length; i++) if (!"".equals(tokens[i])) stringSet.add(tokens[i]);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -142,7 +146,7 @@ public class TestAVLTreeVsTreeMap {
         test.deleteRandom();
 
         System.out.println("\nTokens test:");
-        test.initTokens("C:\\Users\\User\\Documents\\Progwards\\Материалы курса\\Продвинутый курс\\F8 Дополнительные материалы к занятию-20230930\\wiki.train.tokens");
+        test.initTokens("wiki.train.tokens");
         test.putTokens();
         test.findTokens();
         test.deleteTokens();
