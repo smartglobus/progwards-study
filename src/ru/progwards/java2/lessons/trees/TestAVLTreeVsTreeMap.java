@@ -146,7 +146,7 @@ public class TestAVLTreeVsTreeMap {
         test.deleteRandom();
 
         System.out.println("\nTokens test:");
-        test.initTokens("wiki.train.tokens");
+        test.initTokens("resources\\wiki.train.tokens");
         test.putTokens();
         test.findTokens();
         test.deleteTokens();
