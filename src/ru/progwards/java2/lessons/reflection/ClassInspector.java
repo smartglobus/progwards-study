@@ -37,6 +37,7 @@ public class ClassInspector {
             }
             for (Method m : methods) {
                 writer.write("\n\t" + Modifier.toString(m.getModifiers()) + " ");
+                writer.write(m.getReturnType().getSimpleName() + " ");
                 writer.write(m.getName() + "(");
                 Class[] classes = m.getParameterTypes();
                 if (classes.length == 0) writer.write(") {}");
