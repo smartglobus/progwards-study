@@ -12,61 +12,140 @@ public class SimCalcJTest {
     void initCalc() {
         simCalc = new SimpleCalculator();
         testSet.add(new TestDataUnit(Operation.DIFF, 5, 7, -2));
+        testSet.add(new TestDataUnit(Operation.DIFF, Integer.MIN_VALUE, 25, 0));
+        testSet.add(new TestDataUnit(Operation.DIFF, 35, 20, 20));
+        testSet.add(new TestDataUnit(Operation.DIFF, 15, 7, 8));
 
+        testSet.add(new TestDataUnit(Operation.SUM, 5, 7, 12));
+        testSet.add(new TestDataUnit(Operation.SUM, Integer.MAX_VALUE, 25, 0));
+        testSet.add(new TestDataUnit(Operation.SUM, 35, 20, 20));
+        testSet.add(new TestDataUnit(Operation.SUM, 15, 7, 22));
+
+        testSet.add(new TestDataUnit(Operation.MULT, 5, 7, 35));
+        testSet.add(new TestDataUnit(Operation.MULT, Integer.MAX_VALUE, 25, 0));
+        testSet.add(new TestDataUnit(Operation.MULT, 35, 20, 20));
+        testSet.add(new TestDataUnit(Operation.MULT, 15, 7, 105));
+
+        testSet.add(new TestDataUnit(Operation.DIV, 5, 7, 0));
+        testSet.add(new TestDataUnit(Operation.DIV, Integer.MAX_VALUE, 0, 0));
+        testSet.add(new TestDataUnit(Operation.DIV, 35, 20, 20));
+        testSet.add(new TestDataUnit(Operation.DIV, 15, 7, 2));
     }
 
 
     @Test(priority = Priority.ONE)
     private boolean sumTest() {
-        List<Boolean> results = new ArrayList<>();
-        boolean res = true;
-        results.add(simCalc.sum(-6, 8) == 2);
-        results.add(simCalc.sum(0, 88) == 88);
-        results.add(simCalc.sum(6, 8) == 14);
-//        boolean a = simCalc.sum(-6, 8) == 2;
-//        boolean b = simCalc.sum(0, 88) == 88;
-//        boolean c = simCalc.sum(6, 8) == 14;
-        for (boolean bb : results) {
-            res &= bb;
+        Map<TestDataUnit, Boolean> testResMap = new HashMap<>();
+        for (TestDataUnit tdu : testSet) {
+            if (tdu.operation == Operation.SUM) {
+                try {
+                    boolean res = simCalc.sum(tdu.a, tdu.b) == tdu.result;
+                    testResMap.put(tdu, res);
+                } catch (ArithmeticException e) {
+                    testResMap.put(tdu, false);
+                    System.err.printf("При вычислении суммы %d и %d произошло исключение. ", tdu.a, tdu.b);
+                    System.err.println(e.getMessage());
+                }
+            }
         }
-        System.out.println(res);
-        return res;
+        boolean outRes = true;
+        for (TestDataUnit tdu : testResMap.keySet()) {
+            boolean testRes = testResMap.get(tdu);
+            if (!testRes)
+                System.out.printf("Неверный результат при вычислении суммы %d и %d.\n", tdu.a, tdu.b);
+            outRes &= testRes;
+        }
+        return outRes;
     }
 
     @Test(priority = Priority.TWO)
-    private void diffTest() {
+    private boolean diffTest() {
         Map<TestDataUnit, Boolean> testResMap = new HashMap<>();
         for (TestDataUnit tdu : testSet) {
             if (tdu.operation == Operation.DIFF) {
                 try {
                     boolean res = simCalc.diff(tdu.a, tdu.b) == tdu.result;
-                    testResMap.put(tdu,res);
-//                    return res;
+                    testResMap.put(tdu, res);
                 } catch (ArithmeticException e) {
                     testResMap.put(tdu, false);
-                    System.out.printf("При выполнении проверки вычисления разницы между %d и %d произошло исключение. ", tdu.a, tdu.b);
-                    System.out.println(e.getMessage());
+                    System.err.printf("При вычислении разницы %d и %d произошло исключение. ", tdu.a, tdu.b);
+                    System.err.println(e.getMessage());
                 }
             }
         }
-
-//        return false;
+        boolean outRes = true;
+        for (TestDataUnit tdu : testResMap.keySet()) {
+            boolean testRes = testResMap.get(tdu);
+            if (!testRes)
+                System.out.printf("Неверный результат при вычислении разницы %d и %d.\n", tdu.a, tdu.b);
+            outRes &= testRes;
+        }
+        return outRes;
     }
 
     @Test(priority = Priority.THREE)
     private boolean multTest() {
-        return false;
+        Map<TestDataUnit, Boolean> testResMap = new HashMap<>();
+        for (TestDataUnit tdu : testSet) {
+            if (tdu.operation == Operation.MULT) {
+                try {
+                    boolean res = simCalc.mult(tdu.a, tdu.b) == tdu.result;
+                    testResMap.put(tdu, res);
+                } catch (ArithmeticException e) {
+                    testResMap.put(tdu, false);
+                    System.err.printf("При вычислении произведения %d и %d произошло исключение. ", tdu.a, tdu.b);
+                    System.err.println(e.getMessage());
+                }
+            }
+        }
+        boolean outRes = true;
+        for (TestDataUnit tdu : testResMap.keySet()) {
+            boolean testRes = testResMap.get(tdu);
+            if (!testRes)
+                System.out.printf("Неверный результат при вычислении произведения %d и %d.\n", tdu.a, tdu.b);
+            outRes &= testRes;
+        }
+        return outRes;
     }
 
     @Test(priority = Priority.FOUR)
     private boolean divTest() {
-        return false;
+        Map<TestDataUnit, Boolean> testResMap = new HashMap<>();
+        for (TestDataUnit tdu : testSet) {
+            if (tdu.operation == Operation.DIV) {
+                try {
+                    boolean res = simCalc.div(tdu.a, tdu.b) == tdu.result;
+                    testResMap.put(tdu, res);
+                } catch (ArithmeticException e) {
+                    testResMap.put(tdu, false);
+                    System.err.printf("При выполнении деления %d на %d произошло исключение. ", tdu.a, tdu.b);
+                    System.err.println(e.getMessage());
+                }
+            }
+        }
+        boolean outRes = true;
+        for (TestDataUnit tdu : testResMap.keySet()) {
+            boolean testRes = testResMap.get(tdu);
+            if (!testRes)
+                System.out.printf("Неверный результат при делении %d на %d.\n", tdu.a, tdu.b);
+            outRes &= testRes;
+        }
+        return outRes;
     }
 
 
     @After
     void killCalk() {
         simCalc = null;
+    }
+
+    public static void main(String[] args) {
+        SimCalcJTest simCalcJTest = new SimCalcJTest();
+        simCalcJTest.initCalc();
+        System.out.println("Diff test result = " + simCalcJTest.diffTest());
+        System.out.println("Sum test result = " + simCalcJTest.sumTest());
+        System.out.println("Mult test result = " + simCalcJTest.multTest());
+        System.out.println("Div test result = " + simCalcJTest.divTest());
     }
 }
 
