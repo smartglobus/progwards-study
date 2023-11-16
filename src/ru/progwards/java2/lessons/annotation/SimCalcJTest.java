@@ -108,7 +108,7 @@ public class SimCalcJTest {
         return outRes;
     }
 
-    @Test(priority = Priority.FOUR)
+    @Test(priority = Priority.ONE)
     private boolean divTest() {
         Map<TestDataUnit, Boolean> testResMap = new HashMap<>();
         for (TestDataUnit tdu : testSet) {
@@ -138,6 +138,7 @@ public class SimCalcJTest {
     void killCalk() {
         simCalc = null;
     }
+
 
     public static void main(String[] args) {
         SimCalcJTest simCalcJTest = new SimCalcJTest();
