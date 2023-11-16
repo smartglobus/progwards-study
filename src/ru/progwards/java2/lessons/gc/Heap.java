@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 // Нужно будет написать алгоритм, который выделяет и освобождает память (ячейки в массиве) и делает дефрагментацию.
 public class Heap {
     private byte[] bytes;
+
     private SortedMap<Integer, Integer> ocupReg = new TreeMap<>();
     private List<MemBlock> freeReg = new ArrayList<>();
     private byte label = 1;

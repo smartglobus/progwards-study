@@ -28,7 +28,10 @@ public class GettersAndSetters {
                         if (m.getName().equals(setter)) {
                             Parameter[] parameters = m.getParameters();
                             String methodModifiers = Modifier.toString(m.getModifiers());
-                            if (parameters.length != 1 || !methodModifiers.contains("public") || methodModifiers.contains("static"))
+                            boolean wrongParamType = parameters.length == 1 && parameters[0].getType() != f.getType();
+                            boolean isStatic = methodModifiers.contains("static");
+                            boolean isNotPublic = !methodModifiers.contains("public");
+                            if (parameters.length != 1 || isNotPublic || isStatic || wrongParamType)
                                 System.out.println("public void " + setter + "(" + fTypeName + " " + fName + ")");
                         }
                     }
@@ -40,7 +43,10 @@ public class GettersAndSetters {
                         if (m.getName().equals(getter)) {
                             Parameter[] parameters = m.getParameters();
                             String methodModifiers = Modifier.toString(m.getModifiers());
-                            if (parameters.length > 0 || !methodModifiers.contains("public") || methodModifiers.contains("static"))
+                            boolean wrongParamType = parameters.length == 0 && m.getReturnType() != f.getType();
+                            boolean isStatic = methodModifiers.contains("static");
+                            boolean isNotPublic = !methodModifiers.contains("public");
+                            if (parameters.length > 0 || isNotPublic || isStatic || wrongParamType)
                                 System.out.println("public " + fTypeName + " " + getter + "()");
                         }
                     }
