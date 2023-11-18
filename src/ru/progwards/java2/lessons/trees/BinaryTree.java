@@ -1,8 +1,5 @@
 package ru.progwards.java2.lessons.trees;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
@@ -11,12 +8,14 @@ public class BinaryTree<K extends Comparable<K>, V> {
     private static final String KEYEXIST = "Key already exist";
     private static final String KEYNOTEXIST = "Key not exist";
 
+
     class TreeLeaf<K extends Comparable<K>, V> {
         K key;
         V value;
         TreeLeaf<K, V> parent;
         TreeLeaf<K, V> left;
         TreeLeaf<K, V> right;
+
 
         public TreeLeaf(K key, V value) {
             this.key = key;
@@ -121,10 +120,16 @@ public class BinaryTree<K extends Comparable<K>, V> {
         }
     }
 
+    /**
+     * @return Возвращает {@link TreeIterator} для данного зкземпляра BinaryTree
+     */
     public TreeIterator<K, V> getIterator() {
         return new TreeIterator<>(this);
     }
 
+    /**
+     * @hidden
+     */
     public static void main(String[] args) {
         BinaryTree<Integer, Integer> btree = new BinaryTree<>();
 
