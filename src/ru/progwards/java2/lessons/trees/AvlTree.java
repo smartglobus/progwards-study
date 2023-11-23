@@ -350,7 +350,7 @@ public class AvlTree<K extends Comparable<K>, V> {
         if (root != null) {
             root.process(o -> builder.append("(").append(o.key).append(", ").append(o.value).append("); "));
             String res = builder.toString();
-            return res.substring(0, res.length() - 2) + "}";
+            return res.substring(0, res.length() - "; ".length()) + "}";
         } else return "{}";
     }
 
