@@ -3,6 +3,8 @@ package ru.progwards.java2.lessons.classloader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
@@ -15,9 +17,9 @@ public class PatchLoader extends ClassLoader {
     private final static String DOT_CLASS = ".class";
     private static PatchLoader loader = new PatchLoader(ROOT);
     private final String basePath;
-    private static String lastPatchDate;// имя самой свежей папки date
+    private static String lastPatchDate;
     private static String currentDate;
-    private static boolean isInitialLoad = true;
+    private static boolean isInitialLoad = true;// на случай, если PatchLoader будет периодически вызываться в цикле
 
     private static Set<String> classes = new HashSet<>();// реестр всех полных имён загруженных этим загрузчиком классов
     private SortedMap<String, String> updateList = new TreeMap<>();// текущий список на загрузку из полных имён классов и даты
@@ -32,6 +34,7 @@ public class PatchLoader extends ClassLoader {
         this.basePath = basePath;
     }
 
+    // метод запуска сканирования корневого каталога и загрузки патчей
     private void rootScanner() {
         File[] rootFiles = new File(ROOT).listFiles();
         if (rootFiles != null) {
@@ -44,11 +47,10 @@ public class PatchLoader extends ClassLoader {
                 }
             }
         }
-// вызов метода с загрузчиком. После первичной загрузки по списку isInitialLoad становится false и все обновления
-// делаются новым экземпляром загрузчика.
         customClassLoader();
     }
 
+// После первичной загрузки по списку isInitialLoad становится false и все обновления делаются новыми экземплярами загрузчика.
     private void customClassLoader() {
         String className = "";
         try {
@@ -58,26 +60,24 @@ public class PatchLoader extends ClassLoader {
                     // А внутри переопределённых методов разобрать обратно
                     className = updateList.firstKey();
                     currentDate = updateList.remove(className);
-                    loader.loadClass(className, true);
+                    loader.loadClass(className, false);
                     String absolutePath = ROOT + "\\" + currentDate + "\\" + className.replace(".", "\\") + DOT_CLASS;
                     writeLog(className + " загружен успешно из " + absolutePath + "\n");
-                    System.out.println("Загружен класс " + className);
                     currentDate = "";
                 }
                 isInitialLoad = false;
-            } else {
+            } else {// заготовка на случай, если PatchLoader будет периодически вызываться в цикле
                 // создавать новый загрузчик для каждого загружаемого класса
                 while (!updateList.isEmpty()) {
                     className = updateList.firstKey();
                     currentDate = updateList.remove(className);
                     loader = new PatchLoader(ROOT);
                     loader.loadClass(className, true);
-                    System.out.println("Обновлён класс " + className);
                     currentDate = "";
                 }
             }
         } catch (ClassNotFoundException e) {
-            writeLog(className + " ошибка загрузки " + e.getMessage() + "\n");
+            e.printStackTrace();
         }
     }
 
@@ -93,7 +93,7 @@ public class PatchLoader extends ClassLoader {
                             if (isNewer(date, lastPatchDate) > 0) {
                                 updateList.replace(className, date);
                             }
-                        } else {// новый класс
+                        } else {// обнаружен новый класс
                             classes.add(className);
                             updateList.put(className, date);
                         }
@@ -154,13 +154,20 @@ public class PatchLoader extends ClassLoader {
             Path classPathName = Paths.get(basePath, currentDate, classPath + DOT_CLASS);
             if (Files.exists(classPathName)) {
                 byte[] b = Files.readAllBytes(classPathName);
-                return defineClass(className, b, 0, b.length);
+                try {
+                    return defineClass(className, b, 0, b.length);
+                } catch (ClassFormatError classFormatError) {
+                    classFormatError.printStackTrace();
+                } catch (NoClassDefFoundError e) {
+                    writeLog(className + " ошибка загрузки " + e.getMessage() + "\n");
+                }
             } else {
                 return findSystemClass(className);
             }
         } catch (IOException e) {
             throw new ClassNotFoundException(className);
         }
+        return null;
     }
 
     private void writeLog(String logMessage) {
@@ -176,5 +183,12 @@ public class PatchLoader extends ClassLoader {
     public static void main(String[] args) {
         PatchLoader testLoader = new PatchLoader("C:\\Users\\User\\Documents\\Progwards\\classLoaderRoot");
         testLoader.rootScanner();
+        try {
+            Class someClass = Class.forName("classes.loader.study.Something");
+            Constructor constructor = someClass.getConstructor();
+            Object o = constructor.newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 }
