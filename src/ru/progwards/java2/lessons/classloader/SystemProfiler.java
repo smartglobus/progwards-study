@@ -47,14 +47,18 @@ public class SystemProfiler {
         sectionsList.sort(new Comparator<StatisticInfo>() {
             @Override
             public int compare(StatisticInfo o1, StatisticInfo o2) {
-                return o1.sectionName.compareTo(o2.sectionName);
+                return Integer.compare(o2.selfTime * o2.count, o1.selfTime * o1.count);
             }
         });
         return sectionsList;
     }
 
     public static void printStatisticInfo(String fileName) {
+        getStatisticInfo();
+
         try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write("StatisticInfo: " +
+                    "Сортировка по произведению чистого времени работы метода на количество его вызовов.\n\n");
             for (StatisticInfo si : sectionsList) writer.write(si.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,8 +72,7 @@ public class SystemProfiler {
 
     public static void main(String[] args) throws NotFoundException, CannotCompileException, IllegalAccessException, InvocationTargetException {
         ClassPool classPool = ClassPool.getDefault();//
-        CtClass modifiedPL = classPool.get("ru/progwards/java2/lessons/classloader/PatchLoader".replace('/', '.'));
-
+        CtClass modifiedPL = classPool.get("ru/progwards/java2/lessons/trees/TestAVLTreeVsTreeMap".replace('/', '.'));
         CtMethod[] modPLMethods = modifiedPL.getDeclaredMethods();
         for (CtMethod cm : modPLMethods) {
             if (cm.getName().equals("main")) {
@@ -104,11 +107,11 @@ class StatisticInfo {
 
     @Override
     public String toString() {
-        return "StatisticInfo{" +
-                "sectionName='" + sectionName + '\'' +
-                ", fullTime=" + fullTime +
-                ", selfTime=" + selfTime +
-                ", count=" + count +
-                "}\n";
+        return
+                "method: " + sectionName +
+                        ", \n\tselfTime=" + selfTime +
+                        ", count=" + count +
+                        ", fullTime=" + fullTime +
+                        ";\n";
     }
 }
