@@ -183,12 +183,12 @@ public class PatchLoader extends ClassLoader {
     public static void main(String[] args) {
         PatchLoader testLoader = new PatchLoader("C:\\Users\\User\\Documents\\Progwards\\classLoaderRoot");
         testLoader.rootScanner();
-        try {
-            Class someClass = Class.forName("classes.loader.study.Something");
-            Constructor constructor = someClass.getConstructor();
-            Object o = constructor.newInstance();
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Class someClass = Class.forName("classes.loader.study.Something");
+//            Constructor constructor = someClass.getConstructor();
+//            Object o = constructor.newInstance();
+//        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
     }
 }
