@@ -9,7 +9,7 @@ public class FindUnused {
 
     public static List<CObject> find(List<CObject> roots, List<CObject> objects) {
 
-        // предварительная пометка как неиспользуемые для всех объектов-потомков неиспользуемых корней
+        // предварительная пометка как неиспользуемых для всех объектов-потомков неиспользуемых корней
         for (CObject c : roots) if (c.mark == 0) markUnused(c);
 
         for (CObject c : roots) if (c.mark != 0) markUsed(c);

@@ -6,25 +6,28 @@ import java.util.*;
 public class Dijkstra {
     private int[][] graph; // матрица смежности, нумерация от 0
     private final int GRAPH_SIZE;
-    int[][] resultGraph; // ???
+    private int[][] result; // парный массив [номер вершины][дистанция]
     private final static int INF = Integer.MAX_VALUE;
-    private Vertex[] vertexArr; // массив вершин
+    private Vertex[] vertexArr;
     private Queue<Vertex> vertexQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.dist));
 
-    public Dijkstra(int[][] graph) {
-//        if (graph.length != graph[0].length) System.out.println("Граф не квадратный!");
+    public Dijkstra(int[][] graph) throws Exception {
+
         this.graph = graph;
         GRAPH_SIZE = graph.length;
         vertexArr = new Vertex[graph.length];
+        result = new int[GRAPH_SIZE][2];
 
+        for (int i = 0; i < GRAPH_SIZE; i++) {
+            if (graph.length != graph[i].length) throw new Exception("Матрица смежности не квадратная!");
+        }
         for (int i = 0; i < GRAPH_SIZE; i++) vertexArr[i] = new Vertex(INF);
     }
 
-    public int[][] find(int n) { // не понял, что возвращать
+    public int[][] find(int n) throws Exception {
 
         if (n < 0 || n > GRAPH_SIZE - 1) {
-            System.out.println("Нет такой вершины!");
-            return null;
+            throw new Exception("Граф не содержит вершину с таким номером!");
         }
 
         vertexArr[n].dist = 0;
@@ -36,8 +39,8 @@ public class Dijkstra {
         }
 
         while (!vertexQueue.isEmpty()) {
-            Vertex minV = vertexQueue.poll(); // взять вершину с минимальной dist
-            if (minV.dist == INF) return null; // остались только недоступные вершины. Выход!
+            Vertex minV = vertexQueue.poll();
+            if (minV.dist == INF) break; // остались только недоступные вершины.
             minV.visited = true;
             for (int i = 0; i < minV.outEdges.size(); i++) {
                 Edge e = minV.outEdges.get(i);
@@ -52,28 +55,32 @@ public class Dijkstra {
                 }
             }
         }
-        return null;
+        for (int i = 0; i < GRAPH_SIZE; i++) {
+            result[i][0] = i;
+            result[i][1] = vertexArr[i].dist;
+        }
+        return result;
     }
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
         int[][] arr = {{0, 7, 9, 0, 0, 14}, {7, 0, 10, 15, 0, 0}, {9, 10, 0, 11, 0, 2}, {0, 15, 11, 0, 6, 0}, {0, 0, 0, 6, 0, 9}, {14, 0, 2, 0, 9, 0}};
         Dijkstra test = new Dijkstra(arr);
         int[][] arr2 = {{0, 3, 2, 7, 0, 0}, {3, 0, 0, 0, 9, 0}, {2, 0, 0, 0, 0, 0}, {7, 0, 0, 0, 0, 6}, {0, 9, 0, 0, 0, 0}, {0, 0, 4, 0, 8, 0}};
         Dijkstra test2 = new Dijkstra(arr2);
-
-        test2.find(5);
-
+        int[][] res = test2.find(5);
+        for (int i = 0; i < arr2.length; i++) {
+            System.out.printf("Vertex %d, distance %d;\n", res[i][0], res[i][1]);
+        }
     }
 
     class Vertex {
-//        int num;
         int dist;
         boolean visited;
         List<Edge> outEdges = new ArrayList<>();
 
         Vertex(int dist) {
             this.dist = dist;
-//            this.num = num;
         }
     }
 
@@ -86,6 +93,4 @@ public class Dijkstra {
             this.second = second;
         }
     }
-
 }
-
