@@ -35,8 +35,9 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
         private TableEntry(K key, V item) {
             this.key = key;
             this.item = item;
-            if (key instanceof Integer) this.basicKey = new IntKey((int) key).getHash();
-            if (key instanceof String) this.basicKey = new StringKey((String) key).getHash();
+            if (key instanceof Number) this.basicKey = new IntKey(((Number) key).intValue()).getHash();
+            else if (key instanceof String) this.basicKey = new StringKey((String) key).getHash();
+            else this.basicKey = new IntKey(key.hashCode()).getHash();
             this.trueIndex = getFirstHash(basicKey, table.length);
         }
 
@@ -56,7 +57,7 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
     private int size;
 
 
-    private DoubleHashTable() {
+    public DoubleHashTable() {
         table = new TableEntry[101];
     }
 
@@ -174,29 +175,35 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
 //        testDel.remove("hello2");
 //        System.out.println(testDel.get("hello2"));
 
-        DoubleHashTable<Integer, Integer> test2 = new DoubleHashTable<>();
-        test2.add(10, 1);
-        test2.add(111, 2);
-        test2.add(212, 3);
-        test2.add(313, 4);
-        test2.remove(313);
-        test2.add(414, 5);
-        test2.add(515, 6);
-        test2.add(616, 7);
-        test2.add(23, null);
-        System.out.println(test2.get(212));
-        test2.change(212, 717);
+//        DoubleHashTable<Integer, Integer> test2 = new DoubleHashTable<>();
+//        test2.add(10, 1);
+//        test2.add(111, 2);
+//        test2.add(212, 3);
+//        test2.add(313, 4);
+//        test2.remove(313);
+//        test2.add(414, 5);
+//        test2.add(515, 6);
+//        test2.add(616, 7);
+//        test2.add(23, null);
+//        System.out.println(test2.get(212));
+//        test2.change(212, 717);
 
-        System.out.println(test2.get(717));
-        System.out.println("size = " + test2.size() + ";\n");
-        int sum = 0;
-        for (Integer t : test2) {
-            sum += t;
-            System.out.print(t + "  ");
-        }
-        System.out.println("\n" + sum);
-        for (int i = 0; i < test2.table.length; i++) {
-            if (test2.table[i] != null) System.out.println(test2.get((int) test2.table[i].key));
+//        System.out.println(test2.get(717));
+//        System.out.println("size = " + test2.size() + ";\n");
+//        int sum = 0;
+//        for (Integer t : test2) {
+//            sum += t;
+//            System.out.print(t + "  ");
+//        }
+//        System.out.println("\n" + sum);
+//        for (int i = 0; i < test2.table.length; i++) {
+//            if (test2.table[i] != null) System.out.println(test2.get((int) test2.table[i].key));
+//        }
+
+        DoubleHashTable<KeyInteger, String> list = new DoubleHashTable<>();
+        for(int i=0; i<1000; i++) {
+            System.out.println(i);
+            list.add(new KeyInteger(i), "i="+i);
         }
     }
 }
@@ -244,3 +251,10 @@ class StringKey implements HashValue {
 }
 
 
+class KeyInteger{
+    int i;
+
+    public KeyInteger(int i) {
+        this.i = i;
+    }
+}

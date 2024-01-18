@@ -3,10 +3,11 @@ package ru.progwards.java2.lessons.graph;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FindUnused {
-    List<CObject> roots; // -  список корневых объектов
-    List<CObject> objects; // - список всех объектов системы
 
+public class FindUnused {
+
+    // roots  -  список корневых объектов
+    // objects  - список всех объектов системы
     public static List<CObject> find(List<CObject> roots, List<CObject> objects) {
 
         // предварительная пометка как неиспользуемых для всех объектов-потомков неиспользуемых корней
@@ -33,11 +34,22 @@ public class FindUnused {
         }
     }
 
-    class CObject {
-        public List<CObject> references; // ссылки на другие объекты
-        int mark;  // пометка для алгоритма
-        // 0 - не используется
-        // 1 - посещен
-        // 2 - используется
+
+
+    public static void main(String[] args) {
+        CObject aa = new CObject();
+
+
+
+
     }
+}
+
+
+class CObject {
+    public List<CObject> references; // ссылки на другие объекты
+    int mark;  // пометка для алгоритма
+    // 0 - не используется
+    // 1 - посещен
+    // 2 - используется
 }

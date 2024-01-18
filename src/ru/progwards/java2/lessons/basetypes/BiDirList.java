@@ -7,7 +7,7 @@ public class BiDirList<T> implements Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
-            listItem<T> curr = head;
+            ListItem<T> curr = head;
 
             @Override
             public boolean hasNext() {
@@ -23,54 +23,54 @@ public class BiDirList<T> implements Iterable<T> {
         };
     }
 
-    class listItem<T> {
+    class ListItem<T> {
         private T item;
-        private listItem<T> prev;
-        private listItem<T> next;
+        private ListItem<T> prev;
+        private ListItem<T> next;
 
-        listItem(T item) {
+        ListItem(T item) {
             this.item = item;
-            size++;
         }
 
         public T getItem() {
             return item;
         }
 
-        public listItem<T> getPrev() {
+        public ListItem<T> getPrev() {
             return prev;
         }
 
-        public listItem<T> getNext() {
+        public ListItem<T> getNext() {
             return next;
         }
 
-        void setPrev(listItem prev) {
+        void setPrev(ListItem prev) {
             this.prev = prev;
         }
 
-        void setNext(listItem next) {
+        void setNext(ListItem next) {
             this.next = next;
         }
     }
 
 
-    private listItem<T> head;
-    private listItem<T> tail;
+    private ListItem<T> head;
+    private ListItem<T> tail;
     private int size;
 
 
-    public listItem<T> getHead() {
+    public ListItem<T> getHead() {
         return head;
     }
 
-    public listItem<T> getTail() {
+    public ListItem<T> getTail() {
         return tail;
     }
 
 
     public void addLast(T item) {
-        listItem<T> newEntry = new listItem<>(item);
+        ListItem<T> newEntry = new ListItem<>(item);
+        size++;
         if (head == null) {
             head = newEntry;
             tail = newEntry;
@@ -82,7 +82,8 @@ public class BiDirList<T> implements Iterable<T> {
     }
 
     public void addFirst(T item) {
-        listItem<T> newEntry = new listItem<>(item);
+        ListItem<T> newEntry = new ListItem<>(item);
+        size++;
         if (head == null) {
             head = newEntry;
             tail = newEntry;
@@ -95,59 +96,62 @@ public class BiDirList<T> implements Iterable<T> {
 
     // удаляет один, первый из подходящих, элемент из списка
     public void remove(T item) {
-        listItem<T> current = head;
+        ListItem<T> current = head;
         while (current != null) {
             if (current.item.equals(item)) {
-                if (current.next == null) {
-                    current.prev.next = null;
-                    tail = current.prev;
-                    size--;
+                if (--size == 0) {
+                    tail = head = null;
                     break;
                 }
-                if (current.prev == null) {
-                    current.next.prev = null;
-                    current = current.next;
-                    head = current;
-                    size--;
+                if (current == head) {
+                    head = head.next;
+                    head.prev = null;
+                    break;
+                }
+                if (current == tail) {
+                    tail = tail.prev;
+                    tail.next = null;
                     break;
                 }
                 current.prev.next = current.next;
                 current.next.prev = current.prev;
-                size--;
                 break;
             }
             current = current.next;
         }
     }
 
+
     // удаляет все подходящие элементы из списка
     public void removeAll(T item) {
-        listItem<T> current = head;
+        ListItem<T> current = head;
         while (current != null) {
             if (current.item.equals(item)) {
-                if (current.next == null) {
-                    current.prev.next = null;
-                    tail = current.prev;
-                    size--;
+                if (--size == 0) {
+                    tail = head = null;
                     break;
                 }
-                if (current.prev == null) {
-                    current.next.prev = null;
+                if (current == head) {
+                    head = head.next;
+                    head.prev = null;
                     current = current.next;
-                    head = current;
-                    size--;
                     continue;
+                }
+                if (current == tail) {
+                    tail = tail.prev;
+                    tail.next = null;
+                    break;
                 }
                 current.prev.next = current.next;
                 current.next.prev = current.prev;
-                size--;
             }
             current = current.next;
         }
     }
 
     public T at(int i) {
-        listItem<T> current = head;
+        if (i > size - 1) return null;
+        ListItem<T> current = head;
         for (int j = 0; j < size; j++) {
             if (j == i) return current.item;
             current = current.next;
@@ -165,11 +169,11 @@ public class BiDirList<T> implements Iterable<T> {
         return from(array);
     }
 
-    public void toArray(T[] array) {
+    public void toArray(T[] array) throws Exception {
         if (array.length != size)
-            System.out.println("Размер массива не совпадает с размером списка!\nРазмер списка = " + size());
-        listItem<T> current = head;
-        for (int i = 0; i < size && i < array.length; i++) {
+            throw new ArraySizeException("Размер массива не совпадает с размером списка! Размер списка = " + size());
+        ListItem<T> current = head;
+        for (int i = 0; i < size; i++) {
             array[i] = current.item;
             current = current.next;
         }
@@ -180,7 +184,7 @@ public class BiDirList<T> implements Iterable<T> {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         BiDirList<Integer> testBDL = new BiDirList<>();
         testBDL.addLast(2);
         testBDL.addLast(3);
@@ -194,10 +198,10 @@ public class BiDirList<T> implements Iterable<T> {
         System.out.println("head = " + testBDL.getHead().getItem() + "; tail = " + testBDL.getTail().getItem() + "; size = " + testBDL.size());
         for (Integer i : testBDL) System.out.println(i);
         System.out.println();
-        System.out.println("at(i) = " + testBDL.at(10));
+        System.out.println("at(i) = " + testBDL.at(8));
 //        testBDL.remove(3);
 //        testBDL.remove(3);
-//        testBDL.remove(3);
+        testBDL.remove(3);
 //        testBDL.removeAll(3);
         for (Integer i : testBDL) System.out.println(i);
         System.out.println("head = " + testBDL.getHead().getItem() + "; tail = " + testBDL.getTail().getItem() + "; size = " + testBDL.size());
@@ -217,5 +221,11 @@ public class BiDirList<T> implements Iterable<T> {
         String[] sa = new String[5];
         ofVarargBDL.toArray(sa);
         System.out.println(Arrays.toString(sa));
+    }
+}
+
+class ArraySizeException extends Exception {
+    ArraySizeException(String message) {
+        super(message);
     }
 }
