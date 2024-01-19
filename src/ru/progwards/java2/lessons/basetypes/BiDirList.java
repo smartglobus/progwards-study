@@ -218,7 +218,7 @@ public class BiDirList<T> implements Iterable<T> {
         System.out.println();
         for (String i : ofVarargBDL) System.out.println(i);
         System.out.println("head = " + ofVarargBDL.getHead().getItem() + "; tail = " + ofVarargBDL.getTail().getItem() + "; size = " + ofVarargBDL.size());
-        String[] sa = new String[5];
+        String[] sa = new String[7];
         ofVarargBDL.toArray(sa);
         System.out.println(Arrays.toString(sa));
     }
