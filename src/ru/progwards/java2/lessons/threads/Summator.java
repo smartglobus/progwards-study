@@ -21,9 +21,7 @@ public class Summator {
                 @Override
                 public void run() {
                     BigInteger from = BigInteger.valueOf(j).multiply(step);
-                    BigInteger to;
-                    if (j == count - 1) to = number;
-                    else to = from.add(step);
+                    BigInteger to = (j == count - 1) ? number : from.add(step);
                     partSum(from.add(BigInteger.ONE), to);
                 }
             });
@@ -34,16 +32,12 @@ public class Summator {
     }
 
     synchronized void partSum(BigInteger from, BigInteger to) {
-
         int n = to.subtract(from).intValue() + 1;
-        for (int i = 0; i < n; i++) {
-            BigInteger x = from.add(BigInteger.valueOf(i));
-            result = result.add(x);
-        }
+        for (int i = 0; i < n; i++) result = result.add(from.add(BigInteger.valueOf(i)));
     }
 
     public static void main(String[] args) throws InterruptedException {
         Summator summator = new Summator(7);
-        System.out.println(summator.sum(BigInteger.valueOf(11)));
+        System.out.println(summator.sum(BigInteger.valueOf(13)));
     }
 }
