@@ -2,7 +2,7 @@ package ru.progwards.java2.lessons.basetypes;
 
 import java.util.Iterator;
 
-public class DoubleHashTable<K, V> implements Iterable<V> {
+public class DoubleHashTable<K extends HashValue, V> implements Iterable<V> {
 
     @Override
     public Iterator<V> iterator() {
@@ -30,26 +30,21 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
         };
     }
 
-    class TableEntry<K, V> {
+    class TableEntry<K extends HashValue, V> {
+        private int basicKey;
+        private K key;
+        private V item;
+        private boolean deleted;
 
         private TableEntry(K key, V item) {
             this.key = key;
             this.item = item;
-            if (key instanceof Number) this.basicKey = new IntKey(((Number) key).intValue()).getHash();
-            else if (key instanceof String) this.basicKey = new StringKey((String) key).getHash();
-            else this.basicKey = new IntKey(key.hashCode()).getHash();
-            this.trueIndex = getFirstHash(basicKey, table.length);
+            this.basicKey = key.getHash();
         }
 
         public V getItem() {
             return item;
         }
-
-        private int basicKey;
-        private int trueIndex;
-        private K key;
-        private V item;
-        private boolean deleted;
     }
 
     private TableEntry<K, V>[] table;
@@ -66,9 +61,7 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
             TableEntry<K, V> tableEntry = new TableEntry<>(key, value);
             putEntry(tableEntry, table);
             size++;
-            if (collisionCount * 10 > table.length) {
-                expandTable();
-            }
+
         } else {
             System.out.println("Добавление значения null с ключом \"" + key + "\" проигнорованно.");
         }
@@ -76,7 +69,7 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
 
     public V get(K key) {
         TableEntry<K, V> nullEntry = new TableEntry<>(key, null);
-        int guessIndex = nullEntry.trueIndex;
+        int guessIndex = getFirstHash(nullEntry.basicKey, table.length);
         while (table[guessIndex] != null) {
             if (table[guessIndex].key.equals(nullEntry.key)) {
                 return (V) table[guessIndex].getItem();
@@ -88,7 +81,8 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
 
     public void remove(K key) {
         TableEntry<K, V> nullEntry = new TableEntry<>(key, null);
-        int guessIndex = nullEntry.trueIndex;
+        int guessIndex = getFirstHash(nullEntry.basicKey, table.length);
+
         while (table[guessIndex] != null) {
             if (table[guessIndex].key.equals(nullEntry.key)) {
                 table[guessIndex].item = null;
@@ -111,22 +105,22 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
         return size;
     }
 
-    private void expandTable() {
+    private TableEntry<K, V>[] expandTable() {
         int newTableSize = nextSize(table.length);
         TableEntry<K, V>[] newTable = new TableEntry[newTableSize];
         collisionCount = 0;
         for (TableEntry tableEntry : table) {
             if (tableEntry != null) {
-                tableEntry.trueIndex = getFirstHash(tableEntry.basicKey, newTableSize); // изменение trueIndex под новый размер таблицы
                 putEntry(tableEntry, newTable);
             }
         }
         table = newTable;
+        return newTable;
     }
 
     private void putEntry(TableEntry tableEntry, TableEntry[] table) {
         if (!tableEntry.deleted) { // удалённые элементы при расширении таблицы игнорируются
-            int guessIndex = tableEntry.trueIndex;
+            int guessIndex = getFirstHash(tableEntry.basicKey, table.length);
             while (table[guessIndex] != null) {
                 if (table[guessIndex].key.equals(tableEntry.key)) {
                     System.out.println("Элемент E<key, value>: (" + table[guessIndex].key + ", " + table[guessIndex].item +
@@ -135,6 +129,10 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
                 }
                 guessIndex = getSecondHash(guessIndex, table.length);
                 collisionCount++;
+                if (collisionCount * 10 > table.length) {
+                    table = expandTable();
+                    guessIndex = getFirstHash(tableEntry.basicKey, table.length);
+                }
             }
             table[guessIndex] = tableEntry;
         }
@@ -201,60 +199,45 @@ public class DoubleHashTable<K, V> implements Iterable<V> {
 //        }
 
         DoubleHashTable<KeyInteger, String> list = new DoubleHashTable<>();
-        for(int i=0; i<1000; i++) {
+        for (int i = 0; i < 1000; i++) {
             System.out.println(i);
-            list.add(new KeyInteger(i), "i="+i);
+            KeyInteger check = new KeyInteger(i);
+            list.add(check, "i=" + i);
+            if (i%3 ==1){
+                System.out.println(list.get(check));
+//                System.out.println();
+            }
         }
-    }
-}
+//        list.add(new KeyInteger(0), "0");
+//        list.add(new KeyInteger(101), "101");
+//        list.add(new KeyInteger(211), "211");
+//        list.add(new KeyInteger(431), "431");
+//        list.add(new KeyInteger(863), "863");
 
-class IntKey implements HashValue {
-    private int key;
-
-    public IntKey(int key) {
-        this.key = key;
-    }
-
-    @Override
-    public int getHash() {
-        return key;
-    }
-}
-
-class StringKey implements HashValue {
-    private String key;
-
-    StringKey(String key) {
-        this.key = key;
-    }
-
-    @Override
-    public int getHash() {
-        return (int) (BKDRHash(key));
-    }
-
-    public static long BKDRHash(String str) {
-        long seed = 131; // 31 131 1313 13131 131313 etc..
-        long hash = 0;
-
-        for (int i = 0; i < str.length(); i++) {
-            hash = unsignedInt((hash * seed) + str.charAt(i));
-        }
-        return hash;
-    }
-
-    static final long UINT_MAX = (long) Integer.MAX_VALUE * 2;
-
-    static long unsignedInt(long n) {
-        return n % UINT_MAX;
+        System.out.println();
     }
 }
 
 
-class KeyInteger{
+class KeyInteger implements HashValue {
     int i;
 
     public KeyInteger(int i) {
         this.i = i;
+    }
+
+    @Override
+    public String stringHash() {
+        return Integer.toString(i);
+    }
+
+
+}
+class MyKey implements HashValue{
+
+
+    @Override
+    public String stringHash() {
+        return null;
     }
 }
