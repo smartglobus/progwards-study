@@ -57,14 +57,9 @@ public class DoubleHashTable<K extends HashValue, V> implements Iterable<V> {
     }
 
     public void add(K key, V value) {
-        if (value != null) {
-            TableEntry<K, V> tableEntry = new TableEntry<>(key, value);
-            putEntry(tableEntry, table);
-            size++;
-
-        } else {
-            System.out.println("Добавление значения null с ключом \"" + key + "\" проигнорованно.");
-        }
+        TableEntry<K, V> tableEntry = new TableEntry<>(key, value);
+        putEntry(tableEntry, table);
+        size++;
     }
 
     public V get(K key) {
@@ -72,7 +67,7 @@ public class DoubleHashTable<K extends HashValue, V> implements Iterable<V> {
         int guessIndex = getFirstHash(nullEntry.basicKey, table.length);
         while (table[guessIndex] != null) {
             if (table[guessIndex].key.equals(nullEntry.key)) {
-                return (V) table[guessIndex].getItem();
+                return table[guessIndex].getItem();
             }
             guessIndex = getSecondHash(guessIndex, table.length);
         }
@@ -82,7 +77,6 @@ public class DoubleHashTable<K extends HashValue, V> implements Iterable<V> {
     public void remove(K key) {
         TableEntry<K, V> nullEntry = new TableEntry<>(key, null);
         int guessIndex = getFirstHash(nullEntry.basicKey, table.length);
-
         while (table[guessIndex] != null) {
             if (table[guessIndex].key.equals(nullEntry.key)) {
                 table[guessIndex].item = null;
@@ -163,50 +157,12 @@ public class DoubleHashTable<K extends HashValue, V> implements Iterable<V> {
     }
 
     public static void main(String[] args) {
-//        DoubleHashTable<String, Integer> testDel = new DoubleHashTable<>();
-////        System.out.println(nextSize(431));
-////        System.out.println(StringKey.BKDRHash("abc"));
-//        testDel.add("hello", 21);
-//        testDel.add("hello1", 22);
-//        testDel.add("hello2", 23);
-//        testDel.add("hello3", 24);
-//        testDel.remove("hello2");
-//        System.out.println(testDel.get("hello2"));
-
-//        DoubleHashTable<Integer, Integer> test2 = new DoubleHashTable<>();
-//        test2.add(10, 1);
-//        test2.add(111, 2);
-//        test2.add(212, 3);
-//        test2.add(313, 4);
-//        test2.remove(313);
-//        test2.add(414, 5);
-//        test2.add(515, 6);
-//        test2.add(616, 7);
-//        test2.add(23, null);
-//        System.out.println(test2.get(212));
-//        test2.change(212, 717);
-
-//        System.out.println(test2.get(717));
-//        System.out.println("size = " + test2.size() + ";\n");
-//        int sum = 0;
-//        for (Integer t : test2) {
-//            sum += t;
-//            System.out.print(t + "  ");
-//        }
-//        System.out.println("\n" + sum);
-//        for (int i = 0; i < test2.table.length; i++) {
-//            if (test2.table[i] != null) System.out.println(test2.get((int) test2.table[i].key));
-//        }
 
         DoubleHashTable<KeyInteger, String> list = new DoubleHashTable<>();
         for (int i = 0; i < 1000; i++) {
             System.out.println(i);
             KeyInteger check = new KeyInteger(i);
             list.add(check, "i=" + i);
-            if (i%3 ==1){
-                System.out.println(list.get(check));
-//                System.out.println();
-            }
         }
 //        list.add(new KeyInteger(0), "0");
 //        list.add(new KeyInteger(101), "101");
@@ -214,7 +170,12 @@ public class DoubleHashTable<K extends HashValue, V> implements Iterable<V> {
 //        list.add(new KeyInteger(431), "431");
 //        list.add(new KeyInteger(863), "863");
 
-        System.out.println();
+        DoubleHashTable<Humanoid, Integer> humanList = new DoubleHashTable<>();
+        for (int i = 0; i < 1000; i++) {
+            System.out.println(i);
+            Humanoid humanoid = new Humanoid("Humanoid " + i);
+            humanList.add(humanoid, null);
+        }
     }
 }
 
@@ -227,17 +188,20 @@ class KeyInteger implements HashValue {
     }
 
     @Override
-    public String stringHash() {
-        return Integer.toString(i);
+    public int getHash() {
+        return getHashFromNumber(i);
+    }
+}
+
+class Humanoid implements HashValue {
+    String name;
+
+    public Humanoid(String name) {
+        this.name = name;
     }
 
-
-}
-class MyKey implements HashValue{
-
-
     @Override
-    public String stringHash() {
-        return null;
+    public int getHash() {
+        return getHashFromString(name);
     }
 }

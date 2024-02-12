@@ -1,20 +1,15 @@
 package ru.progwards.java2.lessons.basetypes;
 
 public interface HashValue {
-    String stringHash();
+    int getHash();
 
-    default int getHash() {
-        int hash;
-        try {
-            hash = new IntKey(Integer.parseInt(stringHash())).getHash();
-        } catch (NumberFormatException e) {
-            hash = new StringKey(stringHash()).getHash();
-        }
-
-        return hash;
+    default int getHashFromNumber(Number key) {
+        return new IntKey((int) key).getHash();
     }
 
-
+    default int getHashFromString(String key) {
+        return new StringKey(key).getHash();
+    }
 }
 
 class IntKey {
@@ -24,13 +19,12 @@ class IntKey {
         this.key = key;
     }
 
-
     public int getHash() {
         return key;
     }
 }
 
-class StringKey  {
+class StringKey {
     private String key;
 
     StringKey(String key) {
@@ -39,7 +33,8 @@ class StringKey  {
 
 
     public int getHash() {
-        return (int) (BKDRHash(key));
+        // сдвиг на 1, чтобы избежать отрицательных значений при приведении к int
+        return (int) (BKDRHash(key) >> 1);
     }
 
     public static long BKDRHash(String str) {
@@ -47,6 +42,7 @@ class StringKey  {
         long hash = 0;
 
         for (int i = 0; i < str.length(); i++) {
+
             hash = unsignedInt((hash * seed) + str.charAt(i));
         }
         return hash;
