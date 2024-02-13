@@ -117,6 +117,7 @@ public class DoubleHashTable<K extends HashValue, V> implements Iterable<V> {
             int guessIndex = getFirstHash(tableEntry.basicKey, table.length);
             while (table[guessIndex] != null) {
                 if (table[guessIndex].key.equals(tableEntry.key)) {
+               // Действия при добавлении элемента с повторяющимся ключом не указаны, метод void, поэтому сделал println
                     System.out.println("Элемент E<key, value>: (" + table[guessIndex].key + ", " + table[guessIndex].item +
                             ") заменён на новый, (" + tableEntry.key + ", " + tableEntry.item + ").");
                     break;
