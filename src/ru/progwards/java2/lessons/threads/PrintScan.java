@@ -10,7 +10,7 @@ public class PrintScan {
     static void print(String name, int pages) throws InterruptedException {
         printLock.lock();
         for (int i = 1; i <= pages; i++) {
-            System.out.println("print " + name + " page " + i);
+            System.out.println("print " + name + ", page " + i);
             Thread.sleep(50);
         }
         printLock.unlock();
@@ -19,7 +19,7 @@ public class PrintScan {
     static void scan(String name, int pages) throws InterruptedException {
         scanLock.lock();
         for (int i = 1; i <= pages; i++) {
-            System.out.println("             scan " + name + " page " + i);
+            System.out.println("             scan " + name + ", page " + i);
             Thread.sleep(70);
         }
         scanLock.unlock();
