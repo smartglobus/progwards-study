@@ -4,6 +4,7 @@ import ru.progwards.java2.lessons.synchro.app.Store;
 import ru.progwards.java2.lessons.synchro.app.model.Account;
 import ru.progwards.java2.lessons.synchro.app.service.StoreService;
 
+import java.io.File;
 import java.util.Collection;
 
 public class StoreServiceImpl implements StoreService {
@@ -35,6 +36,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public synchronized void insert(Account account) {
+        // вставляет новый или заменяет
         Store.getStore().put(account.getId(), account);
     }
 
@@ -44,5 +46,21 @@ public class StoreServiceImpl implements StoreService {
             throw new RuntimeException("Account not found by id:" + account.getId());
         }
             this.insert(account);
+    }
+
+    @Override
+    public File setStoreFile(String fileName) {
+
+        return null;
+    }
+
+    @Override
+    public Account accountFromString(String line) {
+        return null;
+    }
+
+    @Override
+    public String accountToString(Account account) {
+        return null;
     }
 }

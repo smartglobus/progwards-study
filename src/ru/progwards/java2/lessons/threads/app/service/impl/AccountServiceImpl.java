@@ -79,23 +79,24 @@ public class AccountServiceImpl implements AccountService {
         Lock lock = new ReentrantLock();
 
         for (int i = 0; i < 5; i++) {
-            int j = i;
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     String threadName = Thread.currentThread().getName();
                     System.out.println(threadName + " started");
-                    for (int k = 0; k < 1000; k++) {
+                    for (int k = 0; k < 10000; k++) {
                         lock.lock();
                         Account account1 = accounts.get((int) (Math.random() * 10));
                         Account account2 = accounts.get((int) (Math.random() * 10));
 
-                        double diff0 = accountService.balance(account1);// - accountService.balance(account2);
+                        double diff0 = accountService.balance(account1)- accountService.balance(account2);
                         accountService.deposit(account1, k % 7);
                         accountService.withdraw(account1, k % 7);
+                        accountService.deposit(account2, k % 11);
+                        accountService.withdraw(account2, k % 11);
+                        double diff1 = accountService.balance(account1) - accountService.balance(account2);
                         lock.unlock();
 
-                        double diff1 = accountService.balance(account1);// - accountService.balance(account2);
                         if (Math.abs(diff0 - diff1) > 0.01d)
                             System.out.println("OMG! diff = " + (diff0 - diff1) + ", " + threadName);
                     }

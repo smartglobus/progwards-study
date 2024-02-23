@@ -2,6 +2,7 @@ package ru.progwards.java2.lessons.synchro.app.service;
 
 import ru.progwards.java2.lessons.synchro.app.model.Account;
 
+import java.io.File;
 import java.util.Collection;
 
 public interface StoreService {
@@ -11,6 +12,7 @@ public interface StoreService {
     public void insert(Account account);
     public void update(Account account);
 
-//    public void writeAccount(String fileName);
-//    public Account readAccount(String id);
+    public File setStoreFile();
+    public Account accountFromString(String line);
+    String accountToString(Account account);
 }
