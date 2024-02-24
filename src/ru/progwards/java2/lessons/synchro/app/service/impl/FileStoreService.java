@@ -28,7 +28,10 @@ public class FileStoreService implements StoreService {
              Scanner scanner = new Scanner(reader)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if (line.contains(id)) account = accountFromString(line);
+                if (line.contains(id)) {
+                    account = accountFromString(line);
+                    break;
+                }
             }
             if (account == null) throw new RuntimeException("Account not found by id:" + id);
         } catch (IOException e) {
@@ -66,21 +69,29 @@ public class FileStoreService implements StoreService {
                 }
                 writer.write(line + "\n");
             }
+            writer.close();
+            reader.close();
             if (!found) throw new RuntimeException("Account not found by id:" + id);
             Files.copy(tmpStoreFilePath, storeFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             Files.delete(tmpStoreFilePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
     public void insert(Account account) {
+        String id = account.getId();
         try (FileReader reader = new FileReader(storeFile);
              Scanner scanner = new Scanner(reader)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if (line.contains(account.getId())) delete(account.getId());
+                if (line.contains(id)) {
+                    reader.close();
+                    delete(account.getId());
+                    break;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,7 +113,9 @@ public class FileStoreService implements StoreService {
                 String line = scanner.nextLine();
                 if (line.contains(account.getId())) {
                     found = true;
+                    reader.close();
                     insert(account);
+                    break;
                 }
             }
             if (!found) throw new RuntimeException("Account not found by id:" + account.getId());
@@ -118,14 +131,18 @@ public class FileStoreService implements StoreService {
 
     @Override
     public Account accountFromString(String line) {
-        // Исключения: строка null, ошибка формата строки, ошибки парсинга
         Account acc = new Account();
-        String[] accArr = line.split("[\\n,]");
-        acc.setId(accArr[0]);
-        acc.setHolder(accArr[1]);
-        acc.setDate(new Date(Long.parseLong(accArr[2])));
-        acc.setPin(Integer.parseInt(accArr[3]));
-        acc.setAmount(Double.parseDouble(accArr[4]));
+        try {
+            String[] accArr = line.split("[\\n,]");
+            if (accArr.length != 5) throw new RuntimeException("Wrong account line format.");
+            acc.setId(accArr[0]);
+            acc.setHolder(accArr[1]);
+            acc.setDate(new Date(Long.parseLong(accArr[2])));
+            acc.setPin(Integer.parseInt(accArr[3]));
+            acc.setAmount(Double.parseDouble(accArr[4]));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
         return acc;
     }
 
@@ -138,6 +155,6 @@ public class FileStoreService implements StoreService {
     public static void main(String[] args) {
         FileStoreService fss = new FileStoreService();
         Account account = fss.accountFromString("e939ab7c-1ac5-4801-b160-bb858e3ea426,Account_2,1740081925963,1002,162519.45510791955\n");
-        System.out.println();
+        System.out.println(account);
     }
 }

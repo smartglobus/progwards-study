@@ -49,7 +49,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public File setStoreFile(String fileName) {
+    public File setStoreFile() {
 
         return null;
     }
