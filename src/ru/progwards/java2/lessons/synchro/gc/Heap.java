@@ -1,10 +1,7 @@
 package ru.progwards.java2.lessons.synchro.gc;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentNavigableMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -16,7 +13,6 @@ public class Heap {
     private static ConcurrentNavigableMap<Integer, Integer> ocupReg = new ConcurrentSkipListMap<>();// <pos, size>
     private volatile List<MemBlock> freeReg = new CopyOnWriteArrayList<>();
     private byte label = 1;
-    private Defrag defragThread;
 
     Heap(int maxHeapSize) {
         bytes = new byte[maxHeapSize];
@@ -40,8 +36,14 @@ public class Heap {
     // Возвращает "указатель" - индекс первой ячейки в массиве, размещенного блока.
     public int malloc(int size) throws OutOfMemoryException {
 
-        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 10);
-        if (n == 0) defragDaemon();
+        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 200);
+        if (n == 0) {
+            try {
+                defragDaemon();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         malLock.lock();
 //        if (n == 0) defrag();
@@ -105,23 +107,20 @@ public class Heap {
 //                System.out.println("           Successful free ptr " + ptr + "  " + Thread.currentThread().getName());
                 for (int i = ptr; i < ptr + mbSize; i++) bytes[i] = 0;
             } else {
-                noFaults = false;
+//                noFaults = false;
                 throw new InvalidPointerException("Неверный указатель на блок ptr = " + ptr + "  " + Thread.currentThread().getName()
                         + "    Размер bytes = " + bytes.length + ", freeReg = " + freeReg.size() + ", ocupReg = " + ocupReg.size());
             }
         } finally {
-            if (!noFaults) System.out.println("freeLock.unlock();");
+//            if (!noFaults) System.out.println("freeLock.unlock();");
             freeLock.unlock();
         }
     }
 
-    Lock defLock = new ReentrantLock();
 
     //Метод осуществляет дефрагментацию кучи - ищет смежные свободные блоки,
     // границы которых соприкасаются и которые можно слить в один.
     public void defrag() {
-//        if (defLock.tryLock()) {
-//        System.out.println("Вызван defrag()");
         freeReg.sort(Comparator.comparing(o -> o.pos));
 
         for (int i = 1; i < freeReg.size(); i++) {
@@ -131,30 +130,27 @@ public class Heap {
                 i--;
             }
         }
-//            defLock.unlock();
-//        }
     }
 
     Lock daemonLock = new ReentrantLock();
 
-    private void defragDaemon() {
+    private void defragDaemon() throws InterruptedException {
 
-        if (daemonLock.tryLock()) {
+        if (daemonLock.tryLock(5, TimeUnit.MILLISECONDS)) {
             Defrag defragThread = new Defrag();
-//            defragThread.setPriority(4);
+            defragThread.setPriority(Thread.MAX_PRIORITY);
             defragThread.setDaemon(true);
             defragThread.start();
             while (defragThread.isAlive()) {
-                try {
-                    System.out.println("defrag alive" + "   " + Thread.currentThread().getName());
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                System.out.println("defrag alive" + "   " + Thread.currentThread().getName());
+                Thread.sleep(1);
             }
+            Thread.sleep(5);
             daemonLock.unlock();
         }
     }
+
+    Lock defLock = new ReentrantLock();
 
     class Defrag extends Thread {
 
@@ -162,17 +158,17 @@ public class Heap {
         public void run() {
 //            System.out.println("defrag on"+ "   "+Thread.currentThread().getName());
             freeReg.sort(Comparator.comparing(o -> o.pos));
-            if (defLock.tryLock()) {
-                for (int i = 1; i < freeReg.size(); i++) {
 
+            for (int i = 1; i < freeReg.size(); i++) {
+                if (defLock.tryLock()) {
                     if (freeReg.get(i - 1).pos + freeReg.get(i - 1).size == freeReg.get(i).pos) {
                         freeReg.get(i - 1).size += freeReg.get(i).size;
                         freeReg.remove(i);
                         i--;
 //                        System.out.println("!!!->->->->->!!!");
                     }
+                    defLock.unlock();
                 }
-                defLock.unlock();
             }
 //            System.out.println("defrag off"+ "   "+Thread.currentThread().getName());
         }
@@ -214,11 +210,10 @@ public class Heap {
     }
 
 
-
     Lock runLock = new ReentrantLock();
 
     public static void main(String[] args) throws InterruptedException {
-        Heap heap = new Heap(100000);
+        Heap heap = new Heap(20000);
 
         List<HeapTestThread> threads = new ArrayList<>();
 
@@ -232,7 +227,7 @@ public class Heap {
 
         for (HeapTestThread h : threads) h.join();
         System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime));
-        System.out.println("Done without faults: " + heap.noFaults);
+//        System.out.println("Done without faults: " + heap.noFaults);
     }
 }
 
@@ -314,23 +309,23 @@ class HeapTestThread extends Thread {
 
             heap.runLock.lock();
             heap.free(pointers.get((int) (Math.random() * 8)));
-            Thread.sleep(1);
+//            Thread.sleep(1);
             heap.runLock.unlock();
 
             heap.runLock.lock();
             heap.free(pointers.get((int) (Math.random() * 8)));
-            Thread.sleep(1);
+//            Thread.sleep(1);
             heap.runLock.unlock();
 
 
             heap.runLock.lock();
             heap.free(pointers.get((int) (Math.random() * 8)));
-            Thread.sleep(1);
+//            Thread.sleep(1);
             heap.runLock.unlock();
 
             heap.runLock.lock();
             heap.free(pointers.get((int) (Math.random() * 8)));
-            Thread.sleep(1);
+//            Thread.sleep(1);
             heap.runLock.unlock();
 
 
