@@ -47,14 +47,12 @@ public class Heap {
 
         malLock.lock();
 //        if (n == 0) defrag();
-//        System.out.println(Thread.currentThread().getName() + "  enter");
         int bIndex = findSpace(size);
         if (bIndex == -1) {
             System.out.println("Вызван compact()");
             compact();
             bIndex = findSpace(size);
         }
-//        System.out.println(Thread.currentThread().getName() + "  exit\n");
 
         malLock.unlock();
 
@@ -74,7 +72,7 @@ public class Heap {
     }
 
     private void pushMB(MemBlock b, int size) {
-        ocupReg.put(b.pos, size);// b после блокировки в malloc уникален
+        ocupReg.put(b.pos, size);
 
         for (int i = b.pos; i < b.pos + size; i++)
             bytes[i] = label;// визуализация разницы блоков для наглядности в отладке
@@ -93,26 +91,21 @@ public class Heap {
     // блока, а не его середине, или вообще, уже свободному.
     List<Integer> pointers = new CopyOnWriteArrayList<>();// отладка. Список актуальных указателей на размещенные блоки
     Lock freeLock = new ReentrantLock();
-    boolean noFaults = true;// отладка
 
     public void free(int ptr) throws InvalidPointerException {
 
         try {
             freeLock.lock();
-//            System.out.println("            Trying to free ptr " + ptr + "  " + Thread.currentThread().getName());
             if (ocupReg.containsKey(ptr)) {
                 int mbSize = ocupReg.remove(ptr);
                 freeReg.add(new MemBlock(ptr, mbSize));
                 pointers.remove((Integer) ptr);// отладка
-//                System.out.println("           Successful free ptr " + ptr + "  " + Thread.currentThread().getName());
                 for (int i = ptr; i < ptr + mbSize; i++) bytes[i] = 0;
             } else {
-//                noFaults = false;
                 throw new InvalidPointerException("Неверный указатель на блок ptr = " + ptr + "  " + Thread.currentThread().getName()
                         + "    Размер bytes = " + bytes.length + ", freeReg = " + freeReg.size() + ", ocupReg = " + ocupReg.size());
             }
         } finally {
-//            if (!noFaults) System.out.println("freeLock.unlock();");
             freeLock.unlock();
         }
     }
@@ -142,7 +135,6 @@ public class Heap {
             defragThread.setDaemon(true);
             defragThread.start();
             while (defragThread.isAlive()) {
-//                System.out.println("defrag alive" + "   " + Thread.currentThread().getName());
                 Thread.sleep(1);
             }
             Thread.sleep(5);
@@ -156,7 +148,6 @@ public class Heap {
 
         @Override
         public void run() {
-//            System.out.println("defrag on"+ "   "+Thread.currentThread().getName());
             freeReg.sort(Comparator.comparing(o -> o.pos));
 
             for (int i = 1; i < freeReg.size(); i++) {
@@ -165,12 +156,10 @@ public class Heap {
                         freeReg.get(i - 1).size += freeReg.get(i).size;
                         freeReg.remove(i);
                         i--;
-//                        System.out.println("!!!->->->->->!!!");
                     }
                     defLock.unlock();
                 }
             }
-//            System.out.println("defrag off"+ "   "+Thread.currentThread().getName());
         }
     }
 
@@ -227,7 +216,6 @@ public class Heap {
 
         for (HeapTestThread h : threads) h.join();
         System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime));
-//        System.out.println("Done without faults: " + heap.noFaults);
     }
 }
 
