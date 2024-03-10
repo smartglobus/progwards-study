@@ -6,13 +6,13 @@ import java.io.File;
 import java.util.Collection;
 
 public interface StoreService {
-    public Account get(String id);
-    public Collection<Account> get();
-    public void delete(String id);
-    public void insert(Account account);
-    public void update(Account account);
+    Account get(String id);
+    Collection<Account> get();
+    void delete(String id);
+    void insert(Account account);
+    void update(Account account);
 
-    public File setStoreFile();
-    public Account accountFromString(String line);
+    File setStoreFile();
+    Account accountFromString(String line);
     String accountToString(Account account);
 }

@@ -1,15 +1,11 @@
 package ru.progwards.java2.lessons.threads.app.service.impl;
 
-import ru.progwards.java2.lessons.threads.app.Store;
 import ru.progwards.java2.lessons.threads.app.model.Account;
 import ru.progwards.java2.lessons.threads.app.service.AccountService;
 import ru.progwards.java2.lessons.threads.app.service.StoreService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TransferQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -31,45 +27,44 @@ public class AccountServiceImpl implements AccountService {
         return account.getAmount();
     }
 
+    Lock serviceLock = new ReentrantLock();
+
     @Override
     public void deposit(Account account, double amount) {
-        Lock lock = new ReentrantLock();
-        lock.lock();
+        serviceLock.lock();
         double sum = account.getAmount() + amount;
         account.setAmount(sum);
         service.update(account);
-        lock.unlock();
+        serviceLock.unlock();
     }
 
     @Override
     public void withdraw(Account account, double amount) {
-        Lock lock = new ReentrantLock();
-        lock.lock();
+        serviceLock.lock();
         double sum = account.getAmount() - amount;
         if (sum < 0) {
-            lock.unlock();
+            serviceLock.unlock();
             throw new RuntimeException("Not enough money");
         }
         account.setAmount(sum);
         service.update(account);
-        lock.unlock();
+        serviceLock.unlock();
     }
 
     @Override
     public void transfer(Account from, Account to, double amount) {
-        Lock lock = new ReentrantLock();
-        lock.lock();
+        serviceLock.lock();
         double fromSum = from.getAmount() - amount;
         double toSum = to.getAmount() + amount;
         if (fromSum < 0) {
-            lock.unlock();
+            serviceLock.unlock();
             throw new RuntimeException("Not enough money");
         }
         from.setAmount(fromSum);
         service.update(from);
         to.setAmount(toSum);
         service.update(to);
-        lock.unlock();
+        serviceLock.unlock();
     }
 
     public static void main(String[] args) {
@@ -79,17 +74,19 @@ public class AccountServiceImpl implements AccountService {
         Lock lock = new ReentrantLock();
 
         for (int i = 0; i < 5; i++) {
+            long startTime = System.currentTimeMillis();
             Thread thread = new Thread(new Runnable() {
+
                 @Override
                 public void run() {
                     String threadName = Thread.currentThread().getName();
                     System.out.println(threadName + " started");
-                    for (int k = 0; k < 10000; k++) {
-                        lock.lock();
+                    for (int k = 0; k < 100000; k++) {
+
                         Account account1 = accounts.get((int) (Math.random() * 10));
                         Account account2 = accounts.get((int) (Math.random() * 10));
-
-                        double diff0 = accountService.balance(account1)- accountService.balance(account2);
+                        lock.lock();
+                        double diff0 = accountService.balance(account1) - accountService.balance(account2);
                         accountService.deposit(account1, k % 7);
                         accountService.withdraw(account1, k % 7);
                         accountService.deposit(account2, k % 11);
@@ -100,6 +97,7 @@ public class AccountServiceImpl implements AccountService {
                         if (Math.abs(diff0 - diff1) > 0.01d)
                             System.out.println("OMG! diff = " + (diff0 - diff1) + ", " + threadName);
                     }
+                    System.out.println(threadName + " finish time " + (System.currentTimeMillis() - startTime));
                 }
             });
             thread.start();

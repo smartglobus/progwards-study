@@ -9,13 +9,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class FileStoreService implements StoreService {
     private File storeFile;
+    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     public FileStoreService() {
         storeFile = setStoreFile();
@@ -23,6 +23,7 @@ public class FileStoreService implements StoreService {
 
     @Override
     public Account get(String id) {
+        readWriteLock.readLock().lock();
         Account account = null;
         try (FileReader reader = new FileReader(storeFile);
              Scanner scanner = new Scanner(reader)) {
@@ -36,12 +37,15 @@ public class FileStoreService implements StoreService {
             if (account == null) throw new RuntimeException("Account not found by id:" + id);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            readWriteLock.readLock().unlock();
         }
         return account;
     }
 
     @Override
     public Collection<Account> get() {
+        readWriteLock.readLock().lock();
         Collection<Account> accounts = new ArrayList<>();
         try (FileReader reader = new FileReader(storeFile);
              Scanner scanner = new Scanner(reader)) {
@@ -49,14 +53,19 @@ public class FileStoreService implements StoreService {
             if (accounts.isEmpty()) throw new RuntimeException("Store is empty");
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            readWriteLock.readLock().unlock();
         }
+
         return accounts;
     }
 
     @Override
     public void delete(String id) {
+        readWriteLock.writeLock().lock();
         Path tmpStoreFilePath = Paths.get("tmpTestFile.csv");
         boolean found = false;
+
         try (FileWriter writer = new FileWriter(tmpStoreFilePath.toString());
              FileReader reader = new FileReader(storeFile);
              Scanner scanner = new Scanner(reader)) {
@@ -76,12 +85,14 @@ public class FileStoreService implements StoreService {
             Files.delete(tmpStoreFilePath);
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            readWriteLock.writeLock().unlock();
         }
-
     }
 
     @Override
     public void insert(Account account) {
+        readWriteLock.readLock().lock();
         String id = account.getId();
         try (FileReader reader = new FileReader(storeFile);
              Scanner scanner = new Scanner(reader)) {
@@ -89,6 +100,7 @@ public class FileStoreService implements StoreService {
                 String line = scanner.nextLine();
                 if (line.contains(id)) {
                     reader.close();
+                    readWriteLock.readLock().unlock();
                     delete(account.getId());
                     break;
                 }
@@ -97,15 +109,19 @@ public class FileStoreService implements StoreService {
             e.printStackTrace();
         }
 
+        readWriteLock.writeLock().lock();
         try (FileWriter writer = new FileWriter(storeFile, true)) {
             writer.write(accountToString(account));
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            readWriteLock.writeLock().unlock();
         }
     }
 
     @Override
     public void update(Account account) {
+        readWriteLock.readLock().lock();
         boolean found = false;
         try (FileReader reader = new FileReader(storeFile);
              Scanner scanner = new Scanner(reader)) {
@@ -114,6 +130,7 @@ public class FileStoreService implements StoreService {
                 if (line.contains(account.getId())) {
                     found = true;
                     reader.close();
+                    readWriteLock.readLock().unlock();
                     insert(account);
                     break;
                 }
@@ -122,6 +139,8 @@ public class FileStoreService implements StoreService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     @Override
@@ -154,7 +173,22 @@ public class FileStoreService implements StoreService {
 
     public static void main(String[] args) {
         FileStoreService fss = new FileStoreService();
-        Account account = fss.accountFromString("e939ab7c-1ac5-4801-b160-bb858e3ea426,Account_2,1740081925963,1002,162519.45510791955\n");
-        System.out.println(account);
+        List<Account> accounts = new ArrayList<>(fss.get());
+        List<String> idList = new ArrayList<>();
+        for (Account acc : accounts) {
+            idList.add(acc.getId());
+        }
+        for (int i = 0; i < 20; i++) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Account account1 = fss.get(idList.get((int) (Math.random() * 10)));
+                    fss.update(account1);
+                    System.out.println(account1);
+                }
+            });
+            thread.start();
+        }
+
     }
 }
