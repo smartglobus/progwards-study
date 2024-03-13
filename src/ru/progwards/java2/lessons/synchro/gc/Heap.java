@@ -10,13 +10,15 @@ import java.util.concurrent.locks.ReentrantLock;
 // Нужно будет написать алгоритм, который выделяет и освобождает память (ячейки в массиве) и делает дефрагментацию.
 public class Heap {
     private byte[] bytes;
-    private static ConcurrentNavigableMap<Integer, Integer> ocupReg = new ConcurrentSkipListMap<>();// <pos, size>
-    private volatile List<MemBlock> freeReg = new CopyOnWriteArrayList<>();
+    private ConcurrentNavigableMap<Integer, Integer> ocupReg = new ConcurrentSkipListMap<>();// <pos, size>
+    private List<MemBlock> freeReg = new CopyOnWriteArrayList<>();
+    private Lock freeRegLock = new ReentrantLock();
     private byte label = 1;
 
     Heap(int maxHeapSize) {
         bytes = new byte[maxHeapSize];
         freeReg.add(new MemBlock(0, maxHeapSize));
+        defragDaemon();
     }
 
     private class MemBlock {
@@ -35,15 +37,7 @@ public class Heap {
     // Соответственно это должен быть непрерывный блок (последовательность ячеек), которые на момент выделения свободны.
     // Возвращает "указатель" - индекс первой ячейки в массиве, размещенного блока.
     public int malloc(int size) throws OutOfMemoryException {
-
-        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 200);
-        if (n == 0) {
-            try {
-                defragDaemon();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        int n = Math.abs(ThreadLocalRandom.current().nextInt() % 20);
 
         malLock.lock();
 //        if (n == 0) defrag();
@@ -53,7 +47,6 @@ public class Heap {
             compact();
             bIndex = findSpace(size);
         }
-
         malLock.unlock();
 
         if (bIndex != -1) return bIndex;
@@ -77,36 +70,36 @@ public class Heap {
         for (int i = b.pos; i < b.pos + size; i++)
             bytes[i] = label;// визуализация разницы блоков для наглядности в отладке
         label++;
-
+        freeRegLock.lock();
         if (b.size == size) {
             freeReg.remove(b);
         } else {
             b.pos += size;
             b.size -= size;
         }
+        freeRegLock.unlock();
     }
 
     // Метод "удаляет", т.е. помечает как свободный блок памяти по "указателю".
     // Проверять валидность указателя - т.е. то, что он соответствует началу ранее выделенного
     // блока, а не его середине, или вообще, уже свободному.
     List<Integer> pointers = new CopyOnWriteArrayList<>();// отладка. Список актуальных указателей на размещенные блоки
-    Lock freeLock = new ReentrantLock();
 
     public void free(int ptr) throws InvalidPointerException {
 
         try {
-            freeLock.lock();
+            freeRegLock.lock();
             if (ocupReg.containsKey(ptr)) {
                 int mbSize = ocupReg.remove(ptr);
                 freeReg.add(new MemBlock(ptr, mbSize));
-                pointers.remove((Integer) ptr);// отладка
                 for (int i = ptr; i < ptr + mbSize; i++) bytes[i] = 0;
             } else {
-                throw new InvalidPointerException("Неверный указатель на блок ptr = " + ptr + "  " + Thread.currentThread().getName()
-                        + "    Размер bytes = " + bytes.length + ", freeReg = " + freeReg.size() + ", ocupReg = " + ocupReg.size());
+                throw new InvalidPointerException("\nНеверный указатель на блок ptr = " + ptr + "  " + Thread.currentThread().getName()
+                        + "    Размер bytes = " + bytes.length + ", freeReg = " + freeReg.size() + ", ocupReg = " + ocupReg.size()
+                        + ", pointers = " + pointers.size());
             }
         } finally {
-            freeLock.unlock();
+            freeRegLock.unlock();
         }
     }
 
@@ -125,41 +118,33 @@ public class Heap {
         }
     }
 
-    Lock daemonLock = new ReentrantLock();
+    private void defragDaemon() {
 
-    private void defragDaemon() throws InterruptedException {
-
-        if (daemonLock.tryLock(5, TimeUnit.MILLISECONDS)) {
-            Defrag defragThread = new Defrag();
-            defragThread.setPriority(Thread.MAX_PRIORITY);
-            defragThread.setDaemon(true);
-            defragThread.start();
-            while (defragThread.isAlive()) {
-                Thread.sleep(1);
-            }
-            Thread.sleep(5);
-            daemonLock.unlock();
-        }
+        Defrag defragThread = new Defrag();
+//        defragThread.setPriority(3);
+        defragThread.setDaemon(true);
+        defragThread.start();
     }
 
-    Lock defLock = new ReentrantLock();
 
     class Defrag extends Thread {
 
         @Override
         public void run() {
+
             freeReg.sort(Comparator.comparing(o -> o.pos));
 
             for (int i = 1; i < freeReg.size(); i++) {
-                if (defLock.tryLock()) {
+                if (freeRegLock.tryLock()) {
                     if (freeReg.get(i - 1).pos + freeReg.get(i - 1).size == freeReg.get(i).pos) {
                         freeReg.get(i - 1).size += freeReg.get(i).size;
                         freeReg.remove(i);
                         i--;
                     }
-                    defLock.unlock();
+                    freeRegLock.unlock();
                 }
             }
+            defragDaemon();
         }
     }
 
@@ -201,23 +186,36 @@ public class Heap {
 
     Lock runLock = new ReentrantLock();
 
-    public static void main(String[] args) throws InterruptedException {
-        Heap heap = new Heap(20000);
+    public static void main(String[] args) {
 
-        List<HeapTestThread> threads = new ArrayList<>();
+        while (true) {
+            Heap heap = new Heap(13000);
 
-        long startTime = System.currentTimeMillis();
+            List<HeapTestThread> threads = new ArrayList<>();
 
-        for (int i = 0; i < 500; i++) {
-            HeapTestThread hTst = new HeapTestThread(heap);
-            threads.add(hTst);
-            hTst.start();
+            long startTime = System.currentTimeMillis();
+            try {
+                for (int i = 0; i < 500; i++) {
+                    HeapTestThread hTst = new HeapTestThread(heap);
+                    threads.add(hTst);
+                    hTst.start();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            for (HeapTestThread h : threads) {
+                try {
+                    h.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime));
         }
-
-        for (HeapTestThread h : threads) h.join();
-        System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime));
     }
 }
+
 
 class OutOfMemoryException extends RuntimeException {
     @Override
@@ -241,7 +239,7 @@ class InvalidPointerException extends RuntimeException {
 
 class HeapTestThread extends Thread {
     Heap heap;
-    List<Integer> pointers; // список актуальных указателей на размещенные блоки
+    volatile List<Integer> pointers; // список актуальных указателей на размещенные блоки
 
     public HeapTestThread(Heap heap) {
         this.heap = heap;
@@ -249,73 +247,58 @@ class HeapTestThread extends Thread {
     }
 
     @Override
-    public void run() {
+    public void run() throws InvalidPointerException {
 
         try {
             Thread.sleep((long) (Math.random() * 10));
-
             int p1 = heap.malloc(5);
             pointers.add(p1);
-//            System.out.println(" add 5, ptr " + p1 + "  " + Thread.currentThread().getName());
             Thread.sleep(1);
 
             int p2 = heap.malloc(2);
             pointers.add(p2);
-//            System.out.println(" add 2, ptr " + p2 + "  " + Thread.currentThread().getName());
             Thread.sleep(1);
 
             int p3 = heap.malloc(3);
             pointers.add(p3);
-//            System.out.println(" add 3, ptr " + p3 + "  " + Thread.currentThread().getName());
             Thread.sleep(1);
 
             int p4 = heap.malloc(6);
             pointers.add(p4);
-//            System.out.println(" add 6, ptr " + p4 + "  " + Thread.currentThread().getName());
             Thread.sleep(1);
 
             int p5 = heap.malloc(1);
             pointers.add(p5);
-//            System.out.println(" add 1, ptr " + p5 + "  " + Thread.currentThread().getName());
             Thread.sleep(1);
 
             int p6 = heap.malloc(7);
             pointers.add(p6);
-//            System.out.println(" add 7, ptr " + p6 + "  " + Thread.currentThread().getName());
             Thread.sleep(1);
 
             int p7 = heap.malloc(3);
             pointers.add(p7);
-//            System.out.println(" add 3, ptr " + p7 + "  " + Thread.currentThread().getName());
             Thread.sleep(1);
 
             int p8 = heap.malloc(4);
             pointers.add(p8);
-//            System.out.println(" add 4, ptr " + p8 + "  " + Thread.currentThread().getName());
-            Thread.sleep(1);
 
 
             heap.runLock.lock();
-            heap.free(pointers.get((int) (Math.random() * 8)));
-//            Thread.sleep(1);
+            heap.free(pointers.remove((int) (Math.random() * 2)));
             heap.runLock.unlock();
 
             heap.runLock.lock();
-            heap.free(pointers.get((int) (Math.random() * 8)));
-//            Thread.sleep(1);
+            heap.free(pointers.remove((int) (Math.random() * 2)));
             heap.runLock.unlock();
 
 
             heap.runLock.lock();
-            heap.free(pointers.get((int) (Math.random() * 8)));
-//            Thread.sleep(1);
+            heap.free(pointers.remove((int) (Math.random() * 2)));
             heap.runLock.unlock();
 
             heap.runLock.lock();
-            heap.free(pointers.get((int) (Math.random() * 8)));
-//            Thread.sleep(1);
+            heap.free(pointers.remove((int) (Math.random() * 2)));
             heap.runLock.unlock();
-
 
         } catch (InvalidPointerException e) {
             System.out.println(e.getMessage());
@@ -323,6 +306,5 @@ class HeapTestThread extends Thread {
             e.printStackTrace();
         }
     }
-
 }
 
