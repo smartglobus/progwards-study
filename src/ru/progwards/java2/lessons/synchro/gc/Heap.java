@@ -14,6 +14,7 @@ public class Heap {
     private List<MemBlock> freeReg = new CopyOnWriteArrayList<>();
     private Lock freeRegLock = new ReentrantLock();
     private byte label = 1;
+    private static int defragCount = 0;
 
     Heap(int maxHeapSize) {
         bytes = new byte[maxHeapSize];
@@ -121,7 +122,7 @@ public class Heap {
     private void defragDaemon() {
 
         Defrag defragThread = new Defrag();
-//        defragThread.setPriority(3);
+//        defragThread.setPriority(7);
         defragThread.setDaemon(true);
         defragThread.start();
     }
@@ -134,16 +135,18 @@ public class Heap {
 
             freeReg.sort(Comparator.comparing(o -> o.pos));
 
-            for (int i = 1; i < freeReg.size(); i++) {
+            for (int i = 1; i < freeReg.size(); ) {
                 if (freeRegLock.tryLock()) {
                     if (freeReg.get(i - 1).pos + freeReg.get(i - 1).size == freeReg.get(i).pos) {
                         freeReg.get(i - 1).size += freeReg.get(i).size;
                         freeReg.remove(i);
                         i--;
                     }
+                    i++;
                     freeRegLock.unlock();
                 }
             }
+            defragCount++;
             defragDaemon();
         }
     }
@@ -211,7 +214,10 @@ public class Heap {
                     e.printStackTrace();
                 }
             }
-            System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime));
+            System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime) + "; defrag count: " + defragCount);
+            defragCount = 0;
+            int n = Math.abs(ThreadLocalRandom.current().nextInt() % 20);
+            if (n == 0) System.gc();
         }
     }
 }
