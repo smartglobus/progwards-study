@@ -14,6 +14,7 @@ public class Heap {
     private List<MemBlock> freeReg = new CopyOnWriteArrayList<>();
     private Lock freeRegLock = new ReentrantLock();
     private byte label = 1;
+    private static int defragCountStatic = 0;
     int defragCount = 0;
 
     Heap(int maxHeapSize) {
@@ -122,7 +123,7 @@ public class Heap {
     private void defragDaemon() {
 
         Defrag defragThread = new Defrag();
-//        defragThread.setPriority(7);
+        defragThread.setPriority(3);
         defragThread.setDaemon(true);
         defragThread.start();
     }
@@ -147,6 +148,7 @@ public class Heap {
                 }
             }
             defragCount++;
+            defragCountStatic++;
             defragDaemon();
         }
     }
@@ -190,8 +192,8 @@ public class Heap {
     Lock runLock = new ReentrantLock();
 
     public static void main(String[] args) {
-        Heap heap = new Heap(130000);
 //        while (true) {
+//            Heap heap = new Heap(13000);
 //
 //
 //            List<HeapTestThread> threads = new ArrayList<>();
@@ -215,11 +217,12 @@ public class Heap {
 //                }
 //            }
 //            System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime));// + "; defrag count: " + defragCount);
-////            defragCount = 0;
+//            defragCountStatic = 0;
 //            int n = Math.abs(ThreadLocalRandom.current().nextInt() % 20);
 //            if (n == 0) System.gc();
 //        }
 
+        Heap heap = new Heap(130000);
         ExecutorService executorService = Executors.newFixedThreadPool(500);
         long startTime = System.currentTimeMillis();
         List<Future<Integer>> futures = new ArrayList<>();
