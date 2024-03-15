@@ -14,7 +14,7 @@ public class Heap {
     private List<MemBlock> freeReg = new CopyOnWriteArrayList<>();
     private Lock freeRegLock = new ReentrantLock();
     private byte label = 1;
-    private static int defragCount = 0;
+    int defragCount = 0;
 
     Heap(int maxHeapSize) {
         bytes = new byte[maxHeapSize];
@@ -190,35 +190,52 @@ public class Heap {
     Lock runLock = new ReentrantLock();
 
     public static void main(String[] args) {
+        Heap heap = new Heap(130000);
+//        while (true) {
+//
+//
+//            List<HeapTestThread> threads = new ArrayList<>();
+//
+//            long startTime = System.currentTimeMillis();
+//            try {
+//                for (int i = 0; i < 500; i++) {
+//                    HeapTestThread hTst = new HeapTestThread(heap);
+//                    threads.add(hTst);
+//                    hTst.start();
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            for (HeapTestThread h : threads) {
+//                try {
+//                    h.join();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime));// + "; defrag count: " + defragCount);
+////            defragCount = 0;
+//            int n = Math.abs(ThreadLocalRandom.current().nextInt() % 20);
+//            if (n == 0) System.gc();
+//        }
 
-        while (true) {
-            Heap heap = new Heap(13000);
-
-            List<HeapTestThread> threads = new ArrayList<>();
-
-            long startTime = System.currentTimeMillis();
+        ExecutorService executorService = Executors.newFixedThreadPool(500);
+        long startTime = System.currentTimeMillis();
+        List<Future<Integer>> futures = new ArrayList<>();
+        for (int i = 0; i < 5000; i++) {
+            Future<Integer> thread1Future = executorService.submit(new HeapTestThread1(heap));
+            futures.add(thread1Future);
+        }
+        for (var f : futures) {
             try {
-                for (int i = 0; i < 500; i++) {
-                    HeapTestThread hTst = new HeapTestThread(heap);
-                    threads.add(hTst);
-                    hTst.start();
-                }
-            } catch (Exception e) {
+                System.out.println("defrag count: " + f.get());
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
-
-            for (HeapTestThread h : threads) {
-                try {
-                    h.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            System.out.println("\nВремя: " + (System.currentTimeMillis() - startTime) + "; defrag count: " + defragCount);
-            defragCount = 0;
-            int n = Math.abs(ThreadLocalRandom.current().nextInt() % 20);
-            if (n == 0) System.gc();
         }
+        System.out.println("\nОбщее время: " + (System.currentTimeMillis() - startTime));
+        executorService.shutdown();
     }
 }
 
@@ -254,7 +271,6 @@ class HeapTestThread extends Thread {
 
     @Override
     public void run() throws InvalidPointerException {
-
         try {
             Thread.sleep((long) (Math.random() * 10));
             int p1 = heap.malloc(5);
@@ -314,3 +330,76 @@ class HeapTestThread extends Thread {
     }
 }
 
+class HeapTestThread1 implements Callable<Integer> {
+    Heap heap;
+    volatile List<Integer> pointers; // список актуальных указателей на размещенные блоки
+
+    public HeapTestThread1(Heap heap) {
+        this.heap = heap;
+        this.pointers = heap.pointers;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        System.out.println(Thread.currentThread().getName());
+
+        try {
+            Thread.sleep((long) (Math.random() * 10));
+            int p1 = heap.malloc(5);
+            pointers.add(p1);
+            Thread.sleep(1);
+
+            int p2 = heap.malloc(2);
+            pointers.add(p2);
+            Thread.sleep(1);
+
+            int p3 = heap.malloc(3);
+            pointers.add(p3);
+            Thread.sleep(1);
+
+            int p4 = heap.malloc(6);
+            pointers.add(p4);
+            Thread.sleep(1);
+
+            int p5 = heap.malloc(1);
+            pointers.add(p5);
+            Thread.sleep(1);
+
+            int p6 = heap.malloc(7);
+            pointers.add(p6);
+            Thread.sleep(1);
+
+            int p7 = heap.malloc(3);
+            pointers.add(p7);
+            Thread.sleep(1);
+
+            int p8 = heap.malloc(4);
+            pointers.add(p8);
+
+
+            heap.runLock.lock();
+            heap.free(pointers.remove((int) (Math.random() * 2)));
+            heap.runLock.unlock();
+
+            heap.runLock.lock();
+            heap.free(pointers.remove((int) (Math.random() * 2)));
+            heap.runLock.unlock();
+
+
+            heap.runLock.lock();
+            heap.free(pointers.remove((int) (Math.random() * 2)));
+            heap.runLock.unlock();
+
+            heap.runLock.lock();
+            heap.free(pointers.remove((int) (Math.random() * 2)));
+            heap.runLock.unlock();
+
+        } catch (InvalidPointerException e) {
+            System.out.println(e.getMessage());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return heap.defragCount;
+    }
+}
