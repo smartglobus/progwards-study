@@ -34,6 +34,8 @@ public class CleanedGPS_Speed implements SpeedCalculator {
 
     @Override
     public double getSpeed(GPS newPos) {
+        if (newPos == null) throw new NullPointerException("GPS signal is lost");
+
         // проброс первого отсчёта, чтобы не портить статистику
         if (lastPos == null) {
             lastPos = newPos;
