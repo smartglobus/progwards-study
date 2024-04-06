@@ -1,7 +1,9 @@
 package ru.progwards.java2.lessons.patterns.GPS_Filter;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 public class CleanedGPS_Speed implements SpeedCalculator {
     private GPS_Speed speedometer;
@@ -36,12 +38,6 @@ public class CleanedGPS_Speed implements SpeedCalculator {
     public double getSpeed(GPS newPos) {
         if (newPos == null) throw new NullPointerException("GPS signal is lost");
 
-        // проброс первого отсчёта, чтобы не портить статистику
-        if (lastPos == null) {
-            lastPos = newPos;
-            return 0;
-        }
-
         double speed = speedometer.getSpeed(lastPos, newPos);
         if (last50speeds.size() < 50) {
             checkED(speed);
@@ -52,9 +48,20 @@ public class CleanedGPS_Speed implements SpeedCalculator {
                 saveLastSpeed(speed);
                 lastPos = newPos;
             } else {
-                speed = last50speeds.peekLast();
+                System.out.printf("Skipping suspicious GPS point! Speed = %.2f\n", speed);
+                speed = last50speeds.peekLast();// возврат последнего значения скорости
             }
         }
         return speed;
+    }
+
+    public static void main(String[] args) {
+        GPS_Points_Source pointsSource = new GPS_Points_Source();
+
+        List<GPS> gpsList = new ArrayList<>();
+        while (pointsSource.hasNextPoint()) {
+            gpsList.add(pointsSource.getNextPoint());
+        }
+        gpsList.forEach(System.out::println);
     }
 }

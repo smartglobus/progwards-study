@@ -18,17 +18,17 @@ public class RandomCurveGenerator {
         double d3 = random.nextDouble();
 
         for (int i = 1000; i > 0; i--) {
-            double rnd1 = Math.sin((i * d1) + r2);
-            double rnd2 = Math.sin((i * d2 + r3));
-            double rnd3 = Math.sin((i * d3 + r1));
-            curvePoints.add(rnd1 + rnd2 + rnd3 + (random.nextDouble() / 2 - 0.25d));// +- 3.25
+            double rnd1 = Math.sin(i * d1 + r2);
+            double rnd2 = Math.sin(i * d2 + r3);
+            double rnd3 = Math.sin(i * d3 + r1);
+            curvePoints.add(rnd1 + rnd2 + rnd3 + 3 + random.nextDouble() / 2);// диапазон 0...6.5
         }
         return curvePoints;
     }
 
     public static void main(String[] args) {
         for (Double p : tripleSinus()) {
-            int spaces = (int) (p * 10) + 60;
+            int spaces = (int) (p * 10);
             for (int i = 0; i < spaces; i++) {
                 System.out.print(" ");
             }
