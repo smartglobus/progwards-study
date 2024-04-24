@@ -7,9 +7,9 @@ public class ExternalSort {
     private static final long SUB_ARRAY_STEP = 20000 * 12;
 
     static class SubMin {
-        int value;
-        long pointer;
-        long nextSubPointer;
+        int value; // текущее минимальное значение подмассива
+        long pointer; // текущий указатель
+        long nextSubPointer; // указатель начала следующего подмассива
 
         private SubMin(int value, long position) {
             this.value = value;
@@ -57,7 +57,7 @@ public class ExternalSort {
         }
     }
 
-
+// сортировка подмассивами по 10000 значений
     private static File sort_by_10000(String fileName) {
         File result = new File("sort_by_10000.txt");
 
@@ -79,6 +79,7 @@ public class ExternalSort {
         return result;
     }
 
+    // сортировка подмассивами по 20000 значений, с приведением к одинаковой длине строки
     private static File sort_by_20000(File fileName) {
         File result = new File("sort_by_20000.txt");
         Deque<Integer> ints = new ArrayDeque<>(10000);
