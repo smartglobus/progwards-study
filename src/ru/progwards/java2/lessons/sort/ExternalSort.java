@@ -11,7 +11,7 @@ public class ExternalSort {
         long pointer;
         long nextSubPointer;
 
-        public SubMin(int value, long position) {
+        private SubMin(int value, long position) {
             this.value = value;
             this.pointer = position;
             nextSubPointer = position + SUB_ARRAY_STEP;
@@ -24,15 +24,13 @@ public class ExternalSort {
             SubMin curr = mins.get(i);
             if (curr.value < min.value) min = curr;
         }
-
         return min;
     }
 
     static void sort(String inFileName, String outFileName) {
-//        File sortedBy20000 = sort_by_20000(sort_by_10000(inFileName));
+        File sortedBy10000 = sort_by_10000(inFileName);
+        File sortedBy20000 = sort_by_20000(sortedBy10000);
         List<SubMin> mins = new ArrayList<>(10000);
-
-        File sortedBy20000 = new File("sort_by_20000.txt");// test
 
         try (RandomAccessFile raf = new RandomAccessFile(sortedBy20000, "r");
              FileWriter writer = new FileWriter(outFileName)) {
@@ -52,13 +50,11 @@ public class ExternalSort {
                     min.value = Integer.parseInt(raf.readLine());
                 }
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            sortedBy10000.delete();
+            sortedBy20000.delete();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -113,11 +109,8 @@ public class ExternalSort {
 
 
     public static void main(String[] args) {
-        System.out.println("Go!");
         long start = System.currentTimeMillis();
-        sort("data.txt", "sortirovannyi_file.txt");
-//        sort_by_10000("data.txt");
-//        sort_by_20000(new File("sort_by_10000.txt"));
-        System.out.println("all sorted, secs: " + ((System.currentTimeMillis() - start)) / 1000);// all sorted, secs: 61753
+        sort("data.txt", "sorted.txt");
+        System.out.println("all sorted, min: " + ((System.currentTimeMillis() - start)) / (60 * 1000));
     }
 }
