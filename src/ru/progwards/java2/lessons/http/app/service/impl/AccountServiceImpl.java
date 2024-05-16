@@ -12,10 +12,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class AccountServiceImpl implements AccountService {
     private StoreService service;
 
-    private AccountServiceImpl() {
-
-    }
-
     public AccountServiceImpl(StoreService service) {
         this.service = service;
     }
@@ -42,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
         double sum = account.getAmount() - amount;
         if (sum < 0) {
             serviceLock.unlock();
-            throw new RuntimeException("AccountOperation canceled. Not enough money!");
+            throw new RuntimeException("Error: account operation canceled. Not enough money.");
         }
         account.setAmount(sum);
         service.update(account);
@@ -56,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
         double toSum = to.getAmount() + amount;
         if (fromSum < 0) {
             serviceLock.unlock();
-            throw new RuntimeException("AccountOperation canceled. Not enough money!");
+            throw new RuntimeException("Error: account operation canceled. Not enough money.");
         }
         from.setAmount(fromSum);
         service.update(from);

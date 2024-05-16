@@ -10,13 +10,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class AtmClient implements AccountService {
-    StoreService storeService;
     private int port;
 
-    public AtmClient(StoreService storeService, int port) {
-        this.storeService = storeService;
+    public AtmClient(int port) {
         this.port = port;
     }
 
@@ -45,24 +45,27 @@ public class AtmClient implements AccountService {
         sendQuery(getQuery("transfer?", paramsAndValues));
     }
 
-    String getQuery(String method, String paramsAndValues) {
+    private String getQuery(String method, String paramsAndValues) {
         final String GET = "GET /";
         final String HTTP = " HTTP/1.1";
         return GET + method + paramsAndValues + HTTP;
     }
 
-    void sendQuery(String query) {
+    private void sendQuery(String query) {
         try (Socket socket = new Socket("localhost", port);
              InputStream is = socket.getInputStream();
              OutputStream os = socket.getOutputStream();
-             PrintWriter writer = new PrintWriter(os, true);
+             PrintWriter writer = new PrintWriter(os);
              Scanner scanner = new Scanner(is)
         ) {
             writer.println(query);
             writer.println("hostname: localhost");
             writer.println();
+            writer.flush();
 
-            while (scanner.hasNextLine()) System.out.println(scanner.nextLine());
+            StringBuilder printReply = new StringBuilder();
+            while (scanner.hasNextLine()) printReply.append(scanner.nextLine()).append("\n");
+            System.out.println(printReply);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -14,6 +14,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ATM {
     private StoreService storeService;
@@ -28,16 +30,16 @@ public class ATM {
     public static void main(String[] args) {
         StoreService storeService = new StoreServiceImpl();
         ATM atm = new ATM(storeService, 1973);
-        AtmClient client = new AtmClient(storeService,atm.port);
         List<Account> accounts = new ArrayList<>(storeService.get());
+        AccountService accountService = new AccountServiceImpl(storeService);
 
         Thread serverThread = new Thread(new Runnable() {
             @Override
-            public void run() {
+            public synchronized void run() {
                 try (ServerSocket atmServer = new ServerSocket(atm.port)) {
                     while (true) {
                         Socket client = atmServer.accept();
-                        AtmClientThread clientThread = new AtmClientThread(client, atm.storeService);
+                        AtmClientThread clientThread = new AtmClientThread(client, atm.storeService, accountService);
                         clientThread.start();
                     }
                 } catch (IOException e) {
@@ -46,17 +48,21 @@ public class ATM {
             }
         });
         serverThread.start();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        client.balance(accounts.get(3));
-        client.deposit(accounts.get(3), 20000);
-        client.withdraw(accounts.get(3),7000000);
-        client.balance(accounts.get(5));
-        client.transfer(accounts.get(3),accounts.get(5),50000);
+        for (int i = 0; i < 5; i++) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    AtmClient client = new AtmClient(atm.port);
+                    client.balance(accounts.get(3));
+                    client.deposit(accounts.get(3), 20000);
+                    client.withdraw(accounts.get(3), 7000000);
+                    client.balance(accounts.get(5));
+                    client.transfer(accounts.get(3), accounts.get(5), 50000);
+                }
+            });
+            thread.start();
+        }
     }
 }
 
@@ -65,18 +71,19 @@ class AtmClientThread extends Thread {
     private AccountService accountService;
     private StoreService storeService;
 
-    final static String BAD_REQUEST = "HTTP/1.1 400 Bad Request";
-    final static String SUCCESS = "HTTP/1.1 200 OK";
-    final static String CONTENT_TYPE = "Content-Type: text/html; charset=utf-8";
-    final static String NOT_FOUND = "HTTP/1.1 404 Not Found";
+    private final static String BAD_REQUEST = "HTTP/1.1 400 Bad Request";
+    private final static String SUCCESS = "HTTP/1.1 200 OK";
+    private final static String CONTENT_TYPE = "Content-Type: text/html; charset=utf-8";
+    private final static String NOT_FOUND = "HTTP/1.1 404 Not Found";
 
-    public AtmClientThread(Socket incoming, StoreService storeService) {
+    AtmClientThread(Socket incoming, StoreService storeService, AccountService accountService) {
         this.storeService = storeService;
         this.incoming = incoming;
-        this.accountService = new AccountServiceImpl(storeService);
+        this.accountService = accountService;
     }
 
-    void reply(int code, PrintWriter writer, String response, double balance) {
+    private void reply(int code, PrintWriter writer, String response, double balance) {
+
         switch (code) {
             case 200:
                 writer.println(SUCCESS);
@@ -90,15 +97,16 @@ class AtmClientThread extends Thread {
         writer.println(CONTENT_TYPE);
         String contentLength = "Content-Length: " + getContentLength(response, balance) + "\n";
         writer.println(contentLength);
-        if (!"".equals(response))writer.println(response);
+        if (!"".equals(response)) writer.println(response);
         if (balance >= 0) {
             String bal = "Balance: " + balance;
             writer.println(bal);
         }
         writer.println();
+        writer.flush();
     }
 
-    int getContentLength(String response, double balance) {
+    private int getContentLength(String response, double balance) {
         String bal = balance < 0 ? "" : "Balance: " + balance + "\n";
         return (response + "\n" + bal).getBytes().length;
     }
@@ -111,7 +119,7 @@ class AtmClientThread extends Thread {
         try (InputStream is = incoming.getInputStream();
              OutputStream os = incoming.getOutputStream();
              Scanner scanner = new Scanner(is);
-             PrintWriter writer = new PrintWriter(os, true)
+             PrintWriter writer = new PrintWriter(os)
         ) {
             Account account = null, accountFrom = null, accountTo = null;
             double amount = 0;
@@ -196,7 +204,7 @@ class AtmClientThread extends Thread {
                 resultingBalance = accountService.balance(accountFrom);
                 response = "Transfer: successful";
             } else {
-                reply(404, writer, "Wrong parameters", -1);
+                reply(404, writer, "Error: wrong parameters", -1);
                 return;
             }
 
